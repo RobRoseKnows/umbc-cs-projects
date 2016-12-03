@@ -1,0 +1,24 @@
+QUESTION 1:
+1. Divide 7 by all integers [2,6].
+2. If none of the results are an integer, 7 is prime.
+
+QUESTION 2:
+1. Let Q be the square root of X.
+2. Divide X by every integer < Q store list as L
+3. If any of the numbers in L are integers, X is composite. Else, X is prime.
+
+QUESTION 3:
+1. Let n = 0 and length = the length of the string.
+2. Check nth letter and see if it equals the legnth - nth letter.
+3. If the result of Step #2 is false, string is not a palindrome, stop testing.
+4. Repeat steps 2-3 until n = length - n. If 2 has never been false, string is palindrome.
+
+QUESTION 4:
+1. Let n = 0 and Let hi = notecards[0]
+2. Check card notecards[n] and notecards[n+1] and put the largest in hi.
+3. Repeat step 2 until you've gone through all your notecards, hi is max.
+
+QUESTION 5:
+1. Let on = N and Let factorial = 1
+2. Multiply factorial by on and store it in factorial.
+3. Subtract 1 from on repeat step 2 until on = 1
