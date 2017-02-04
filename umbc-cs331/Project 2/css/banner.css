@@ -1,0 +1,26 @@
+div#banner {
+    background-color: #FFA500;
+    width: 110%;
+    margin-left: -5%;
+    margin-top: -8px;
+}
+
+div#banner .positive {
+    background-color: #00FF00;
+}
+
+div#banner .negative {
+    background-color: #FF0000;
+}
+
+div#banner .info {
+    background-color: #0000FF;
+}
+
+div#banner-content {
+    width: 800px;
+    margin: 0 auto;
+    padding: 10px;
+    color: #FFF;
+    
+}

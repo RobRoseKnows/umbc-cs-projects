@@ -1,0 +1,44 @@
+<!-- first_page.html -->
+<!-- This file is the first page seen by the user and is used to make session variables as well as get if the user is an advisor or a student -->
+
+<!-- This will reset the session if a session is already made when reaching this page --> 
+<?php require('../header.html');
+session_unset();
+session_start();
+?>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Advising Homepage</title>
+    <link rel='stylesheet' type='text/css' href='../standard.css'/>
+    <link rel="icon" type="image/png" href="../corner.png" />
+  </head>
+  <div style="overflow:hidden">
+      <img src="../../html/background.jpg" style="overflow:hidden;"/>
+  </div>
+  <body id="background">
+  <!--<p style='clear:both;'><img src='umbc50logo.jpg' height='13%' width='25%'/></p>-->
+
+<left><div id="wrapper">
+
+  <h1> Welcome to UMBC advising! </h1>
+  <h1>College of Mathematics and Natural Sciences</h1>
+
+  <!-- Gets if the user is an advisor or a student then directs them to the appropriate page --> 
+
+  <form method="link" action="login_advisor.html">
+     <input type=submit class="button large go" value="Advisor"/>
+     
+     </form>
+    
+  <form method=post action="register_student.php">
+     <input type=submit class="button large go" value="Student"/>
+     </form>
+
+  <h3 style='color: #FF0000;'>Copyright © umbc.edu</h3>
+</div>
+</left>
+</body>
+</html>
+<?php require('../footer.html'); ?>

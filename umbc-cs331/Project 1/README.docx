@@ -1,0 +1,130 @@
+Robert Rose
+Jake Horvers
+Sarah Heiner
+
+CMSC 331 Project 1
+Undergraduate Advising Website
+
+
+Goal: Create an academic advising website for freshmen and sophomores at UMBC to use for academic advising. The website should allow advisors to log in and create appointments for students (both group and individual) and students to then register for said appointments. Advisors are able to print their schedule for the day, and students are able to search through the database of appointments to determine the one most convenient for them. 
+
+
+Advisor Input: Current advisors at UMBC have been content with the updated advising website that has been provided. However, if they were to make changes, they would recommend making it easier for advisors to add multiple appointments, as well as making the print-view for appointments more user friendly.
+
+
+Explanation of Pages:
+
+
+Homepage: index.html
+After the user indicates whether they are a student or advisor, they will be routed to a page that will allow them to either create an account or sign in under the correct user type.
+
+
+Login Options: studentChoice.php or advisorChoice.php
+After selecting whether they are a student or advisor on the homepage of the site, the user will be prompted to choose if they are a new or returning user and subsequently be brought to the appropriate login page based on their choice
+
+
+Student Sign Up: studentRegister.php / doStudentRegister.php
+The student will be able to create an account on this page by entering their email, name, major, and other identifiers. They will create a password that will allow them to log in as a returning user after creating their account.
+
+
+Advisor Sign Up: advisorRegister.php / doAdvisorRegisterphp
+The advisor will be able to create an account on this page by entering their email, name, office, and other identifiers. They will create a password that will allow them to log in as a returning user after creating their account.
+
+
+Student Login: studentLogin.php / doStudentLogin.php
+This page will allow a student to sign into their existing account and access their homepage.
+
+
+Advisor Login: advisorLogin.php / doAdvisorLogin.php
+This page will allow an advisor to sign into their existing account and access their homepage.
+
+
+Student Homepage: studentHome.php / processStudentHomepage.php
+The student homepage is shown once a student with an existing account logs in. This page provides options for the student to schedule, cancel, or search for advising appointments, as well as edit their information stored in the Student database.
+
+
+	Sign Up for an Appointment: signUpAppt.php / doSignupAppt.php
+	If the student selects the option to sign up for an advising appointment, they are able to search through the Appointment table in the database, narrowing their search by date, time, and appointment type. Once they have located an appointment they would like to sign up for, they select it here and the information in both the Student and Appointment databases are updated.
+
+
+	Edit information: editStudentInfo.php / processStudentEdit.php
+	A student is able to update the information stored in the Student table of the database. On this page they can update any of the information they provided to initially create an account.
+	
+Appointment Search: findAppointment.php / results.php
+A student or advisor may be searching for an appointment on a specific day, at a specific time, or of a certain type. This file is used for both to display the advising appointments available based off of the criteria provided. 
+	
+Cancel an Appointment: studentCancel.php / doStudentCancel.php
+	If a student would like to switch appointments, they first select the option to cancel their appointment. Canceling the appointment opens up a student slot in the Appointment database, as well as updating the Student’s appointment ID to null in the database, allowing them to register for a new appointment.
+
+
+	View Current Appointment: studentViewAppt.php / doStudentViewAppt.php
+	This page allows a student to see the details of the appointment they are currently signed up for (advisor name, time, location, etc.)
+
+
+Advisor Homepage: advisorHome.php / processAdvisorHomepage.php
+The advisor homepage is shown once an advisor with an existing account logs in. This page provides options for the advisor to schedule, search for, and edit advising appointments, print an appointment schedule for a particular day, or add a new advisor account to the Advisor database. 
+	
+Print Schedule: advisorPrintSchedule.php / results.php
+	If the advisor chooses the option “Print Schedule” on their homepage, they are brought here, which prints out the schedule of appointments for that advisor for the specified day.
+
+
+Create Appointment: createAppointment.php / doCreateAppointment.php
+If the advisor chooses the option “Create appointment” on their homepage, they are redirected here, which allows them to specify the date, time(s), major(s), location, and student limit for an appointment. This appointment is then added to the Appointment table in the database.
+
+
+Appointment Search: findAppointment.php / results.php
+A student or advisor may be searching for an appointment on a specific day, at a specific time, or of a certain type. This file is used for both to display the advising appointments available based off of the criteria provided. 
+
+
+Common Files: CommonVariables.php/CommonMethods.php
+These files allow a connection to the database, along with storing the regular expressions that comprise UMBC emails and student IDs. 
+	
+CSS File: standard.css
+	This file provides the CSS used throughout the website for formatting.
+
+
+Logout: Logout.php
+A logout button appears on both the student and advisor homepages, and destroys the session variables utilized by the user during their time on the website.
+
+
+footer.php
+The footer contains the logout button, which routes to the logout.php file, allowing the user to end their session.
+
+
+header.php
+This file starts a user’s session and creates the link to Common which allows for connection with the database.
+
+
+Database:
+
+
+	Advisor Data:
+ID, primary key, auto-increment
+StudentID, text(7)
+FirstName, text(30)
+LastName, text(30)
+Password, text(30)
+Office, text(20)
+	Student Data:
+ID, primary key, auto-increment
+StudentID, text(7)
+FirstName, text(30)
+LastName, text(30)
+Password, text(30)
+ApptNum, smallInt, unsigned, NULL (will be set to null if the student does not currently have an appointment scheduled)
+Major, text(30)
+Email, text(30)
+	Appointment
+ID, primary key, auto-increment
+Location, text(20)
+TimeSlot, time
+Day, date
+Major, text(60)
+numStudents, tinyInt, unsigned, NULL (number of students currently signed up for the appointment)
+maxStudents, tinyInt, unsigned
+listOfStudents, text(80), NULL (list of student IDs of students registered for the appointment)
+advisorID, text(7) (ID of advisor hosting the appointment)
+
+
+Naming Standards:
+File names are descriptive of their purpose for the website. For example, studentViewAppt.php allows a student to view the appointment they have scheduled. A file that has been written to carry out the logic for a page will be written as “do” OR “process” + <page name> “.php” where <page name> is the page that the logic must be used for. These logic files can be found in the “Logic” folder.

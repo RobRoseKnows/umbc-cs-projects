@@ -1,0 +1,224 @@
+html{ 
+    text-align: center;
+    font-family: Calibri, sans-serif;
+    font-size: 15px; 
+    position: center;
+    margin: 0px;
+    padding: 0px;
+}
+h1{
+    color: #FF0000;
+    }
+#background{
+    background-color: #F3F2F2;
+    /*background-image: url("background.jpg");*/
+    background-position: left top;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    -ms-background-size: cover;
+    background-size: cover;
+    margin: 0px;
+    padding-top: 0;
+    padding-left: 0;
+    padding-bottom: 0;
+    }
+
+#form1 {
+    /*margin-left: 25%;
+    margin-right: 75%;*/
+    text-align: left;
+    color: #FF0000;
+}
+
+form {
+    /*margin-left: 25%;
+    margin-right: 75%;*/
+    color: #FF0000;
+}
+
+app_type_buttons {
+    vertical-align: center;
+    }
+
+.button {
+    background-color: #122232;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    font-family: Calibri, Helvetica, sans-serif;
+    font-size:20px;
+    font-weight: bold;
+    height: 25px;
+    overflow: visible;
+    padding: 0 12px;
+    margin: 0px auto 0;
+    text-decoration: none;
+    vertical-align: top;
+    white-space: nowrap;
+    width: auto;
+    border-radius: 4px;
+    line-height: 25px;
+    }
+
+.button:hover {
+    background-color: #BE6CE;
+    
+    text-decoration: none;
+     
+    }
+
+a.button.large {
+    line-height: 32px;
+    }
+
+.button.large {
+    font-size: 20px;
+    height: 32px;
+    padding: 0 16px;
+    }
+.button.large:hover{
+    background-color: #BE6CE;
+
+    }
+
+.button.go {
+    background-color: #122232;
+    color: #FFF;
+    }
+
+
+.button.go:hover {
+    background-color: #BE6CE;
+    
+    }
+
+.button.main {
+    text-align: center;
+    height: 35px;
+    width: 234px;
+    border-radius: 0px;
+    border-bottom: 1px solid #000;
+    }
+
+.button.main:hover {
+    padding-left: 20px;
+    }
+
+.button.selected {
+    cursor: default;
+    height: 30px;
+    width: 300px;
+    border-radius: 0px;
+    border-bottom: 1px solid #000;
+    margin: 0 auto 0;
+    background-color: #97A2AD;
+    padding: 17px 0px 12px 50px;
+    }
+
+.button.logout{
+    background-color: #FF0000;
+    float: center;
+    margin-top: 10px;
+    margin-right: 50%;
+    margin-left: 50%;
+    }
+
+image {
+    width: 20%;
+    height: 20%;
+
+}
+
+header, footer {
+    padding: 1em;
+    color: white;
+    background-color: black;
+    clear: left;
+    text-align: center;
+}
+
+div.container {
+    width: 100%;
+    border: 1px solid gray;
+}
+
+#wrapper {
+    width: -webkit-fit-content;
+    width: -moz-fit-content;
+    width: -ms-fit-content;
+    width: -o-fit-content;
+    height: -webkit-fit-content;
+    height: -moz-fit-content;
+    height: -ms-fit-content;
+    height: -o-fit-content;
+    border: 10px solid white;
+    /*padding: 8px;*/
+    border-radius: 20px;
+    text-align: center;
+    background-color: #F3F2F2;
+    position: absolute;
+    top: 230px;
+    left: 20px;
+    margin: 0 10px 10px 10px;
+}
+
+#wrapper2 {
+    width: 53.8%;
+    border: 2px solid white;
+    /*border-radius: 20px;*/
+    text-align: left;
+    background-color: #F3F2F2;
+    float: left;
+    position: relative;
+    /*background: #fff;
+    border-right: 1px solid black;
+    float: left;*/
+    /*padding-top: 30px;
+    padding-left: 30px;
+    padding-right: 30px;*/
+}
+
+#nav {
+    background-color: #566069;
+    border: 2px solid black;
+    border-top: none;
+    float: left;
+    width: 45%;
+    margin-bottom: 2%;
+    padding-bottom: 2%;
+    /*min-height: 499px;*/
+    overflow: auto;
+    position: relative;
+    text-align: left;
+    height: 36%;
+}
+
+h4 {
+    font-size: 15px;
+    padding: 1%;
+    color: #FF0000;
+    text-align: left;
+}
+
+pre {
+    font-size: 15px;
+    padding: 1%;
+    color: #FF0000;
+    text-align: left;
+}
+
+body {
+    /*background-image: url('background.jpg');*/
+    /*background-color: #F9ADCB;*/
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100%;
+}
+
+h2 {
+    color: #FF0000;
+}
