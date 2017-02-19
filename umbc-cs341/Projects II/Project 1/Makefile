@@ -6,7 +6,7 @@
 
 CXX = g++
 DEBUG = -g
-FLAGS = -std=c++98 $(DEBUG)
+CPPFLAGS = -std=c++98 $(DEBUG)
 OBJS = Graph.o Driver.o
 
 all: $(OBJS)

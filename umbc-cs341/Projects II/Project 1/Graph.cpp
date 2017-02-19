@@ -97,55 +97,114 @@ void Graph::dump() {
 
 
 
-//
+////////////////////////////////////////////////////
 // Begin EgIterator Inner Class
-//
+////////////////////////////////////////////////////
 
 Graph::EgIterator::EgIterator(Graph *Gptr, bool isEnd) {
-
+    m_Gptr = Gptr;
+    
+    if(!isEnd) {
+        m_source = 0;
+        m_where = m_Gptr->m_adjLists[m_source];
+    } else {
+        m_source = m_Gptr->m_size;
+        m_where = NULL;
+    }
 }
 
 
 bool Graph::EgIterator::operator!= (const EgIterator& rhs) {
-
+    return m_source != rhs.m_source;
 }
 
 
 void Graph::EgIterator::operator++ (int dummy) {
 
+    // If we're less than or eqaul to the number of verticies, we are at the
+    // the end of the edges, so just exit the function.
+    if(m_source >= m_Gptr->m_size) {
+        return;
+    }
+
+
+    if(m_where == NULL) {
+        m_source++;
+        
+        // We use this same conditional earlier, but I decided to check again
+        // so we don't get an array out of bounds error when setting m_where
+        // on the last row.
+        if(m_source >= m_Gptr->m_size) {
+        
+            m_where = NULL;
+        
+        } else {
+            
+            m_where = m_Gptr->m_adjLists[m_source];
+        
+        }
+
+    } else {
+
+        m_where = m_where->next;
+
+    }
+
+
+    // We're going to recursively call the iterate operator until we find a
+    // valid edge.
+    if(m_where == NULL || m_source > m_where->m_vertex) {
+        
+        (*this)++;
+    
+    }
+
 }
 
 
 std::pair<int, int> Graph::EgIterator::operator*() {
-
+    if(m_source < m_Gptr->m_size) {
+        return std::pair<int, int>(m_source, m_where->m_vertex);
+    } else {
+        // TODO: I'm pretty sure this needs to return an out of range error.
+    }
 }
 
-//
+////////////////////////////////////////////////////
 // END EgIterator Inner Class
-//
+////////////////////////////////////////////////////
 
 
 
 Graph::EgIterator Graph::egBegin() {
-
+    return EgIterator(this, false) ;
 }
 
 
 Graph::EgIterator Graph::egEnd() {
-
+    return EgIterator(this, true) ;
 }
 
 
 
-//
+////////////////////////////////////////////////////
 // BEGIN NbIterator Inner Class
-//
+////////////////////////////////////////////////////
 
 Graph::NbIterator::NbIterator(Graph *Gptr, int v, bool isEnd) {
     
+    m_Gptr = Gptr ;
+    m_source = v ;
+
+    if(!isEnd) {
+        m_where = Gptr->m_adjLists[v] ;
+    } else {
+        m_where = NULL ;
+    }
 }
 
 
+// False equality opertor.
 bool Graph::NbIterator::operator!= (const NbIterator& rhs) {
 
     return m_where != rhs.m_where ;
@@ -153,36 +212,44 @@ bool Graph::NbIterator::operator!= (const NbIterator& rhs) {
 }
 
 
+// Iterate operator
 void Graph::NbIterator::operator++ (int dummy) {
 
+    if(m_where != NULL) {
+        m_where = m_where->next;
+    }
+
 }
 
 
+// Derefference operator
 int Graph::NbIterator::operator*() {
 
+    return m_where->m_vertex;
+
 }
 
-//
+////////////////////////////////////////////////////
 // END NbIterator Inner Class
-//
+////////////////////////////////////////////////////
 
 
-
+// Returns an iterator at the beginning of a neighbor iteration.
 Graph::NbIterator Graph::nbBegin(int v) {
-
+    return NbIterator(this, v, false) ;
 }
 
 
-
+// Returns an iterator at the end of a nieghbor iteration (e.g. where = NULL)
 Graph::NbIterator Graph::nbEnd(int v) {
-
+    return NbIterator(this, v, true) ;
 }
 
 
 
-//
+////////////////////////////////////////////////////
 // BEGIN AdjListNode Inner Class
-//
+////////////////////////////////////////////////////
 
 Graph::AdjListNode::AdjListNode(int v, AdjListNode *ptr) {
     
@@ -191,9 +258,9 @@ Graph::AdjListNode::AdjListNode(int v, AdjListNode *ptr) {
 
 }
 
-//
+////////////////////////////////////////////////////
 // END AdjListNode Inner Class
-//
+////////////////////////////////////////////////////
 
 
 
