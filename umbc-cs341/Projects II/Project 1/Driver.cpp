@@ -7,8 +7,12 @@
 
 #include "Graph.h"
 #include <iostream>
+#include <stdio.h> // Allows me to use printf
 
 using namespace std;
+
+void printNeighbors(Graph &G, int on) ;
+void printEdges(Graph &G) ;
 
 int main() {
 
@@ -37,24 +41,36 @@ int main() {
     G2.dump() ;
     cout << endl;
     
+    cout << "--- Test Neighbor Iterator ---";
+    printNeighbors(G, 0) ;
+    cout << endl << endl;
+
+    cout << "--- Test Edge Iterator ---";
+    printEdges(G) ;
+
+    cout << endl << endl;
+}
+
+
+void printNeighbors(Graph &G, int on) {
     
-    cout << "--- Test Neighbor Iterator ---" << endl;
-    cout << "0's neighbors: " << endl;
+    printf("\nThe neighbors of vertex %u are:\n", on);
     
-    Graph::NbIterator endNbItr = G.nbEnd(0);
-    for(Graph::NbIterator itr = G.nbBegin(0); itr != endNbItr; itr++) {
+    Graph::NbIterator endNbItr = G.nbEnd(on);
+    for(Graph::NbIterator itr = G.nbBegin(on); itr != endNbItr; itr++) {
         cout << *itr << " ";
     }
 
-    cout << endl << endl;
+}
 
-    cout << "--- Test Edge Iterator ---" << endl;
+void printEdges(Graph &G) {
+
+    printf("\nThe edges in the graph are:\n");
 
     Graph::EgIterator endEgItr = G.egEnd();
     for(Graph::EgIterator itr = G.egBegin(); itr != endEgItr; itr++) {
         std::pair<int, int> edge = *itr;
-        cout << edge.first << " <-> " << edge.second << endl;
+        printf("(%u, %u) ", edge.first, edge.second);
     }
 
-    cout << endl << endl;
 }
