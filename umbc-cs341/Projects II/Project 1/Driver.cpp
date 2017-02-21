@@ -16,14 +16,20 @@ void printEdges(Graph &G) ;
 
 int main() {
 
-    cout << "--- Test Constructor ---" << endl;
+    
+    ///////////////////////////////////////////////////
+    // Testing Functionality for Static Objects ///////
+    ///////////////////////////////////////////////////
+    cerr << "********* Static Class *********" << endl;
+
+    cerr << "------ Test Constructor --------" << endl;
     
     Graph G = Graph(5) ;
     G.dump();
-    cout << endl;
+    cerr << endl;
     
     
-    cout << "--- Test Add Edges ---" << endl;
+    cerr << "-------- Test Add Edges --------" << endl;
 
     G.addEdge(0, 1) ;
     G.addEdge(1, 2) ;
@@ -32,25 +38,76 @@ int main() {
     G.addEdge(4, 0) ;
 
     G.dump() ;
-    cout << endl;
+    cerr << endl;
     
-    
-    cout << "--- Test Copy Constructor ---" << endl;
+    cerr << "---- Test Copy Constructor -----" << endl;
 
     Graph G2 = Graph(G) ;
     G2.dump() ;
-    cout << endl;
+    cerr << endl;
     
-    cout << "--- Test Neighbor Iterator ---";
+    cerr << "---- Test Neighbor Iterator ----";
     printNeighbors(G, 0) ;
-    cout << endl << endl;
+    cerr << endl << endl;
 
-    cout << "--- Test Edge Iterator ---";
+    cerr << "------ Test Edge Iterator ------";
     printEdges(G) ;
+    cerr << endl << endl;
 
-    cout << endl << endl;
+    ///////////////////////////////////////////////////
+    // Testing Functionality for Dynamic Objects //////
+    ///////////////////////////////////////////////////
+    cerr << "********************************" << endl;
+    cerr << "********* Dynamic Class ********" << endl;
+    cerr << "********************************" << endl;
+
+
+    cerr << "------ Test Constructor --------" << endl;
+
+    Graph* Gptr1 = new Graph(5);
+    Gptr1->dump();
+    cerr << endl;
+
+    cerr << "-------- Test Add Edges --------" << endl;
+
+    Gptr1->addEdge(3, 4);
+    Gptr1->addEdge(1, 4);
+    Gptr1->addEdge(0, 3);
+    Gptr1->addEdge(0, 4);
+    Gptr1->addEdge(0, 1);
+    Gptr1->addEdge(1, 2);
+    Gptr1->addEdge(2, 4);;
+
+    Gptr1->dump();
+    cerr << endl;
+
+    cerr << "---- Self Asignment Dynamic -----" << endl;
+    Gptr1->dump();
+    Gptr1 = Gptr1;
+    Gptr1->dump();
+
+    cerr << endl;
+
+    ///////////////////////////////////////////////////
+    // Testing Functionality Combining Dynamic And  //
+    // Static Objects.                              //
+    //////////////////////////////////////////////////
+    cerr << "********************************" << endl;
+    cerr << "* Combining Dynamic and Static *" << endl;
+    cerr << "********************************" << endl;
+
+    cerr << "---- Stat->Dyn Copy Cstruct ----" << endl;
+
+    cerr << "Static G:" << endl;
+    G.dump();
+    cerr << endl;
+
+    Graph* Gptr2 = new Graph(G);
+    
+    cerr << "Dynamic Gptr2 (copied):" << endl;
+    Gptr2->dump();
+    cerr << endl;
 }
-
 
 void printNeighbors(Graph &G, int on) {
     
@@ -58,7 +115,7 @@ void printNeighbors(Graph &G, int on) {
     
     Graph::NbIterator endNbItr = G.nbEnd(on);
     for(Graph::NbIterator itr = G.nbBegin(on); itr != endNbItr; itr++) {
-        cout << *itr << " ";
+        cerr << *itr << " ";
     }
 
 }

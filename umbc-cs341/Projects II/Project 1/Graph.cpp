@@ -47,11 +47,47 @@ Graph::Graph(const Graph& G) {
 
 
 Graph::~Graph() {
-
+/*
+    for(int i = 0; i < size(); i++) {
+        AdjListNode* on = m_adjLists[i] ;
+        while(on != NULL) {
+            AdjListNode* nextTemp = on->next;
+            delete on;
+            on = nextTemp;
+        }
+    }
+*/
+    delete [] m_adjLists;
 }
 
 
 const Graph& Graph::operator=(const Graph& rhs) {
+
+    // Check for self assignment
+    if(&rhs == this) {
+        return *this;
+    } else {
+        
+        // Get rid of the current adjacency list.
+        delete [] m_adjLists;
+
+        // Set up the new adjacency list.
+        m_size = rhs.m_size;
+        m_adjLists = new AdjListNode*[m_size];
+
+        // Go through the right hand side verticies.
+        for(int i = 0; i < m_size; i++) {
+            AdjListNode *on = rhs.m_adjLists[i] ;
+
+            // Copy the linked list
+            while(on != NULL) {
+                m_adjLists[i] = new AdjListNode(on->m_vertex, m_adjLists[i]) ;
+                on = on->next ;
+            }
+        }
+
+    }
+
 
 }
 
@@ -166,7 +202,7 @@ std::pair<int, int> Graph::EgIterator::operator*() {
     if(m_source < m_Gptr->m_size) {
         return std::pair<int, int>(m_source, m_where->m_vertex);
     } else {
-        // TODO: I'm pretty sure this needs to return an out of range error.
+        throw std::out_of_range("Cannot derefference iterator. EgIterator at end.");
     }
 }
 
@@ -225,7 +261,12 @@ void Graph::NbIterator::operator++ (int dummy) {
 // Derefference operator
 int Graph::NbIterator::operator*() {
 
-    return m_where->m_vertex;
+    // Check to make sure the iterator isn't at the end.
+    if(m_where != NULL) {
+        return m_where->m_vertex;
+    } else {
+        throw std::out_of_range("Cannot derefference iterator. NbIterator at end.") ;
+    }
 
 }
 

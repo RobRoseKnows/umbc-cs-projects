@@ -43,14 +43,19 @@ int main() {
 
    // Make another graph and dump
    Graph G3(3) ;
+   
+   /*
    G3.addEdge(0,1) ;
    G3.addEdge(0,2) ;
    G3.addEdge(1,2) ;
+   cout << "Dump G3" << endl;
    G3.dump() ;
+    */
 
    // Copy over G3 and dump
    G3 = *Gptr2 ;
    G3.dump() ;
 
    delete Gptr2 ;
+
 }
