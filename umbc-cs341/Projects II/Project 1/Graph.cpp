@@ -16,7 +16,7 @@ using namespace std;
 Graph::Graph(int n) {
 
     if(n <= 0) {
-        throw std::out_of_range("Invalid graph size (n <= 0) in constructor");
+        throw std::out_of_range("OUT OF RANGE: Invalid graph size (n <= 0) in constructor");
     }
 
     m_size = n ;
@@ -198,11 +198,13 @@ void Graph::EgIterator::operator++ (int dummy) {
 }
 
 
+// Dereference the edge iterator. If the iterator is at the end, it throws an
+// out_of_range exception.
 std::pair<int, int> Graph::EgIterator::operator*() {
     if(m_source < m_Gptr->m_size) {
         return std::pair<int, int>(m_source, m_where->m_vertex);
     } else {
-        throw std::out_of_range("Cannot derefference iterator. EgIterator at end.");
+        throw std::out_of_range("OUT OF RANGE: Cannot derefference iterator. EgIterator at end.");
     }
 }
 
@@ -228,7 +230,12 @@ Graph::EgIterator Graph::egEnd() {
 ////////////////////////////////////////////////////
 
 Graph::NbIterator::NbIterator(Graph *Gptr, int v, bool isEnd) {
-    
+
+    // Check to make sure the vertex is in the graph.
+    if(v >= Gptr->size()) {
+        throw std::out_of_range("OUT OF RANGE: NbIterator constructor: that vertex does not exist.");
+    }
+
     m_Gptr = Gptr ;
     m_source = v ;
 
@@ -265,7 +272,7 @@ int Graph::NbIterator::operator*() {
     if(m_where != NULL) {
         return m_where->m_vertex;
     } else {
-        throw std::out_of_range("Cannot derefference iterator. NbIterator at end.") ;
+        throw std::out_of_range("OUT OF RANGE: Cannot derefference iterator. NbIterator at end.") ;
     }
 
 }
