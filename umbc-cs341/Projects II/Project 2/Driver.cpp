@@ -1,9 +1,5 @@
-// 
-// File: Driver.cpp
-// Author:  Robert Rose
-// Section: 4
-// E-mail:  robrose2@umbc.edu
-// 
+// File: driver2cpp
+//
 // CMSC 341 Spring 2017 Project 2
 //
 // Simple driver program to call the Sally Forth interpreter
@@ -23,14 +19,22 @@ int main( int argc, char *argv[] ) {
     if(argc < 2) {
 
         // This is for if the user dosn't use the cool command line
-        // arguments. This will allow them to type things directly into
-        // the interperter.     
-        Sally S ;
+        string fname ;
+
+        cout << "Enter file name: " ;
+        cin >> fname ;
+        ifstream ifile(fname.c_str()) ;
+
+        Sally S(ifile) ;
 
         S.mainLoop() ;
 
+        ifile.close() ;
+        return 0 ;
+
     } else {
-        
+ 
+
         // This chunk of code allows a user to specify a series of files
         // they would like to run by adding a series of files after the
         // command. 
@@ -57,7 +61,8 @@ int main( int argc, char *argv[] ) {
 
         }
 
+        return 0 ;
+
     }
     
-    return 0 ;
 }
