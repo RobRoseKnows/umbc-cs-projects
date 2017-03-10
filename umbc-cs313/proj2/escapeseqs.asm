@@ -22,7 +22,7 @@
 ;                  *a  *b   c   d   e  *f   g   h   i   j   k   l   m
 esc_lookup:     db 07, 08, -1, -1, -1, 12, -1, -1, -1, -1, -1, -1, -1 
 ;                  *n   o   p   q  *r   s  *t   u  *v   w   x   y   z
-                db 10, -1, -1, -1, -1, -1, 09, -1, 11, -1, -1, -1, -1
+                db 10, -1, -1, -1, 13, -1, 09, -1, 11, -1, -1, -1, -1
 
 ; Prompting messages
 prompt_msg:     db "Enter string: "     ; user prompt
@@ -41,18 +41,11 @@ generr_len:     equ $-generr_msg
 octal_msg:      db 10, "Error: octal value overflow!", 10
 octal_len:      equ $-octal_msg
 
-escape_msg:     db 10, "Error: unknown escape sequence ", 92   ; Add backslash
-escpae_len:     equ $-escape_msg
+; The 92 adds the backslash, the 32 adds the space which will be replaced
+; by the character in the error mesage. The 10 adds new line
+escape_msg:     db 10, "Error: unknown escape sequence ", 92, 32, 10
+escape_len:     equ $-escape_msg
 
-; Some magic numbers
-
-; Bounds for our characters
-POS_CHAR_a:     equ 97
-POS_CHAR_z:     equ 122
-
-; Bounds for octal numbers
-POS_F_OCT:      equ 48
-POS_L_OCT:      equ 55 
 
 ; This is for the backslash 
 ESC_CHAR:       equ 92
@@ -84,7 +77,7 @@ start:                                  ; address for gdb
         mov     eax, SYSCALL_READ       ; read function
         mov     ebx, STDIN              ; Arg 1: file descriptor
         mov     ecx, buf                ; Arg 2: address of buffer
-        mov     edx, BUFLEN             ; Arg 3: buffer length
+        mov     edx, BUFLEN + 1         ; Arg 3: buffer length
         int     080h
 
         ; error check
@@ -98,6 +91,8 @@ start:                                  ; address for gdb
         mov     edx, generr_len
         int     080h
         jmp     exit                    ; skip over rest
+
+
 read_OK:
 
 
@@ -108,6 +103,7 @@ L1_init:
         mov     ecx, [rlen]             ; initialize count
         mov     esi, buf                ; point to start of buffer
         mov     edi, newstr             ; point to start of new string
+        mov     ebx, 0
 
 ; Label to top of the loop
 L1_top:
@@ -117,18 +113,17 @@ L1_top:
         cmp     al, 0                   ; check null
         je      L1_end                  ; if it is, jump to the end.
 
-
-        inc     esi                     ; update source pointer
-
         cmp     al, ESC_CHAR            ; did we hit the escape character?
         jne     L1_cont                 ; If it's not, keep going.
-        cmp     al, 'z'                 ; more than 'z'?
-        ja      L1_cont
-        and     al, 11011111b           ; convert to uppercase
+        call    handle_ESC 
+
+        inc     esi                     ; update source pointer
 
 L1_cont:
         mov     [edi], al               ; store char in new string
         inc     edi                     ; update dest pointer
+        inc     ebx                     ; Increment our tracker of the final
+                                        ; string's size.
         dec     ecx                     ; update char count
         jnz     L1_top                  ; loop to top if more chars
 L1_end:
@@ -159,13 +154,20 @@ L1_end:
         mov     eax, SYSCALL_WRITE      ; write out string
         mov     ebx, STDOUT
         mov     ecx, newstr
-        mov     edx, [rlen]
+        mov     edx, ebx
         int     080h
 
 
 ; handle_ESC() subroutine
-;
+; USES:
+; eax to return a character 
+; ebx to store the number of characters to print out
 handle_ESC:
+
+        push    ebp
+        mov     ebp, esp
+        
+        push    edx
 
         mov     al, [esi]
         inc     esi
@@ -188,27 +190,32 @@ check_oct:
 ; Series comparison to check to see if a character is a lowercase 
 check_letter:
         
-        ; There's nothing else we want to use below the lower case 'a'
+        ; There's nothing else we want to use below the lower case 'a' so we
+        ; can jump straight to an error.
         cmp     al, 'a'
-        jl      handle_ESC_end
+        jl      check_slash
 
         ; Keep going because we still need to check for the slash
         cmp     al, 'z'
-        jg      check_slash
+        jg      escape_err
 
-        jmp     handle_letter_top
+        jmp     handle_letter
 
 ; Check for the backslash character
 check_slash:
 
         cmp     al, ESC_CHAR
-        je      handle_esc_char_top
+        je      handle_esc_char
 
         ; Send us to check else otherwise
 
+
+; This is the else part of the if statement that simply throws an error and
+; returns the backslash.
+;
 check_else:
 
-        jmp     unknown_err    
+        jmp     escape_err    
 
 
 
@@ -216,14 +223,15 @@ check_else:
 ;
 handle_oct_top:
 
-        ; Move the character into edx then subtract by 48 to get the value
-        mov     edx, [al]
-        sub     edx, 48
+        ; Move the character into edx then subtract by '0' (48) to get the 
+        ; real value
+        mov     edx, [eax]
+        sub     edx, '0'
 
 ; Starts the "for" loop we use to check the next two characters
 loop_oct_next_init:
 
-        ; Cache ecx and edx. ecx may be used elsewhere as a counter 
+        ; Cache ecx. ecx may be used elsewhere as a counter 
         push    ecx
         mov     ecx, 2
         
@@ -244,12 +252,12 @@ loop_oct_next_top:
         ; Increment stack
         inc     esi        
         
-        ; Multiplying by 8 allows us to do octals properly
-        mul     edx, 8
+        ; Multiplying edx 3 times by 2 allows us to do octals properly
+        shl     edx, 3
 
         ; Once again, add the character number to the total value and then 
         ; subtract 48 to get its real value.
-        add     edx, [al]
+        add     edx, [eax]
         sub     edx, 48 
 
 loop_oct_next_cont:
@@ -268,29 +276,44 @@ handle_oct_end:
         ; Check to make sure the value is within range
         cmp     edx, 255
         jg      oct_overflow_err
-
+        
         ; Just realized as I'm developing this that the character and the 
         ; octal value are the same thing. This is a simple fix to put the
         ; octal value in the accumulator. I put this after the error call
         ; to prevent overflow.
         ;
-        mov     al, edx
-        jmp handle_ESC_end
-
-
+        mov     al, byte [edx]
+        jmp     handle_ESC_end
 
 
 ; Handling of lower case letters
-handle_letter_:
+handle_letter:
+        ; Use the lookup table to get the right character.
+        ; TODO: I'm not sure I can use 'a' here.
+        mov     al, byte [esc_lookup+eax-'a']
+        cmp     al, -1
+        je      escape_err
+        jmp     handle_ESC_end
 
+; Handling of the backslash character
+handle_esc_char:
 
+        mov     al, ESC_CHAR
+        jmp     handle_ESC_end
 
-
-
-
+; End the handle_ESC subroutine
 handle_ESC_end:
-                
+      
+        pop     edx
+ 
+        mov     esp, ebp
+        pop     ebp
         
+
+        ; This tells us that we added one more character. I added this here
+        ; because handle_ESC should always result in one more character, as
+        ; opposed to the two+ that make up a usual escape sequence.        
+        inc     ebx
         ret
 
 
@@ -326,10 +349,40 @@ oct_overflow_err:
         jmp     handle_ESC_end
 
 
+escape_err:
+        
+        ; Squirrel away everything currrently in the registers so we can
+        ; configure them for printing.
+        push    eax
+        push    ebx
+        push    ecx
+        push    edx        
+              
+        mov     eax, SYSCALL_WRITE      ; ow print error mesg
+        mov     ebx, STDOUT 
+        mov     ecx, escape_msg
+        mov     edx, escape_len
+        
+        ; Replace the space with the character that caused the error. 
+        mov     [ecx+edx-3], al  
+        int     080h
+
+        ; Store return our registers to their rightful place.
+        pop     edx
+        pop     ecx
+        pop     ebx
+        pop     eax
+        
+        ; Move a backslash into the character we return.
+        mov     al, ESC_CHAR 
+
+        ; Send us to handle escape so we can end.
+        jmp     handle_ESC_end
 
 
-        ; final exit
-        ;
+
+; final exit
+;
 exit:   mov     eax, SYSCALL_EXIT       ; exit function
         mov     ebx, 0                  ; exit code, 0=normal
         int     080h                    ; ask kernel to take over
