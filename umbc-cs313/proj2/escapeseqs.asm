@@ -35,15 +35,15 @@ conver_msg:     db "Convert:  "         ; converted string label
 conver_len:     equ $-conver_msg
 
 ; Error Messages
-generr_msg:     db 10, "Error: reading error!", 10
+generr_msg:     db "Error: reading error!", 10
 generr_len:     equ $-generr_msg
 
-octal_msg:      db 10, "Error: octal value overflow!", 10
+octal_msg:      db "Error: octal value overflow!", 10
 octal_len:      equ $-octal_msg
 
 ; The 92 adds the backslash, the 32 adds the space which will be replaced
 ; by the character in the error mesage. The 10 adds new line
-escape_msg:     db 10, "Error: unknown escape sequence ", 92, 32, 10
+escape_msg:     db "Error: unknown escape sequence ", 92, 32, 10
 escape_len:     equ $-escape_msg
 
 
@@ -55,7 +55,8 @@ ESC_CHAR:       equ 92
         SECTION .bss                    ; uninitialized data section
 buf:    resb BUFLEN                     ; buffer for read
 newstr: resb BUFLEN                     ; converted string
-rlen:   resb 4                          ; length
+rlen:   resb 4                          ; length of input
+flen:   resb 4                          ; length of output
 
 
         SECTION .text                   ; Code section.
@@ -95,15 +96,16 @@ start:                                  ; address for gdb
 
 read_OK:
 
-
         ; Loop for upper case conversion
-        ; assuming rlen > 0
+        ; assuming elen > 0
         ;
 L1_init:
-        mov     ecx, [rlen]             ; initialize count
+        mov     ecx, [rlen]             ; initialize count        
         mov     esi, buf                ; point to start of buffer
         mov     edi, newstr             ; point to start of new string
         mov     ebx, 0
+
+        mov     byte [esi + eax], 0
 
 ; Label to top of the loop
 L1_top:
@@ -117,17 +119,16 @@ L1_top:
         jne     L1_cont                 ; If it's not, keep going.
         call    handle_ESC 
 
-        inc     esi                     ; update source pointer
-
 L1_cont:
         mov     [edi], al               ; store char in new string
         inc     edi                     ; update dest pointer
         inc     ebx                     ; Increment our tracker of the final
+        inc     esi                     ; update source pointer
                                         ; string's size.
-        dec     ecx                     ; update char count
-        jnz     L1_top                  ; loop to top if more chars
+        jmp     L1_top                  ; loop to top if more chars
 L1_end:
 
+        mov     [flen], ebx             ; store the length of the final msg
 
         ; print out user input for feedback
         ;
@@ -154,9 +155,10 @@ L1_end:
         mov     eax, SYSCALL_WRITE      ; write out string
         mov     ebx, STDOUT
         mov     ecx, newstr
-        mov     edx, ebx
+        mov     edx, [flen]
         int     080h
-
+        
+        jmp exit
 
 ; handle_ESC() subroutine
 ; USES:
@@ -169,8 +171,8 @@ handle_ESC:
         
         push    edx
 
-        mov     al, [esi]
         inc     esi
+        mov     al, [esi]
 
 
 ; This is a series of comparisons to check whether or not the form
@@ -225,7 +227,7 @@ handle_oct_top:
 
         ; Move the character into edx then subtract by '0' (48) to get the 
         ; real value
-        mov     edx, [eax]
+        mov     edx, eax
         sub     edx, '0'
 
 ; Starts the "for" loop we use to check the next two characters
@@ -238,7 +240,7 @@ loop_oct_next_init:
 ; The body of the loop for checking characters
 loop_oct_next_top:
 
-        mov     al, [esi]
+        mov     al, [esi+1]
         
         ; Check to see if new character is still an octal digit
         cmp     al, '0'
@@ -257,8 +259,8 @@ loop_oct_next_top:
 
         ; Once again, add the character number to the total value and then 
         ; subtract 48 to get its real value.
-        add     edx, [eax]
-        sub     edx, 48 
+        add     edx, eax
+        sub     edx, '0' 
 
 loop_oct_next_cont:
 
@@ -282,7 +284,7 @@ handle_oct_end:
         ; octal value in the accumulator. I put this after the error call
         ; to prevent overflow.
         ;
-        mov     al, byte [edx]
+        mov     al, dl
         jmp     handle_ESC_end
 
 
@@ -309,11 +311,6 @@ handle_ESC_end:
         mov     esp, ebp
         pop     ebp
         
-
-        ; This tells us that we added one more character. I added this here
-        ; because handle_ESC should always result in one more character, as
-        ; opposed to the two+ that make up a usual escape sequence.        
-        inc     ebx
         ret
 
 
@@ -322,7 +319,7 @@ handle_ESC_end:
 
 ; Octal overflow error we should send when an octal value greater than 255
 ; is included in the string.
-; 
+ 
 oct_overflow_err:
         
         ; Squirrel away everything currrently in the registers so we can
@@ -358,13 +355,17 @@ escape_err:
         push    ecx
         push    edx        
               
-        mov     eax, SYSCALL_WRITE      ; ow print error mesg
         mov     ebx, STDOUT 
-        mov     ecx, escape_msg
         mov     edx, escape_len
-        
+       
+        ; Have to these first so that way eax doesn't replace the character. 
+        mov     ecx, escape_msg
         ; Replace the space with the character that caused the error. 
-        mov     [ecx+edx-3], al  
+        mov     [ecx+edx-2], al  
+        
+        ; Do this after replace the character in the print out.
+        mov     eax, SYSCALL_WRITE      ; ow print error mesg
+
         int     080h
 
         ; Store return our registers to their rightful place.
@@ -372,9 +373,9 @@ escape_err:
         pop     ecx
         pop     ebx
         pop     eax
-        
+ 
         ; Move a backslash into the character we return.
-        mov     al, ESC_CHAR 
+        mov     al, ESC_CHAR
 
         ; Send us to handle escape so we can end.
         jmp     handle_ESC_end

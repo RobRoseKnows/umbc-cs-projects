@@ -20,3 +20,6 @@ OBJS=escapeseqs.o
 #
 ${TARGET}: ${OBJS}
 	${LD} ${LDFLAGS} ${OBJS} -o ${TARGET}
+
+clean:
+	rm -f *.o *.out *.lst
