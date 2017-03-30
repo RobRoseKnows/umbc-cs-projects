@@ -10,10 +10,10 @@ LDFLAGS=-g -melf_i386
 #
 
 # Modify following to the name of your linked program
-TARGET=escapeseqs.out
+TARGET=main3.out
 
 # Modify following to the list of component object files
-OBJS=escapeseqs.o
+OBJS=prt_dec.o main3.o
 
 #
 # Do not modify remainder of this Makefile

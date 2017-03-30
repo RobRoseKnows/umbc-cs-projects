@@ -18,92 +18,125 @@ err_msg:   db 10, "Read error", 10         ; error message
 err_len:   equ $-err_msg
 
 
-        SECTION .bss                    ; uninitialized data section
-buf:    resb BUFLEN                     ; buffer for read
-newstr: resb BUFLEN                     ; converted string
-rlen:   resb 4                          ; length
+        SECTION .bss                ; uninitialized data section
+divbuf: resb BUFLEN                 ; buffer to place into reverse wise
+strbuf: resb BUFLEN                 ; buffer to put in right order.
+prtlen: resb 4
 
+stkptr: resb 4                      ; the first thing on the stack
 
-        SECTION .text                   ; Code section.
-        global  prt_dec                 ; let loader see entry point
+to_prt: resb 4                      ; the decimal number we'll print after
+                                    ; we take it from the stack and before
+                                    ; we store it in a register
 
-prt_dec: nop                            ; Entry point.
-start:                                  ; address for gdb
+        SECTION .text               ; Code section.
+        global  prt_dec             ; let loader see entry point
+
+prt_dec: nop                        ; Entry point.
+start:                              ; address for gdb
+
+        pop     dword [stkptr]
+
+        ; Since we need to preserve all registers, we'll pop the decimal into
+        ; into memory.
+        ; TODO: Make sure I can actually do this.
+        pop     dword [to_prt]
 
         ; Push all the registers to the stack.
         pusha
+       
+        ; Loop through dividing by 10 each time
+        ; Set esi to equal buf + BUFLEN
+        ; Store the remainders in reverse at the end of the buffer. (at esi)
+        ; decrement esi each time
+        ; inc ecx still though
+        ; once we're done, store ecx to prtlen
+        ; set edi equal to strbuf, that's where we'll transfer what two print
+        ; now transfer what's in esi to edi and inc each one
+        ; decrement ecx each time.
+        ; when ecx is 0, we're done and we should print what's in strbuf
 
-        ; error check
-        ;
-        mov     [rlen], eax             ; save length of string read
-        cmp     eax, 0                  ; check if any chars read
-        jg      read_OK                 ; >0 chars read = OK
-        mov     eax, SYSCALL_WRITE      ; ow print error mesg
-        mov     ebx, STDOUT
-        mov     ecx, err_msg
-        mov     edx, err_len
-        int     080h
-        jmp     exit                    ; skip over rest
-read_OK:
+        ; Storing characters
+        ; we can add '0' to dl which is th remainer
 
+dloop_init:
+        ; Move the number into place 
+        mov     eax, [to_prt]
+        mov     edx, 0                  ; zero out edx because of div 
+        
+        mov     ecx, 0
+        
+        ; Technically, edi would be most suited for the register here however
+        ; since we'll be using esi and edi to transfer things later in the
+        ; program, I decided just to use esi here so I don't have to swap it
+        ; later and confuse which one it is at the time.
+        mov     esi, divbuf
+        add     esi, BUFLEN
 
-        ; Loop for upper case conversion
-        ; assuming rlen > 0
-        ;
-L1_init:
-        mov     ecx, [rlen]             ; initialize count
-        mov     esi, buf                ; point to start of buffer
-        mov     edi, newstr             ; point to start of new string
+        mov     ebx, 10
 
-L1_top:
-        mov     al, [esi]               ; get a character
-        inc     esi                     ; update source pointer
-        cmp     al, 'a'                 ; less than 'a'?
-        jb      L1_cont
-        cmp     al, 'z'                 ; more than 'z'?
-        ja      L1_cont
-        and     al, 11011111b           ; convert to uppercase
+; Divide loop
+dloop_top:
+        div     ebx
+        add     dl, '0'                 ; Get the ascii of the remainder.
+        mov     [esi], dl
+        
 
-L1_cont:
-        mov     [edi], al               ; store char in new string
-        inc     edi                     ; update dest pointer
-        dec     ecx                     ; update char count
-        jnz     L1_top                  ; loop to top if more chars
-L1_end:
+dloop_cont: 
+        mov     edx, dword 0
 
+        inc     ecx
+        
+        ; See if we've divided all the way. 
+        ; We have to do this after we've already put saved one thing in the
+        ; string. Otherwise if we were initially provided a zero (or anything
+        ; less than 10) we'd never print anything.
+        cmp     eax, 0
+        je      dloop_end
+        
+        ; Put this after the status check so we don't decrement past the top
+        dec     esi
+        jmp     dloop_top
 
+dloop_end:
+        ; Move ecx to the prtlen memory spot so wer can use ecx to track
+        ; where we are iterating.
+        mov     [prtlen], ecx
+        
+; The tloop is where we transfer the data at the end of the divbuf to the 
+; beginning of prtbuf so we can print it properly. 
+tloop_init:
+        mov     edi, strbuf
+
+; Mov the character in the old string into the new string.
+tloop_top:
+        mov     bl, byte [esi]
+        mov     [edi], bl
+
+tloop_cont:
+        ; Inc/dec the i pointers
+        inc     edi
+        inc     esi
+        
+        ; Decrement ecx and see if we can continue going.
+        dec     ecx
+        jnz     tloop_top
+
+tloop_end:
+        ; Nothing to do here, I just wanted to be consistent.
+
+do_prt:
         ; print out user input for feedback
         ;
         mov     eax, SYSCALL_WRITE      ; write message
         mov     ebx, STDOUT
-        mov     ecx, msg2
-        mov     edx, len2
+        mov     ecx, strbuf
+        mov     edx, [prtlen]
         int     080h
 
-        mov     eax, SYSCALL_WRITE      ; write user input
-        mov     ebx, STDOUT
-        mov     ecx, buf
-        mov     edx, [rlen]
-        int     080h
-
-        ; print out converted string
-        ;
-        mov     eax, SYSCALL_WRITE      ; write message
-        mov     ebx, STDOUT
-        mov     ecx, msg3
-        mov     edx, len3
-        int     080h
-
-        mov     eax, SYSCALL_WRITE      ; write out string
-        mov     ebx, STDOUT
-        mov     ecx, newstr
-        mov     edx, [rlen]
-        int     080h
-
-
-        ; final exit
-        ;
-exit:   mov     eax, SYSCALL_EXIT       ; exit function
-        mov     ebx, 0                  ; exit code, 0=normal
-        int     080h                    ; ask kernel to take over
+exit: 
+        popa
+        push    dword [to_prt]
+        push    dword [stkptr]
+        ret        
 
