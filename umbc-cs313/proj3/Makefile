@@ -10,10 +10,10 @@ LDFLAGS=-g -melf_i386
 #
 
 # Modify following to the name of your linked program
-TARGET=main3.out
+TARGET=a.out
 
 # Modify following to the list of component object files
-OBJS=prt_dec.o main3.o
+OBJS=prt_dec.o mytest3.o
 
 #
 # Do not modify remainder of this Makefile

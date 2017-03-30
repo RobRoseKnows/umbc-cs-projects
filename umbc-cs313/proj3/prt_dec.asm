@@ -3,6 +3,14 @@
 ; Author:   Robert Rose
 ; E-mail:   robrose2@umbc.edu
 ;
+; Description:
+; This contains a subroutine prt_dec that allows the user to print out a
+; decimal number. It does this by dividing by ten, getting the remainder and
+; placing it at the end of a buffer. It iterates backwards, placing things
+; one closer to the start of a buffer. It then increments forward, taking the
+; things at the end of the first buffer and placing them at the front of a
+; second buffer which can be printed out.
+;
 
 %define STDIN 0
 %define STDOUT 1
@@ -35,11 +43,13 @@ to_prt: resb 4                      ; the decimal number we'll print after
 prt_dec: nop                        ; Entry point.
 start:                              ; address for gdb
 
+        ; This solved a problem I was having with a segfault. The thing to
+        ; print is the second thing on the stack, not the first thing. The
+        ; call pointer is first.
         pop     dword [stkptr]
 
         ; Since we need to preserve all registers, we'll pop the decimal into
         ; into memory.
-        ; TODO: Make sure I can actually do this.
         pop     dword [to_prt]
 
         ; Push all the registers to the stack.
@@ -72,6 +82,7 @@ dloop_init:
         ; later and confuse which one it is at the time.
         mov     esi, divbuf
         add     esi, BUFLEN
+        dec     esi
 
         mov     ebx, 10
 
@@ -79,6 +90,10 @@ dloop_init:
 dloop_top:
         div     ebx
         add     dl, '0'                 ; Get the ascii of the remainder.
+        ; I know on the first project notes you said that it'd be best to use
+        ; the numerical value for 0 here, I prefer using the character way
+        ; because it doesn't use magic numbers.
+
         mov     [esi], dl
         
 
@@ -114,19 +129,19 @@ tloop_top:
         mov     [edi], bl
 
 tloop_cont:
-        ; Inc/dec the i pointers
+        ; Inc/dec the *i pointers
         inc     edi
         inc     esi
         
         ; Decrement ecx and see if we can continue going.
-        dec     ecx
+        dec     ecx        
         jnz     tloop_top
 
 tloop_end:
         ; Nothing to do here, I just wanted to be consistent.
 
 do_prt:
-        ; print out user input for feedback
+        ; print out the buffer.
         ;
         mov     eax, SYSCALL_WRITE      ; write message
         mov     ebx, STDOUT
@@ -135,7 +150,10 @@ do_prt:
         int     080h
 
 exit: 
+        ; Fix the registers.
         popa
+
+        ; Put things back on the stack.
         push    dword [to_prt]
         push    dword [stkptr]
         ret        
