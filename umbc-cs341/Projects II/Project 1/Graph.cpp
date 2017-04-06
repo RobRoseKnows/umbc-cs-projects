@@ -165,13 +165,20 @@ void Graph::dump() {
 
 Graph::EgIterator::EgIterator(Graph *Gptr, bool isEnd) {
     m_Gptr = Gptr;
-    
-    if(!isEnd) {
-        m_source = 0;
-        m_where = m_Gptr->m_adjLists[m_source];
+  
+    if(Gptr != NULL) {
+
+        if(!isEnd) {
+            m_source = 0;
+            m_where = m_Gptr->m_adjLists[m_source];
+        } else {
+            m_source = m_Gptr->m_size;
+            m_where = NULL;
+        }
+
     } else {
-        m_source = m_Gptr->m_size;
-        m_where = NULL;
+        m_source = -1;
+        m_where = NULL; // I think the compiler actually optimizes this out.
     }
 }
 
@@ -227,6 +234,12 @@ void Graph::EgIterator::operator++ (int dummy) {
 // Dereference the edge iterator. If the iterator is at the end, it throws an
 // out_of_range exception.
 std::pair<int, int> Graph::EgIterator::operator*() {
+    
+
+    if(m_where == NULL || m_source > m_where->m_vertex) {
+        (*this)++;
+    }
+
     if(m_source < m_Gptr->m_size) {
         return std::pair<int, int>(m_source, m_where->m_vertex);
     } else {
@@ -258,14 +271,14 @@ Graph::EgIterator Graph::egEnd() {
 Graph::NbIterator::NbIterator(Graph *Gptr, int v, bool isEnd) {
 
     // Check to make sure the vertex is in the graph.
-    if(v >= Gptr->size()) {
+    if(Gptr != NULL && v >= Gptr->size()) {
         throw std::out_of_range("OUT OF RANGE: NbIterator constructor: that vertex does not exist.");
     }
 
     m_Gptr = Gptr ;
     m_source = v ;
 
-    if(!isEnd) {
+    if(Gptr != NULL && !isEnd) {
         m_where = Gptr->m_adjLists[v] ;
     } else {
         m_where = NULL ;
@@ -335,6 +348,7 @@ Graph::AdjListNode::AdjListNode(int v, AdjListNode *ptr) {
 ////////////////////////////////////////////////////
 // END AdjListNode Inner Class
 ////////////////////////////////////////////////////
+
 
 
 
