@@ -32,26 +32,6 @@ LazyBST::~LazyBST() {
 }
 
 
-// Deletes the subtree including the root given.
-void LazyBST::killFamily(Node* parent) {
-
-    // Kill the left side.
-    if(parent->m_left != NULL) {
-        killFamily(parent->m_left);
-        parent->m_left = NULL;
-    }
-
-    // Kill the right side
-    if(parent->m_right != NULL) {
-        killFamily(parent->m_right);
-        parent->m_right = NULL;
-    }
-
-    delete parent;
-
-}
-
-
 // Operators
 const LazyBST& LazyBST::operator=(const LazyBST& rhs) {
 
