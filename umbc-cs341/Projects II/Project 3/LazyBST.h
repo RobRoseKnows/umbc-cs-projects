@@ -10,9 +10,6 @@
  *
  */
 
-#include<exception>
-
-
 class Node;
 class LazyBST;
 
@@ -70,6 +67,7 @@ public:
 
     void inorder();
 
+    void rebalance();
 
     bool locate(const char *position, int& key);
 
@@ -77,13 +75,16 @@ private:
 
     Node* m_root;
 
-    void rebalance();
-    
-
-
-    //////////////////////////////////////////////////////////////////
-    // Recurring methods.                                           //
-    //////////////////////////////////////////////////////////////////
+    // This flattens all the nodes out into an array of pointers to nodes.
+    // This is used when you sort them all back together and stuff. This
+    // leaves disconnecting children as an exercise for the the current node
+    // rebalancing method and whatnot.
+    //
+    // index:   what index within the array the node is on
+    // arr:     the array with all the nodes in it
+    // size:    the total size of the subtree.
+    void flattenNodes(
+            Node* on, int& index, Node** arr, int size );
 
     // This is the recurrsive insert function for the lazy BST. It recurrs 
     // until it finds a null pointer where the node should go. When it finds
@@ -99,54 +100,23 @@ private:
 
     Node* rebalanceAndRecurr(Node* on);
 
+    // Helper function that returns the minimum of two integers for the 
+    // rebalance recurrsion function. Defined in header file because it's 
+    // only one short expression.
+    int min(int x, int y)  {    return (x >= y) ? x : y;   }
 
-    
-    //////////////////////////////////////////////////////////////////
-    // Some utility functions.                                      //
-    //////////////////////////////////////////////////////////////////
-    
-    // This flattens all the nodes out into an array of pointers to nodes.
-    // This is used when you sort them all back together and stuff. This
-    // leaves disconnecting children as an exercise for the the current node
-    // rebalancing method and whatnot.
-    //
-    // index:   what index within the array the node is on
-    // arr:     the array with all the nodes in it
-    // size:    the total size of the subtree.
-    void flattenNodes(
-             Node* on, int& index, Node** arr, int size );
+
+    // Helper function that returns the absolute value of an integer for the
+    // rebalance recurssion function. Defined in header file because it's 
+    // only one short expression.
+    int absVal(int n)      {    return (n >= 0) ? n : -n;  }
+
     
     // This separates all the nodes in a flattened BST from their children.
     // This allows the rebalancing to take place more easily. It also sets 
     // all their heights to 0 and sizes to 1..
     void unlinkAllFromChildren(Node** arr, int size) ;
 
-    // This is a helper function that gets the maximum heights of the subtrees
-    // below a certain node.
-    int getMaxHeightBelow(Node* on); 
-
-    // This helper function gets the sum of the sizes of the nodes below the 
-    // current one. We use this in rebalancing. 
-    int getSizeBelow(Node* on); 
-    
-   
-
-
-    //////////////////////////////////////////////////////////////////
-    // Extremely simple helper functions.                           //
-    //////////////////////////////////////////////////////////////////
-    
-    // Helper function that returns the minimum of two integers for the 
-    // rebalance recurrsion function. Defined in header file because it's 
-    // only one short expression.
-    int min(int x, int y)  {    return (x >= y) ? y : x;   }
-
-    int max(int x, int y)  {    return (x >= y) ? x : y;   }
-
-    // Helper function that returns the absolute value of an integer for the
-    // rebalance recurssion function. Defined in header file because it's 
-    // only one short expression.
-    int absVal(int n)      {    return (n >= 0) ? n : -n;  }
 }
 
 #endif

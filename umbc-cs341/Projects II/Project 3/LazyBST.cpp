@@ -67,41 +67,7 @@ void LazyBST::rebalance() {
 
 bool LazyBST::locate(const char *position, int& key) {
 
-    int i = 0;
-    Node* curr = m_root;
-    char direction = position[i];
-
-    // Check to see if the root is NULL.
-    if(curr == NULL)        {   return false;   }
-
-    // Check to see if we're just looking for the root.
-    if(position == "")      {   return true;    }
-
-    while(direction != '\0') {
-        // We reached the end of the locate call and found that no such node
-        // exists at the requested point.
-        if(curr == NULL)    {   return false;   }
-
-        switch(direction) {
-
-            case 'L':
-                // Check left direction.
-                curr = curr->m_left;
-                break;
-            case 'R':
-                // Check right direction
-                curr = curr->m_right;
-                break;
-            default:
-                // The input we got for locate's location was invalid.
-                throw std::runtime_error("locate() had invalid direction");
-        }
-
-        i++;
-        direction = position[i];
-    }
-
-    key = curr->m_key;
+    
 
 }
 
@@ -266,58 +232,15 @@ Node* LazyBST::insertWithOrder(int lower, int upper, Node** arr) {
     Node* toReturn = arr[middle];
 
     // Catch to make sure we haven't reached the end.
-    if(upper > lower) {
+    if(upper != lower) {
 
-        toReturn->m_left = insertWithOrder(lower, middle - 1, arr);
-        toReturn->m_right = insertWithOrder(middle + 1, upper, arr);
+        toReturn->m_left = insertWithOrder(lower, middle, arr);
+        toReturn->m_right = insertWithOrder(middle, upper, arr);
 
-        int tallestHeight = getMaxHeightBelow(toReturn);
-        toReturn->m_height = tallestHeight + 1;
-
-
-        int sizeBelow = getSizeBelow(toReturn);
-        toReturn->m_size = sizeBelow + 1;
     }
 
     return toReturn;
 
-}
-
-
-// This is a helper function that gets the maximum heights of the subtrees
-// below a certain node.
-int LazyBST::getMaxHeightBelow(Node* on) {
-
-    int hLeft = 0;
-    int hRight = 0;
-
-    // These are the NULL checks that make up the purpose of this helper
-    // function.
-    if(on->m_left != NULL)  {   hLeft = on->m_left->m_height;   }
-    if(on->m_right != NULL) {   hRight = on->m_right->m_height; }
-
-    // This tells us we're at a leaf so we should return -1 to symbolize that.
-    if(on->m_left == NULL && on->m_right == NULL) {
-        return -1;
-    }
-
-
-    return max(hLeft, hRight);
-
-}
-
-
-// This helper function gets the sum of the sizes of the nodes below the 
-// current one. We use this in rebalancing. 
-int LazyBST::getSizeBelow(Node* on) {
-
-    int sLeft = 0;
-    int sRight = 0;
-    
-    if(on->m_left != NULL)  {   sLeft = on->m_left->m_size;     } 
-    if(on->m_right != NULL) {   sRight = on->m_right->m_size;   }
-
-    return sLeft + sRight; 
 }
 
 
