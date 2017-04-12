@@ -18,8 +18,12 @@ DEBUG = -g
 CPPFLAGS = -std=c++98 $(DEBUG)
 PRIM_OBJS = LazyBST.o Driver.o
 
+
 all: $(PRIM_OBJS)
 	$(CXX) $(FLAGS) $(PRIM_OBJS) -o a.out
+
+test%.out: LazyBST.o test%.o
+	$(CXX) $(FLAGS) $^ -o $@
 
 val: all
 	valgrind --leak-check=full ./a.out
@@ -28,7 +32,7 @@ test: all
 	./a.out test.sally
 
 run: all
-	./a.out $(FILES)
+	./a.out
 
 fresh: clean run
 

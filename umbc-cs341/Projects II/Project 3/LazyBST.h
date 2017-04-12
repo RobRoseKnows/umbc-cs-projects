@@ -10,8 +10,6 @@
  *
  */
 
-#include<exception>
-
 
 class Node;
 class LazyBST;
@@ -45,7 +43,7 @@ public:
     Node* m_left;
     Node* m_right;
 
-}
+};
 
 
 class LazyBST {
@@ -77,8 +75,7 @@ private:
 
     Node* m_root;
 
-    void rebalance();
-    
+    void rebalance(); 
 
 
     //////////////////////////////////////////////////////////////////
@@ -95,10 +92,13 @@ private:
     // 
     // Returns: true if a node is inserted,
     //          false otherwise. 
-    Node* insertAndRecurr(Node* on, int key);
+    Node* insertAndRecurr(Node* &on, int key);
 
-    Node* rebalanceAndRecurr(Node* on);
+    Node* removeAndRecurr(Node* &on, int key);
 
+    Node* rebalanceAndRecurr(Node* &on);
+
+    Node* insertDuringRebalance(int lower, int upper, Node* arr[]); 
 
     
     //////////////////////////////////////////////////////////////////
@@ -114,22 +114,33 @@ private:
     // arr:     the array with all the nodes in it
     // size:    the total size of the subtree.
     void flattenNodes(
-             Node* on, int& index, Node** arr, int size );
+             Node* &on, int& index, Node* arr[], int size );
     
     // This separates all the nodes in a flattened BST from their children.
     // This allows the rebalancing to take place more easily. It also sets 
     // all their heights to 0 and sizes to 1..
-    void unlinkAllFromChildren(Node** arr, int size) ;
+    void unlinkAllFromChildren(Node* arr[], int size) ;
 
     // This is a helper function that gets the maximum heights of the subtrees
     // below a certain node.
-    int getMaxHeightBelow(Node* on); 
+    int getMaxHeightBelow(Node* &on); 
 
     // This helper function gets the sum of the sizes of the nodes below the 
     // current one. We use this in rebalancing. 
-    int getSizeBelow(Node* on); 
+    int getSizeBelow(Node* &on); 
     
    
+    // This checks to see if we need to rebalance without doing recursive 
+    // calls. This is useful for the top level rebalance function and for 
+    // checking if we need to call rebalance() at all.
+    // THIS DOES NOT CHECK WHETHER THE NODES ARE TALL ENOUGH TO REBALANCE
+    //
+    // on:      a node representing the root of a subtree
+    // returns: 
+    //  true:   when the child on one side of the tree is at least double 
+    //          the height of the other child subtree.
+    //  false:  otherwise
+    bool childrenUnbalanced(Node* &on);
 
 
     //////////////////////////////////////////////////////////////////
@@ -147,6 +158,6 @@ private:
     // rebalance recurssion function. Defined in header file because it's 
     // only one short expression.
     int absVal(int n)      {    return (n >= 0) ? n : -n;  }
-}
+};
 
 #endif
