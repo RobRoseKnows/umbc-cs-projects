@@ -7,11 +7,6 @@
  *
  */
 
-#include "LazyBST.h"
-#include <stdexcept>
-#include <stdlib.h>
-
-using namespace std;
 
 // Constructors
 LazyBST::LazyBST() {
@@ -66,50 +61,8 @@ void LazyBST::inorder() {
 
 void LazyBST::rebalance() {
 
-    // Check to make sure root is not NULL or if height is too short.
-    if(m_root == NULL || m_root->m_height <= 3) {
-        return;
-    }
-
-
-    // If we need to rebalance, trigger the recurrsive rebalancing function. 
-    if(childrenUnbalanced(m_root)) {
-        m_root = rebalanceAndRecurr(m_root);
-    }
 
 }
-
-
-// This checks to see if we need to rebalance without doing recursive calls.
-// This is useful for the top level rebalance function and for checking if we
-// need to rebalance at all.
-bool LazyBST::childrenUnbalanced(Node* &on) {
-    
-    
-    int sLeft; 
-    if(on->m_left != NULL) {
-        sLeft = on->m_left->m_size;
-    } else {
-        // Left side is empty.
-        sLeft = 0;
-    }
-
-
-    int sRight;
-    if(on->m_right != NULL) {
-        sRight = on->m_right->m_size;
-    } else { 
-        // Right side is empty.
-        sRight = 0;
-    }
-     
-
-    // If we need to rebalance, trigger the recurrsive rebalancing function. 
-    return (abs(sLeft - sRight) >= min(sLeft, sRight));
-
-
-}
-
 
 
 bool LazyBST::locate(const char *position, int& key) {
@@ -141,7 +94,7 @@ bool LazyBST::locate(const char *position, int& key) {
                 break;
             default:
                 // The input we got for locate's location was invalid.
-                throw std::invalid_argument("locate() had invalid direction");
+                throw std::runtime_error("locate() had invalid direction");
         }
 
         i++;
@@ -154,7 +107,7 @@ bool LazyBST::locate(const char *position, int& key) {
 
 
 void LazyBST::flattenNodes(
-        Node* &on, int& index, Node* arr[], int size ) {
+        Node* on, int& index, Node** arr, int size ) {
 
     if(on->m_left != NULL) {
         flattenNodes(on->m_left, index, arr, size);
@@ -167,12 +120,11 @@ void LazyBST::flattenNodes(
         flattenNodes(on->m_right, index, arr, size);
     }
 
-
 }
 
 
 
-Node* LazyBST::insertAndRecurr(Node* &on, int key) {
+Node* LazyBST::insertAndRecurr(Node* on, int key) {
 
     // Whether or not the recurrsion resulted in an insertion.
     Node* result = NULL;
@@ -210,8 +162,6 @@ Node* LazyBST::insertAndRecurr(Node* &on, int key) {
                 // If the current one on the right is not the same as the one
                 // on.m_rightjust got back, do some reasignment.
                 if(on->m_right->m_key != result->m_key) {    
-                    // TODO: Inspect what I was doing here, I can't remember 
-                    // doing it or why.
                     on->m_right = result;
                 }
 
@@ -241,7 +191,6 @@ Node* LazyBST::insertAndRecurr(Node* &on, int key) {
                 // If the current one on the right is not the same as the one
                 // on.m_rightjust got back, do some reasignment.
                 if(on->m_left->m_key != result->m_key) {    
-                    // TODO: Same inspection here.
                     on->m_left = result;
                 }
 
@@ -249,92 +198,7 @@ Node* LazyBST::insertAndRecurr(Node* &on, int key) {
 
             }
 
-        } 
-
-    }
-
-}
-
-
-
-Node* LazyBST::removeAndRecurr(Node* &on, int toRemove) {
-
-    // Whether or not the recurrsion resulted in an insertion.
-    Node* result = NULL;
-
-    // Check if it's time to add a new node.
-    if(on == NULL) {
-
-        return NULL ;
-    
-    } else {
-
-        if(toRemove == on->m_key) {
-            
-            // This tells us that no Node was inserted.
-            return NULL;
-        
-        } else if(toRemove > on->m_key) {
-
-            // Do the recurrsion.
-            result = insertAndRecurr(on->m_right, toRemove);
-            
-            if(result == NULL) {
-
-                // No node was inserted, just recurr up the tree doing 
-                // nothing
-                return NULL;
-
-            } else {
-
-                // If we did add a new node somewhere in subtrees, increment
-                // the size and height counters.
-                on->m_size++;
-                on->m_height++;
-
-                // If the current one on the right is not the same as the one
-                // on.m_rightjust got back, do some reasignment.
-                if(on->m_right->m_key != result->m_key) {    
-                    // TODO: Inspect what I was doing here, I can't remember 
-                    // doing it or why.
-                    on->m_right = result;
-                }
-
-                return on;
-
-            }
-
-
-        } else if(toRemove < on->m_key) {
-
-            // Do the recurrsion.
-            result = insertAndRecurr(on->m_left, toRemove);
-            
-            if(result == NULL) {
-
-                // No node was inserted, just recurr up the tree doing 
-                // nothing
-                return NULL;
-
-            } else {
-
-                // If we did add a new node somewhere in subtrees, increment
-                // the size and height counters.
-                on->m_size++;
-                on->m_height++;
-
-                // If the current one on the right is not the same as the one
-                // on.m_rightjust got back, do some reasignment.
-                if(on->m_left->m_key != result->m_key) {    
-                    // TODO: Same inspection here.
-                    on->m_left = result;
-                }
-
-                return on;
-
-            }
-
-        } 
+        }
 
     }
 
@@ -343,7 +207,7 @@ Node* LazyBST::removeAndRecurr(Node* &on, int toRemove) {
 
 
 
-Node* LazyBST::rebalanceAndRecurr(Node* &on) {
+Node* LazyBST::rebalanceAndRecurr(Node* on) {
 
     // Check to see if it's NULL, if so, return.
     if(on == NULL) {
@@ -356,49 +220,46 @@ Node* LazyBST::rebalanceAndRecurr(Node* &on) {
     }
 
 
-    int sLeft; 
+    int hLeft; 
     if(on->m_left != NULL) {
         // Recurr on the left size first.
         on->m_left = rebalanceAndRecurr(on->m_left);
-        sLeft = on->m_left->m_size;
+        hLeft = on->m_left->m_height;
     } else {
         // Left side is empty.
-        sLeft = 0;
+        hLeft = 0;
     }
 
 
-    int sRight;
+    int hRight;
     if(on->m_right != NULL) {
         // Then recurr on the right side if there's stuff there. 
         on->m_right = rebalanceAndRecurr(on->m_right);
-        sRight = on->m_right->m_size;
+        hRight = on->m_right->m_height;
     } else { 
         // Right side is empty.
-        sRight = 0;
+        hRight = 0;
     }
      
 
-    if(abs(sLeft - sRight) >= min(sLeft, sRight) ) {
+    if(abs(hLeft - hRight) >= min(hLeft, hRight) ) {
 
         int subTreeSize = on->m_size;
 
         int flattenIndex = 0;
         Node* arr[subTreeSize];
 
-        flattenNodes(on, flattenIndex, arr, subTreeSize);
+        flattenNodes(on, *flattenIndex, arr, subTreeSize);
         unlinkAllFromChildren(arr, subTreeSize);
 
-        Node* newRoot = insertDuringRebalance(0, subTreeSize - 1, arr);
+        Node* newRoot = insertWithOrder(0, subTreeSize - 1, arr);
 
     }
 
 }
 
 
-// This is a recursive function that goes through the flattened tree and
-// generates a new tree. In order to do this is uses a binary search-esque
-// movement to return new Nodes.
-Node* LazyBST::insertDuringRebalance(int lower, int upper, Node* arr[]) {
+Node* LazyBST::insertWithOrder(int lower, int upper, Node** arr) {
     
     int middle = lower + (upper - lower) / 2;
     
@@ -407,8 +268,8 @@ Node* LazyBST::insertDuringRebalance(int lower, int upper, Node* arr[]) {
     // Catch to make sure we haven't reached the end.
     if(upper > lower) {
 
-        toReturn->m_left = insertDuringRebalance(lower, middle - 1, arr);
-        toReturn->m_right = insertDuringRebalance(middle + 1, upper, arr);
+        toReturn->m_left = insertWithOrder(lower, middle - 1, arr);
+        toReturn->m_right = insertWithOrder(middle + 1, upper, arr);
 
         int tallestHeight = getMaxHeightBelow(toReturn);
         toReturn->m_height = tallestHeight + 1;
@@ -425,7 +286,7 @@ Node* LazyBST::insertDuringRebalance(int lower, int upper, Node* arr[]) {
 
 // This is a helper function that gets the maximum heights of the subtrees
 // below a certain node.
-int LazyBST::getMaxHeightBelow(Node* &on) {
+int LazyBST::getMaxHeightBelow(Node* on) {
 
     int hLeft = 0;
     int hRight = 0;
@@ -448,7 +309,7 @@ int LazyBST::getMaxHeightBelow(Node* &on) {
 
 // This helper function gets the sum of the sizes of the nodes below the 
 // current one. We use this in rebalancing. 
-int LazyBST::getSizeBelow(Node* &on) {
+int LazyBST::getSizeBelow(Node* on) {
 
     int sLeft = 0;
     int sRight = 0;
@@ -464,12 +325,11 @@ int LazyBST::getSizeBelow(Node* &on) {
 // allows the rebalancing to take place more easily. It also sets all their
 // heights to 0 and sizes to 1.
 
-void LazyBST::unlinkAllFromChildren(Node* arr[], int size) {
-    
+void LazyBST::unlinkAllFromChildren(Node** arr, int size) {
     for(int i = 0; i < size; i++) {
 
         arr[i]->m_height = 0;
-        arr[i]->m_size = 1;
+        arr[i]->m_sizes = 1;
         arr[i]->m_left = NULL;
         arr[i]->m_right = NULL;
 
