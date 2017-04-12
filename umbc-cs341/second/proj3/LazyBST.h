@@ -94,7 +94,7 @@ private:
     //          false otherwise. 
     Node* insertAndRecurr(Node* &on, int key);
 
-    Node* removeAndRecurr(Node* &on, int key);
+    Node* removeAndRecurr(Node* &on, int key, bool &removed);
 
     Node* rebalanceAndRecurr(Node* &on);
 
@@ -129,18 +129,28 @@ private:
     // current one. We use this in rebalancing. 
     int getSizeBelow(Node* &on); 
     
-   
+    // Delete all of a subtree. Used in the destructor for recurssive calls.
+    //
+    // Takes:
+    //  parent: a parent of a subtree (can have 0 children).
+    void killFamily(Node* parent);
+    
+        
     // This checks to see if we need to rebalance without doing recursive 
     // calls. This is useful for the top level rebalance function and for 
     // checking if we need to call rebalance() at all.
     // THIS DOES NOT CHECK WHETHER THE NODES ARE TALL ENOUGH TO REBALANCE
     //
-    // on:      a node representing the root of a subtree
-    // returns: 
+    // Takes:
+    //  on:      a node representing the root of a subtree
+    // Returns: 
     //  true:   when the child on one side of the tree is at least double 
     //          the height of the other child subtree.
     //  false:  otherwise
     bool childrenUnbalanced(Node* &on);
+
+
+    Node* findMin(Node* &on);
 
 
     //////////////////////////////////////////////////////////////////

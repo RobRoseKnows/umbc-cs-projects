@@ -28,7 +28,20 @@ LazyBST::LazyBST(const LazyBST& other) {
 // Destructor
 LazyBST::~LazyBST() {
 
+    killFamily(m_root);
 
+}
+
+
+void LazyBST::killFamily(Node* parent) {
+
+    // This is the base case.
+    if(parent == NULL) return;
+
+    killFamily(parent->m_left);
+    killFamily(parent->m_right);
+
+    delete parent;
 }
 
 
@@ -42,12 +55,17 @@ const LazyBST& LazyBST::operator=(const LazyBST& rhs) {
 // Methods
 void LazyBST::insert(int key) {
 
+    rebalance();
+    m_root = insertAndRecurr(m_root, key);
 
 }
 
 
 bool LazyBST::remove(int key) {
 
+    bool wasRemoved = false;
+
+    m_root = removeAndRecurr(m_root, key, wasRemoved);
 
 }
 
@@ -257,7 +275,7 @@ Node* LazyBST::insertAndRecurr(Node* &on, int key) {
 
 
 
-Node* LazyBST::removeAndRecurr(Node* &on, int toRemove) {
+Node* LazyBST::removeAndRecurr(Node* &on, int toRemove, bool &wasRemoved) {
 
     // Whether or not the recurrsion resulted in an insertion.
     Node* result = NULL;
@@ -266,69 +284,78 @@ Node* LazyBST::removeAndRecurr(Node* &on, int toRemove) {
     if(on == NULL) {
 
         return NULL ;
-    
+
     } else {
 
         if(toRemove == on->m_key) {
-            
+
+            Node* toReturnIfDelete;
+
+            if(on->m_left != NULL && on->m_right != NULL) {
+                // There are two children, uh oh.
+
+
+            } else if(on->m_left != NULL && on->m_right == NULL) {
+                // One child on the left
+                toReturnIfDelete = on->m_left;
+
+            } else if(on->m_left == NULL && on->m_right != NULL) {
+                // One child on the right.
+                toReturnIfDelete = on->m_right;
+
+            } else {
+                // No children.
+                toReturnIfDelete = NULL;
+            }
+
             // This tells us that no Node was inserted.
-            return NULL;
-        
+            *wasRemoved = true;
+
+            // Free the memory
+            on->m_left = NULL;
+            on->m_right = NULL;
+            delete on;
+
+
+            return toReturnIfDelete;
+
         } else if(toRemove > on->m_key) {
 
             // Do the recurrsion.
-            result = insertAndRecurr(on->m_right, toRemove);
-            
-            if(result == NULL) {
+            result = removeAndRecurr(on->m_right, toRemove, wasRemoved);
 
-                // No node was inserted, just recurr up the tree doing 
-                // nothing
-                return NULL;
+            if(wasRemoved) {
+                // Since we removed one, we should subtract the size.
+                on->m_size--;
+                // Correct the height of the subtree.
+                on->m_height = getMaxHeightBelow(on) + 1; 
+                
+                on->m_right = result;
+
+                return on;
 
             } else {
-
-                // If we did add a new node somewhere in subtrees, increment
-                // the size and height counters.
-                on->m_size++;
-                on->m_height++;
-
-                // If the current one on the right is not the same as the one
-                // on.m_rightjust got back, do some reasignment.
-                if(on->m_right->m_key != result->m_key) {    
-                    // TODO: Inspect what I was doing here, I can't remember 
-                    // doing it or why.
-                    on->m_right = result;
-                }
 
                 return on;
 
             }
 
-
         } else if(toRemove < on->m_key) {
 
-            // Do the recurrsion.
-            result = insertAndRecurr(on->m_left, toRemove);
-            
-            if(result == NULL) {
+            // Do the recurrsion
+            result = removeAndRecurr(on->m_left, toRemove, wasRemoved);
 
-                // No node was inserted, just recurr up the tree doing 
-                // nothing
-                return NULL;
+            if(wasRemoved) {
+                // Since we removed one, we should subtract the size.
+                on->m_size--;
+                // Correct the height of the subtree.
+                on->m_height = getMaxHeightBelow(on) + 1; 
+                
+                on->m_left = result;
+
+                return on;
 
             } else {
-
-                // If we did add a new node somewhere in subtrees, increment
-                // the size and height counters.
-                on->m_size++;
-                on->m_height++;
-
-                // If the current one on the right is not the same as the one
-                // on.m_rightjust got back, do some reasignment.
-                if(on->m_left->m_key != result->m_key) {    
-                    // TODO: Same inspection here.
-                    on->m_left = result;
-                }
 
                 return on;
 
@@ -340,6 +367,19 @@ Node* LazyBST::removeAndRecurr(Node* &on, int toRemove) {
 
 }
 
+
+
+Node* LazyBST::findMin(Node* &on) {
+
+    if(on == NULL) { return NULL; }
+
+    if(on->m_left == NULL) {
+        return on->m_left;
+    } else {
+        return findMin(on->m_left)
+    }
+
+}
 
 
 
