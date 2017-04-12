@@ -1,10 +1,9 @@
-# File:     bookcmp.asm
-# Author:   Robert Rose
-#
-# Project 4
-#
-# Compares two book structs.
-`
+; File:     bookcmp.asm
+; Author:   Robert Rose
+;
+; Project 4
+;
+; Compares two book structs.`
 %define STDIN 0
 %define STDOUT 1
 %define SYSCALL_EXIT  1
@@ -12,144 +11,113 @@
 %define SYSCALL_WRITE 4
 %define BUFLEN 256
 
+; The field lengths
+%define TITLE_LEN       32
+%define AUTHOR_LEN      20
+%define SUBJECT_LEN     10
+
+; Just a reminder of what the struct looks like.
+;    char author[AUTHOR_LEN + 1];    /* first author */
+;    char title[TITLE_LEN + 1];
+;    char subject[SUBJECT_LEN + 1];  /* Nonfiction, Fantasy, Mystery, ... */
+;    unsigned int year;              /* year of e-book release */
+
+; The offsets we can add.
+%define AUTHOR_OFFSET   0
+%define TITLE_OFFSET    AUTHOR_OFFSET + AUTHOR_LEN + 2
+%define SUBJECT_OFFSET  TITLE_OFFSET + TITLE_LEN + 2
+%define YEAR_OFFSET     SUBJECT_OFFSET + SUBJECT_LEN + 2
+
 
         SECTION .data                   ; initialized data section
 
-err_msg:   db 10, "Read error", 10         ; error message
-err_len:   equ $-err_msg
-
+finans: dd 0
 
         SECTION .bss                ; uninitialized data section
-divbuf: resb BUFLEN                 ; buffer to place into reverse wise
-strbuf: resb BUFLEN                 ; buffer to put in right order.
-prtlen: resb 4
 
-stkptr: resb 4                      ; the first thing on the stack
-
-to_prt: resb 4                      ; the decimal number we'll print after
-                                    ; we take it from the stack and before
-                                    ; we store it in a register
+        ; Nothing here.
 
         SECTION .text               ; Code section.
-        global  bootcmp             ; let loader see entry point
+        global  bookcmp             ; let loader see entry point
         
     extern book1, book2
 
 bookcmp: nop                        ; Entry point.
 start:                              ; address for gdb
 
-        ; This solved a problem I was having with a segfault. The thing to
-        ; print is the second thing on the stack, not the first thing. The
-        ; call pointer is first.
-        pop     dword [stkptr]
-
-        ; Since we need to preserve all registers, we'll pop the decimal into
-        ; into memory.
-        pop     dword [to_prt]
-
         ; Push all the registers to the stack.
         pusha
-       
-        ; Loop through dividing by 10 each time
-        ; Set esi to equal buf + BUFLEN
-        ; Store the remainders in reverse at the end of the buffer. (at esi)
-        ; decrement esi each time
-        ; inc ecx still though
-        ; once we're done, store ecx to prtlen
-        ; set edi equal to strbuf, that's where we'll transfer what two print
-        ; now transfer what's in esi to edi and inc each one
-        ; decrement ecx each time.
-        ; when ecx is 0, we're done and we should print what's in strbuf
 
-        ; Storing characters
-        ; we can add '0' to dl which is th remainer
+        ; Move the book pointers into registers
+        mov     ebx, [book1]
+        mov     ecx, [book2]
 
-dloop_init:
-        ; Move the number into place 
-        mov     eax, [to_prt]
-        mov     edx, 0                  ; zero out edx because of div 
+cmp_years:
         
-        mov     ecx, 0
-        
-        ; Technically, edi would be most suited for the register here however
-        ; since we'll be using esi and edi to transfer things later in the
-        ; program, I decided just to use esi here so I don't have to swap it
-        ; later and confuse which one it is at the time.
-        mov     esi, divbuf
-        add     esi, BUFLEN
-        dec     esi
+        mov     al, byte [ebx + YEAR_OFFSET]
+        mov     ah, byte [ecx + YEAR_OFFSET]
+        cmp     al, ah
+        jl      set_less
+        jg      set_greater    
+    
+check_titles:
+cloop_init:
 
-        mov     ebx, 10
+        ; esi will be the pointer to book1's title
+        lea     esi, [ebx + TITLE_OFFSET]
+
+        ; edi will be the pointer to book2's title
+        lea     edi, [ecx + TITLE_OFFSET]
 
 ; Divide loop
-dloop_top:
-        div     ebx
-        add     dl, '0'                 ; Get the ascii of the remainder.
-        ; I know on the first project notes you said that it'd be best to use
-        ; the numerical value for 0 here, I prefer using the character way
-        ; because it doesn't use magic numbers.
+cloop_top:
 
-        mov     [esi], dl
+        ; Check the titles.
+        mov     al, byte [esi]
+        mov     ah, byte [edi]
         
+        cmp     al, ah
+        ; Set them equal if we have a result...
+        jl      set_less
+        jg      set_greater
+        ; ..Otherwise let it move to the next.
 
-dloop_cont: 
-        mov     edx, dword 0
+cloop_cont: 
+        ; If we get here, it means they're equal.
 
-        inc     ecx
-        
-        ; See if we've divided all the way. 
-        ; We have to do this after we've already put saved one thing in the
-        ; string. Otherwise if we were initially provided a zero (or anything
-        ; less than 10) we'd never print anything.
-        cmp     eax, 0
-        je      dloop_end
-        
-        ; Put this after the status check so we don't decrement past the top
-        dec     esi
-        jmp     dloop_top
-
-dloop_end:
-        ; Move ecx to the prtlen memory spot so wer can use ecx to track
-        ; where we are iterating.
-        mov     [prtlen], ecx
-        
-; The tloop is where we transfer the data at the end of the divbuf to the 
-; beginning of prtbuf so we can print it properly. 
-tloop_init:
-        mov     edi, strbuf
-
-; Mov the character in the old string into the new string.
-tloop_top:
-        mov     bl, byte [esi]
-        mov     [edi], bl
-
-tloop_cont:
-        ; Inc/dec the *i pointers
-        inc     edi
+        ; We can check if we've reached the end by checking if one of them
+        ; is equal to \0 (because we know they're already equal)
+        cmp     byte [esi], 0
+        je      set_equal       
+ 
         inc     esi
-        
-        ; Decrement ecx and see if we can continue going.
-        dec     ecx        
-        jnz     tloop_top
+        inc     edi
+        jmp     cloop_top
+            
+cloop_end:
+                
 
-tloop_end:
-        ; Nothing to do here, I just wanted to be consistent.
+set_less:
+        mov     eax, -1
+        jmp     exit 
 
-do_prt:
-        ; print out the buffer.
-        ;
-        mov     eax, SYSCALL_WRITE      ; write message
-        mov     ebx, STDOUT
-        mov     ecx, strbuf
-        mov     edx, [prtlen]
-        int     080h
+set_greater:
+        mov     eax,  1
+        jmp     exit
 
-exit: 
+set_equal:
+        mov     eax,  0
+        jmp     exit
+
+exit:
+        ; Stash eax for a second.
+        mov     [finans], eax
+ 
         ; Fix the registers.
         popa
 
-        ; Put things back on the stack.
-        push    dword [to_prt]
-        push    dword [stkptr]
+        ; Unstash eax
+        mov     eax, [finans]
+        
         ret        
 
