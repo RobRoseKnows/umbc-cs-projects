@@ -76,46 +76,40 @@ private:
     Node* m_root;
 
     // This flattens all the nodes out into an array of pointers to nodes.
-    // This is used when you sort them all back together and stuff. This
-    // leaves disconnecting children as an exercise for the the current node
-    // rebalancing method and whatnot.
+    // This is used when you sort them all back together and stuff. The 
+    // disconnect sets it apart from the other flattenNodes in that it sets
+    // all the children to NULL so it can be used in rebalancing operations
     //
+    // on:      the current node
     // index:   what index within the array the node is on
     // arr:     the array with all the nodes in it
     // size:    the total size of the subtree.
-    void flattenNodes(
+    void LazyBST::flattenAndDisconnectNodes(
             Node* on, int& index, Node** arr, int size );
 
     // This is the recurrsive insert function for the lazy BST. It recurrs 
     // until it finds a null pointer where the node should go. When it finds
     // it, it inserts a new Node with the key and then returns bool.
     //
-    // Takes:   
-    // on:      a node pointing to the root of the subtree we're on.
-    // key:     a key to add into the tree
-    // 
+    // Takes:   a node pointing to the root of the subtree we're on.
+    //          a key to add into the tree
     // Returns: true if a node is inserted,
-    //          false otherwise. 
+    //          false otherwise.
+   
     Node* insertAndRecurr(Node* on, int key);
 
     Node* rebalanceAndRecurr(Node* on);
 
     // Helper function that returns the minimum of two integers for the 
-    // rebalance recurrsion function. Defined in header file because it's 
-    // only one short expression.
-    int min(int x, int y)  {    return (x >= y) ? x : y;   }
+    // rebalance recurrsion function. Defined in header file because it's only
+    // one short expression.
+    int LazyBST::min(int x, int y)  {    return (x >= y) ? x : y;   }
 
 
     // Helper function that returns the absolute value of an integer for the
-    // rebalance recurssion function. Defined in header file because it's 
-    // only one short expression.
-    int absVal(int n)      {    return (n >= 0) ? n : -n;  }
-
-    
-    // This separates all the nodes in a flattened BST from their children.
-    // This allows the rebalancing to take place more easily. It also sets 
-    // all their heights to 0 and sizes to 1..
-    void unlinkAllFromChildren(Node** arr, int size) ;
+    // rebalance recurssion function. Defined in header file because it's only
+    // one short expression.
+    int LazyBST::absVal(int n)      {    return (n >= 0) ? n : -n;  }
 
 }
 
