@@ -12,15 +12,11 @@
 #include <stdlib.h>         // Gives us NULL
 #include <string>
 #include <sstream>
+#include <iostream>
 
 using namespace std;
 
 // Constructors
-LazyBST::LazyBST() {
-
-
-}
-
 
 LazyBST::LazyBST(const LazyBST& other) {
 
@@ -82,7 +78,7 @@ bool LazyBST::find(int key) {
 
 void LazyBST::inorder() {
    
-   inorderRecurrsive(m_root); 
+   cout << inorderRecurrsive(m_root); 
 
 }
 
@@ -164,46 +160,7 @@ bool LazyBST::childrenUnbalanced(Node* &on) {
 
 bool LazyBST::locate(const char *position, int& key) {
 
-    int i = 0;
-    Node* curr = m_root;
-    char direction = position[i];
-
-    // Check to see if the root is NULL.
-    if(curr == NULL)        {   return false;   }
-
-    // Check to see if we're just looking for the root.
-    if(position == "")      {   return true;    }
-
-    while(direction != '\0') {
-        // We reached the end of the locate call and found that no such node
-        // exists at the requested point.
-        if(curr == NULL)    {   return false;   }
-
-        switch(direction) {
-
-            case 'L':
-                // Check left direction.
-                curr = curr->m_left;
-                break;
-        
-            case 'R':
-                // Check right direction
-                curr = curr->m_right;
-                break;
-        
-            default:
-                // The input we got for locate's location was invalid.
-                throw std::invalid_argument("locate() had invalid direction");
-        
-        }
-
-        i++;
-    
-        direction = position[i];
-
-    }
-
-    key = curr->m_key;
+    return recurrAndLocate(position, key, m_root);
 
 }
 
@@ -212,6 +169,14 @@ bool LazyBST::recurrAndLocate(const char *position, int& key, Node* on) {
 
     // Base case
     if(on == NULL)  {   return false;   }
+
+    // Actually I don't think I need this because I check for the null
+    // character in the switch statement.
+    // Check to see if we're just looking for the root.
+//    if(position == "") {
+//        key = on->m_key;   
+//        return true;    
+//    }
 
     const char currChar = position[0];
 
@@ -271,8 +236,6 @@ void LazyBST::flattenNodes(
 
 Node* LazyBST::insertAndRecurr(Node* &on, int key) {
 
-    // Whether or not the recurrsion resulted in an insertion.
-    Node* result = NULL;
 
     // Check if it's time to add a new node.
     if(on == NULL) {
@@ -289,9 +252,9 @@ Node* LazyBST::insertAndRecurr(Node* &on, int key) {
         } else if(key > on->m_key) {
 
             // Do the recurrsion.
-            result = insertAndRecurr(on->m_right, key);
+            Node* resultRight = insertAndRecurr(on->m_right, key);
             
-            if(result == NULL) {
+            if(resultRight == NULL) {
 
                 // No node was inserted, just recurr up the tree doing 
                 // nothing
@@ -304,13 +267,7 @@ Node* LazyBST::insertAndRecurr(Node* &on, int key) {
                 on->m_size++;
                 on->m_height++;
 
-                // If the current one on the right is not the same as the one
-                // on.m_rightjust got back, do some reasignment.
-                if(on->m_right->m_key != result->m_key) {    
-                    // TODO: Inspect what I was doing here, I can't remember 
-                    // doing it or why.
-                    on->m_right = result;
-                }
+                on->m_right = resultRight;
 
                 return on;
 
@@ -320,9 +277,9 @@ Node* LazyBST::insertAndRecurr(Node* &on, int key) {
         } else if(key < on->m_key) {
 
             // Do the recurrsion.
-            result = insertAndRecurr(on->m_left, key);
+            Node* resultLeft = insertAndRecurr(on->m_left, key);
             
-            if(result == NULL) {
+            if(resultLeft == NULL) {
 
                 // No node was inserted, just recurr up the tree doing 
                 // nothing
@@ -335,12 +292,7 @@ Node* LazyBST::insertAndRecurr(Node* &on, int key) {
                 on->m_size++;
                 on->m_height++;
 
-                // If the current one on the right is not the same as the one
-                // on.m_rightjust got back, do some reasignment.
-                if(on->m_left->m_key != result->m_key) {    
-                    // TODO: Same inspection here.
-                    on->m_left = result;
-                }
+                on->m_left = resultLeft;
 
                 return on;
 

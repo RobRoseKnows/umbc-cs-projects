@@ -25,17 +25,23 @@ public:
         m_key(-1), 
         m_data(-1), 
         m_height(0), 
-        m_size(1) {};
+        m_size(1),
+        m_left(NULL),
+        m_right(NULL)   {};
     Node(int key): 
         m_key(key), 
         m_data(key), 
         m_height(0), 
-        m_size(1) {};
+        m_size(1),
+        m_left(NULL),
+        m_right(NULL)   {};
     Node(int key, int data): 
         m_key(key), 
         m_data(data), 
         m_height(0), 
-        m_size(1) {};
+        m_size(1),
+        m_left(NULL),
+        m_right(NULL)   {};
      
     int m_key;
     int m_data;
@@ -53,7 +59,7 @@ class LazyBST {
 public:
 
     // Constructors
-    LazyBST();
+    LazyBST() : m_root(NULL) {};
     LazyBST(const LazyBST& other);
 
     // Destructor
