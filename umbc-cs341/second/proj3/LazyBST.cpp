@@ -258,7 +258,7 @@ Node* LazyBST::insertAndRecurr(Node* &on, int key) {
             // Set it negative as default so we can check for unequality and
             // we'll know when something new is added.
             int priorHeightRight = -1;
-            int priorSizeRight = - 1;
+            int priorSizeRight = 0;
             
             if(on->m_right != NULL) {
                 priorHeightRight = on->m_right->m_height;
@@ -279,12 +279,14 @@ Node* LazyBST::insertAndRecurr(Node* &on, int key) {
 
                // If we did add a new node somewhere in subtrees, increment
                 // the size and height counters.
-                if(resultRight->m_size != priorHeightLeft ) { 
-                    on->m_size = resultRight->m_size + 1;
+                if(resultRight->m_size != priorHeightRight ) { 
+                    on->m_size += 
+                        (resultRight->m_size - priorSizeRight);
                 }
 
-                if(resultRight->m_size != priorHeightLeft) {
-                    on->m_height = resultRight->m_height + 1;
+                if(resultRight->m_size != priorHeightRight) {
+                    on->m_height =
+                        max(resultRight->m_height + 1, on->m_height);
                 }
 
                 on->m_right = resultRight;
@@ -299,9 +301,9 @@ Node* LazyBST::insertAndRecurr(Node* &on, int key) {
             // Set it negative as default so we can check for unequality and
             // we'll know when something new is added.
             int priorHeightLeft = -1;
-            int priorSizeLeft = - 1;
+            int priorSizeLeft = 0;
             
-            if(on->m_right != NULL) {
+            if(on->m_left != NULL) {
                 priorHeightLeft = on->m_left->m_height;
                 priorSizeLeft = on->m_left->m_size;
             }
@@ -320,11 +322,13 @@ Node* LazyBST::insertAndRecurr(Node* &on, int key) {
                 // If we did add a new node somewhere in subtrees, increment
                 // the size and height counters.
                 if(resultLeft->m_size != priorHeightLeft ) { 
-                    on->m_size = resultLeft->m_size + 1;
+                    on->m_size += 
+                        (resultLeft->m_size - priorSizeLeft);
                 }
 
                 if(resultLeft->m_size != priorHeightLeft) {
-                    on->m_height = resultLeft->m_height + 1;
+                    on->m_height = 
+                        max(resultLeft->m_height + 1, on->m_height);
                 }
 
                 on->m_left = resultLeft;
@@ -495,11 +499,15 @@ Node* LazyBST::rebalanceAndRecurr(Node* &on) {
         int flattenIndex = 0;
         Node* arr[subTreeSize];
 
+        for(int i = 0; i < subTreeSize; i++) {
+            arr[i] = NULL;
+        }
+
         // Asked on Piazza if this was O(n) and a TA said it was.
         flattenNodes(on, flattenIndex, arr, subTreeSize);
         unlinkAllFromChildren(arr, subTreeSize);
 
-        Node* newRoot = insertDuringRebalance(0, subTreeSize - 1, arr);
+        return insertDuringRebalance(0, subTreeSize - 1, arr);
 
     }
 
@@ -511,6 +519,10 @@ Node* LazyBST::rebalanceAndRecurr(Node* &on) {
 // movement to return new Nodes.
 Node* LazyBST::insertDuringRebalance(int lower, int upper, Node* arr[]) {
     
+    if(lower > upper) {
+        return NULL;
+    }
+
     int middle = lower + (upper - lower) / 2;
     
     Node* toReturn = arr[middle];
