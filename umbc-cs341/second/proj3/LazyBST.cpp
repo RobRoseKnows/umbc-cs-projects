@@ -219,6 +219,10 @@ bool LazyBST::recurrAndLocate(const char *position, int& key, Node* on) {
 void LazyBST::flattenNodes(
         Node* &on, int& index, Node* arr[], int size ) {
 
+    if(on == NULL) {
+        return;
+    }
+
     if(on->m_left != NULL) {
         flattenNodes(on->m_left, index, arr, size);
     }
@@ -251,6 +255,17 @@ Node* LazyBST::insertAndRecurr(Node* &on, int key) {
         
         } else if(key > on->m_key) {
 
+            // Set it negative as default so we can check for unequality and
+            // we'll know when something new is added.
+            int priorHeightRight = -1;
+            int priorSizeRight = - 1;
+            
+            if(on->m_right != NULL) {
+                priorHeightRight = on->m_right->m_height;
+                priorSizeRight = on->m_right->m_size;
+            }
+            
+
             // Do the recurrsion.
             Node* resultRight = insertAndRecurr(on->m_right, key);
             
@@ -262,10 +277,15 @@ Node* LazyBST::insertAndRecurr(Node* &on, int key) {
 
             } else {
 
-                // If we did add a new node somewhere in subtrees, increment
+               // If we did add a new node somewhere in subtrees, increment
                 // the size and height counters.
-                on->m_size++;
-                on->m_height++;
+                if(resultRight->m_size != priorHeightLeft ) { 
+                    on->m_size = resultRight->m_size + 1;
+                }
+
+                if(resultRight->m_size != priorHeightLeft) {
+                    on->m_height = resultRight->m_height + 1;
+                }
 
                 on->m_right = resultRight;
 
@@ -276,6 +296,16 @@ Node* LazyBST::insertAndRecurr(Node* &on, int key) {
 
         } else if(key < on->m_key) {
 
+            // Set it negative as default so we can check for unequality and
+            // we'll know when something new is added.
+            int priorHeightLeft = -1;
+            int priorSizeLeft = - 1;
+            
+            if(on->m_right != NULL) {
+                priorHeightLeft = on->m_left->m_height;
+                priorSizeLeft = on->m_left->m_size;
+            }
+            
             // Do the recurrsion.
             Node* resultLeft = insertAndRecurr(on->m_left, key);
             
@@ -289,8 +319,13 @@ Node* LazyBST::insertAndRecurr(Node* &on, int key) {
 
                 // If we did add a new node somewhere in subtrees, increment
                 // the size and height counters.
-                on->m_size++;
-                on->m_height++;
+                if(resultLeft->m_size != priorHeightLeft ) { 
+                    on->m_size = resultLeft->m_size + 1;
+                }
+
+                if(resultLeft->m_size != priorHeightLeft) {
+                    on->m_height = resultLeft->m_height + 1;
+                }
 
                 on->m_left = resultLeft;
 
