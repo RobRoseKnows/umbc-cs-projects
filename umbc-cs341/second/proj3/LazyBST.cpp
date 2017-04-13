@@ -364,27 +364,41 @@ Node* LazyBST::removeAndRecurr(Node* &on, int toRemove, bool &wasRemoved) {
             if(on->m_left != NULL && on->m_right != NULL) {
                 // There are two children, uh oh.
 
+                toReturnIfDelete = new Node(findMin(on->m_right));
+
+                toReturnIfDelete->m_left = on->m_left;
+                toReturnIfDelete->m_right = 
+                    removeAndRecurr(toReturnIfDelete->m_key, on->m_right);
 
             } else if(on->m_left != NULL && on->m_right == NULL) {
                 // One child on the left
                 toReturnIfDelete = on->m_left;
 
+                // Free the memory
+                on->m_left = NULL;
+                on->m_right = NULL;
+                delete on;
             } else if(on->m_left == NULL && on->m_right != NULL) {
                 // One child on the right.
                 toReturnIfDelete = on->m_right;
-
+                
+                // Free the memory
+                on->m_left = NULL;
+                on->m_right = NULL;
+                delete on;
             } else {
                 // No children.
                 toReturnIfDelete = NULL;
+                
+                // Free the memory
+                on->m_left = NULL;
+                on->m_right = NULL;
+                delete on;
             }
 
             // This tells us that no Node was inserted.
             wasRemoved = true;
 
-            // Free the memory
-            on->m_left = NULL;
-            on->m_right = NULL;
-            delete on;
 
 
             return toReturnIfDelete;
@@ -398,7 +412,9 @@ Node* LazyBST::removeAndRecurr(Node* &on, int toRemove, bool &wasRemoved) {
                 // Since we removed one, we should subtract the size.
                 on->m_size--;
                 // Correct the height of the subtree.
-                on->m_height = getMaxHeightBelow(on) + 1; 
+                on->m_height = 
+                    max((result) ? result->m_height - 1 : -1, 
+                        (on->m_left) ? on->m_left->m_height : -1) + 1;
                 
                 on->m_right = result;
 
@@ -419,7 +435,9 @@ Node* LazyBST::removeAndRecurr(Node* &on, int toRemove, bool &wasRemoved) {
                 // Since we removed one, we should subtract the size.
                 on->m_size--;
                 // Correct the height of the subtree.
-                on->m_height = getMaxHeightBelow(on) + 1; 
+                on->m_height = 
+                    max((result) ? result->m_height - 1 : -1, 
+                        (on->m_right) ? on->m_right->m_height : -1) + 1;
                 
                 on->m_left = result;
 
