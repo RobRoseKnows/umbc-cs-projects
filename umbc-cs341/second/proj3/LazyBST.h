@@ -10,6 +10,9 @@
  *
  */
 
+#include<string>
+
+using namespace std;
 
 class Node;
 class LazyBST;
@@ -99,8 +102,12 @@ private:
     Node* rebalanceAndRecurr(Node* &on);
 
     Node* insertDuringRebalance(int lower, int upper, Node* arr[]); 
-
     
+    std::string inorderRecurrsive(Node* &on);
+    
+    bool recurrAndLocate(const char *position, int& key, Node* on);
+
+
     //////////////////////////////////////////////////////////////////
     // Some utility functions.                                      //
     //////////////////////////////////////////////////////////////////

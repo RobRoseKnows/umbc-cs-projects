@@ -8,8 +8,10 @@
  */
 
 #include "LazyBST.h"
-#include <stdexcept>
-#include <stdlib.h>
+#include <stdexcept>        // Gives us exceptions that we use at one point.
+#include <stdlib.h>         // Gives us NULL
+#include <string>
+#include <sstream>
 
 using namespace std;
 
@@ -42,6 +44,7 @@ void LazyBST::killFamily(Node* parent) {
     killFamily(parent->m_right);
 
     delete parent;
+
 }
 
 
@@ -64,7 +67,7 @@ void LazyBST::insert(int key) {
 bool LazyBST::remove(int key) {
 
     bool wasRemoved = false;
-
+    rebalance();
     m_root = removeAndRecurr(m_root, key, wasRemoved);
 
 }
@@ -73,11 +76,13 @@ bool LazyBST::remove(int key) {
 bool LazyBST::find(int key) {
 
 
+
 }
 
 
 void LazyBST::inorder() {
-
+   
+   inorderRecurrsive(m_root); 
 
 }
 
@@ -94,6 +99,33 @@ void LazyBST::rebalance() {
     if(childrenUnbalanced(m_root)) {
         m_root = rebalanceAndRecurr(m_root);
     }
+
+}
+
+
+std::string LazyBST::inorderRecurrsive(Node* &on) {
+
+    // Base case
+    if(on == NULL)      {   return "";  }
+
+    // Create a "buffer" to save the stuff to return.
+    stringstream toReturn;
+
+    // Add parantheses
+    toReturn << "(";
+
+    // Do the left
+    toReturn << inorderRecurrsive(on->m_left);
+
+    // Do the current
+    toReturn << on->m_key << ":" << on->m_height << ":" << on->m_size;
+
+    // Do the right
+    toReturn << inorderRecurrsive(on->m_right);
+
+    toReturn << ")";
+
+    return toReturn.str();
 
 }
 
@@ -153,22 +185,70 @@ bool LazyBST::locate(const char *position, int& key) {
                 // Check left direction.
                 curr = curr->m_left;
                 break;
+        
             case 'R':
                 // Check right direction
                 curr = curr->m_right;
                 break;
+        
             default:
                 // The input we got for locate's location was invalid.
                 throw std::invalid_argument("locate() had invalid direction");
+        
         }
 
         i++;
+    
         direction = position[i];
+
     }
 
     key = curr->m_key;
 
 }
+
+
+bool LazyBST::recurrAndLocate(const char *position, int& key, Node* on) {
+
+    // Base case
+    if(on == NULL)  {   return false;   }
+
+    const char currChar = position[0];
+
+    Node* nextNode = NULL;
+
+    const char* newPosition;  
+
+    switch(currChar) {
+
+        case 'L':
+            // Go to the left 
+            nextNode = on->m_left;
+            newPosition = 
+                string(position).substr(1, string::npos).c_str();
+            return recurrAndLocate(newPosition, key, nextNode);
+        
+        case 'R':
+            // Go to the right
+            nextNode = on->m_right;
+            newPosition = 
+                string(position).substr(1, string::npos).c_str();
+            return recurrAndLocate(newPosition, key, nextNode);
+        
+        case '\0':
+            // We already checked to make sure something exists at this point
+            // so we know we're at the correct node, store the key and return
+            // true.
+            key = on->m_key;
+            return true;
+
+        default:
+            return false; 
+
+    }
+
+}
+
 
 
 void LazyBST::flattenNodes(
@@ -184,7 +264,6 @@ void LazyBST::flattenNodes(
     if(on->m_right != NULL) {
         flattenNodes(on->m_right, index, arr, size);
     }
-
 
 }
 
@@ -309,7 +388,7 @@ Node* LazyBST::removeAndRecurr(Node* &on, int toRemove, bool &wasRemoved) {
             }
 
             // This tells us that no Node was inserted.
-            *wasRemoved = true;
+            wasRemoved = true;
 
             // Free the memory
             on->m_left = NULL;
@@ -374,9 +453,13 @@ Node* LazyBST::findMin(Node* &on) {
     if(on == NULL) { return NULL; }
 
     if(on->m_left == NULL) {
+        
         return on->m_left;
+    
     } else {
-        return findMin(on->m_left)
+        
+        return findMin(on->m_left);
+    
     }
 
 }
@@ -425,6 +508,7 @@ Node* LazyBST::rebalanceAndRecurr(Node* &on) {
         int flattenIndex = 0;
         Node* arr[subTreeSize];
 
+        // Asked on Piazza if this was O(n) and a TA said it was.
         flattenNodes(on, flattenIndex, arr, subTreeSize);
         unlinkAllFromChildren(arr, subTreeSize);
 
