@@ -21,7 +21,30 @@ using namespace std;
 LazyBST::LazyBST(const LazyBST& other) {
 
 
+    Node* newRoot = NULL;
+
+    newRoot = copyConstruct(other.m_root);
+
 }
+
+
+Node* LazyBST::copyConstruct(const Node* on) {
+
+    if(on == NULL) {
+        return NULL;
+    } else {
+
+        Node* newNode = new Node(on->m_key);
+        newNode->m_left = NULL;
+        newNode->m_right = NULL;
+        newNode->m_left = copyConstruct(on->m_left);
+        newNode->m_right = copyConstruct(on->m_right);
+        return newNode;
+
+    }
+
+}
+
 
 // Destructor
 LazyBST::~LazyBST() {
@@ -34,7 +57,9 @@ LazyBST::~LazyBST() {
 void LazyBST::killFamily(Node* parent) {
 
     // This is the base case.
-    if(parent == NULL) return;
+    if(parent == NULL) {
+        return;
+    }
 
     killFamily(parent->m_left);
     killFamily(parent->m_right);
@@ -71,7 +96,26 @@ bool LazyBST::remove(int key) {
 
 bool LazyBST::find(int key) {
 
+    return findR(key, m_root);   
 
+}
+
+
+// The recusive find function called by find()
+bool LazyBST::findR(int key, Node* on) {
+
+    if(on == NULL) {
+        return false;
+    } else if(key == on->m_key) {
+        return true;
+    } else if(key < on->m_key) {
+        return findR(key, on->m_left);
+    } else if(key > on->m_key) {
+        return findR(key, on->m_right);
+    } else {
+        // Not sure what you did to get here.
+        return false;
+    }
 
 }
 
@@ -130,7 +174,8 @@ std::string LazyBST::inorderRecurrsive(Node* &on) {
 // This is useful for the top level rebalance function and for checking if we
 // need to rebalance at all.
 bool LazyBST::childrenUnbalanced(Node* &on) {
-    
+   
+    bool oneSideHasZero = false;
     
     int sLeft; 
     if(on->m_left != NULL) {
@@ -138,6 +183,7 @@ bool LazyBST::childrenUnbalanced(Node* &on) {
     } else {
         // Left side is empty.
         sLeft = 0;
+        oneSideHasZero = true;
     }
 
 
@@ -244,7 +290,10 @@ Node* LazyBST::insertAndRecurr(Node* &on, int key) {
     // Check if it's time to add a new node.
     if(on == NULL) {
 
-        return new Node(key) ;
+        Node* newNode = new Node(key) ;
+        newNode->m_left = NULL;
+        newNode->m_right = NULL;
+        return newNode;
     
     } else {
 
@@ -345,7 +394,8 @@ Node* LazyBST::insertAndRecurr(Node* &on, int key) {
 
 
 
-Node* LazyBST::removeAndRecurr(Node* &on, int toRemove, bool &wasRemoved) {
+Node* LazyBST::removeAndRecurr(
+        Node* &on, int toRemove, bool &wasRemoved, bool doRemove) {
 
     // Whether or not the recurrsion resulted in an insertion.
     Node* result = NULL;
@@ -359,61 +409,108 @@ Node* LazyBST::removeAndRecurr(Node* &on, int toRemove, bool &wasRemoved) {
 
         if(toRemove == on->m_key) {
 
-            Node* toReturnIfDelete;
+            Node* toReturn;
 
             if(on->m_left != NULL && on->m_right != NULL) {
                 // There are two children, uh oh.
 
-                toReturnIfDelete = new Node(findMin(on->m_right));
+                // This is a dummy boolean value that we can use for the
+                // recursion on the right side.
+                bool dummyBoolForTwoChildren = false;
 
-                toReturnIfDelete->m_left = on->m_left;
-                toReturnIfDelete->m_right = 
-                    removeAndRecurr(toReturnIfDelete->m_key, on->m_right);
+                toReturn = findMin(on->m_right);
 
-            } else if(on->m_left != NULL && on->m_right == NULL) {
-                // One child on the left
-                toReturnIfDelete = on->m_left;
-
-                // Free the memory
-                on->m_left = NULL;
-                on->m_right = NULL;
-                delete on;
-            } else if(on->m_left == NULL && on->m_right != NULL) {
-                // One child on the right.
-                toReturnIfDelete = on->m_right;
+                if(toReturn == NULL)    {   return NULL;    }
                 
-                // Free the memory
+                toReturn->m_left = on->m_left;
+                toReturn->m_right = 
+                    removeAndRecurr(
+                            on->m_right, 
+                            toReturn->m_key, 
+                            dummyBoolForTwoChildren,
+                            // This false here means we won't delete the node
+                            // we're pointing to in dummyBoolForTwoChildren
+                            false);
+                
+                int newHeight = 0;
+                int newSize = 1;
+
+                if(toReturn != NULL) {
+                    newSize = getSizeBelow(toReturn);
+                    int hRight = 
+                        (toReturn->m_right) 
+                            ? toReturn->m_right->m_height
+                            : 0;
+                    int hLeft = 
+                        (toReturn->m_left) 
+                            ? toReturn->m_left->m_height
+                            : 0;
+                    newHeight = max(hLeft, hRight - 1);
+                }
+
+                if(toReturn != NULL) {
+                    toReturn->m_size = newSize;
+                    toReturn->m_height = newHeight;
+                }
+
                 on->m_left = NULL;
                 on->m_right = NULL;
-                delete on;
+                
+                if(doRemove)    {   delete on;  }
+ 
+
             } else {
-                // No children.
-                toReturnIfDelete = NULL;
-                
+                // Took this from Park's slides to eliminate the need for 
+                toReturn = 
+                    ((on->m_left != NULL) ? on->m_left : on->m_right);
+
+                /*
+                int newHeight = 0;
+                int newSize = 1;
+
+                if(toReturn != NULL) {
+                    newSize = getSizeBelow(toReturn);
+                    int hRight = 
+                        (toReturn->m_right) 
+                            ? toReturn->m_right->m_height
+                            : 0;
+                    int hLeft = 
+                        (toReturn->m_left) 
+                            ? toReturn->m_left->m_height
+                            : 0;
+                    newHeight = max(hLeft, hRight - 1);
+                }
+
+                if(toReturn != NULL) {
+                    toReturn->m_size = newSize;
+                    toReturn->m_height = newHeight;
+                }*/
+
                 // Free the memory
                 on->m_left = NULL;
                 on->m_right = NULL;
-                delete on;
+                if(doRemove)    {   delete on;  }
+
             }
+
 
             // This tells us that no Node was inserted.
             wasRemoved = true;
 
-
-
-            return toReturnIfDelete;
+            return toReturn;
 
         } else if(toRemove > on->m_key) {
 
             // Do the recurrsion.
-            result = removeAndRecurr(on->m_right, toRemove, wasRemoved);
+            result = removeAndRecurr(
+                    on->m_right, toRemove, wasRemoved, doRemove);
 
             if(wasRemoved) {
                 // Since we removed one, we should subtract the size.
                 on->m_size--;
                 // Correct the height of the subtree.
                 on->m_height = 
-                    max((result) ? result->m_height - 1 : -1, 
+                    max(((result) ? result->m_height - 1 : -1), 
                         (on->m_left) ? on->m_left->m_height : -1) + 1;
                 
                 on->m_right = result;
@@ -429,7 +526,8 @@ Node* LazyBST::removeAndRecurr(Node* &on, int toRemove, bool &wasRemoved) {
         } else if(toRemove < on->m_key) {
 
             // Do the recurrsion
-            result = removeAndRecurr(on->m_left, toRemove, wasRemoved);
+            result = removeAndRecurr(
+                    on->m_left, toRemove, wasRemoved, doRemove);
 
             if(wasRemoved) {
                 // Since we removed one, we should subtract the size.
@@ -570,6 +668,8 @@ int LazyBST::getMaxHeightBelow(Node* &on) {
 
     int hLeft = 0;
     int hRight = 0;
+
+    if(on == NULL)          {   return -1;  }
 
     // These are the NULL checks that make up the purpose of this helper
     // function.

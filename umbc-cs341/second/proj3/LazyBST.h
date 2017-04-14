@@ -74,9 +74,10 @@ public:
     bool remove(int key);
 
     bool find(int key);
+    
+    bool findR(int key, Node* on);
 
     void inorder();
-
 
     bool locate(const char *position, int& key);
 
@@ -98,21 +99,37 @@ private:
     // Takes:   
     // on:      a node pointing to the root of the subtree we're on.
     // key:     a key to add into the tree
-    // 
+    // doRemove:this is useful for when there's two children. It means we can
+    //          recurr without removing the target node so we don't need to
+    //          make a duplicate of the targeted node.
+    //
     // Returns: true if a node is inserted,
     //          false otherwise. 
-    Node* insertAndRecurr(Node* &on, int key);
+    Node* insertAndRecurr(
+            Node* &on, 
+            int key);
 
-    Node* removeAndRecurr(Node* &on, int key, bool &removed);
+    Node* removeAndRecurr(
+            Node* &on, 
+            int key, 
+            bool &removed, 
+            bool doRemove=true);
 
     Node* rebalanceAndRecurr(Node* &on);
 
-    Node* insertDuringRebalance(int lower, int upper, Node* arr[]); 
+    Node* insertDuringRebalance(
+            int lower, 
+            int upper, 
+            Node* arr[]); 
     
     std::string inorderRecurrsive(Node* &on);
     
-    bool recurrAndLocate(const char *position, int& key, Node* on);
+    bool recurrAndLocate(
+            const char *position, 
+            int& key, 
+            Node* on);
 
+    Node* copyConstruct(const Node* on);
 
     //////////////////////////////////////////////////////////////////
     // Some utility functions.                                      //
@@ -127,12 +144,17 @@ private:
     // arr:     the array with all the nodes in it
     // size:    the total size of the subtree.
     void flattenNodes(
-             Node* &on, int& index, Node* arr[], int size );
+             Node* &on, 
+             int& index, 
+             Node* arr[], 
+             int size );
     
     // This separates all the nodes in a flattened BST from their children.
     // This allows the rebalancing to take place more easily. It also sets 
     // all their heights to 0 and sizes to 1..
-    void unlinkAllFromChildren(Node* arr[], int size) ;
+    void unlinkAllFromChildren(
+            Node* arr[], 
+            int size) ;
 
     // This is a helper function that gets the maximum heights of the subtrees
     // below a certain node.
