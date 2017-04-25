@@ -20,9 +20,36 @@ bool maxCmp(const Item<T>& lhs, const Item<T>& rhs) {
 }
 
 
+// This helps with the dump() function.
+std::ostream& Item::operator<<(std::ostream& os, const Item<T>& item) {
+
+    os << "(";
+    os << item.m_data;
+    os << ",";
+    os << item.m_twin;
+    os << ")";
+
+    return os;
+
+}
+
+
+//////////////////////////////////////////////////////
+// Heap Class                                       //
+//////////////////////////////////////////////////////
 
 template <typename T>
-MinMaxHeap<T>::MinMaxHeap() {
+Heap<T>::Heap(int capacity, bool (*cmp)(const Item<T>& *, const Item<T>& *)):
+    m_capacity(capacity), {
+
+    m_heap = new Item<T>[capacity + ROOT_INDEX];
+    m_size = 0;
+
+}
+
+
+template <typename T>
+Heap<T>::Heap(const Heap<T>& other) {
 
 
 
@@ -30,147 +57,176 @@ MinMaxHeap<T>::MinMaxHeap() {
 
 
 template <typename T>
-MinMaxHeap<T>::MinMaxHeap(int capacity) {
+T* Heap<T>::deleteAt(int index) {
 
 
 
 }
+    
+
+template <typename T>
+int Heap<T>::insert(const T& data) {
+
+    if(m_size >= m_capacity) {
+        throw HeapOverflow("Heap::insert(): Heap already at capacity");
+    }
+
+
+}
+
+
+template <typename T>
+T* Heap<T>::pop() {
+
+    T* toReturn = m_heap[ROOT_INDEX];
+
+
+}
+
+
+template <typename T>
+T* Heap<T>::peek() {
+
+    return m_heap[ROOT_INDEX];
+
+}
+
+
+template <typename T>
+void Heap<T>::dump() {
+
+    cout << "size = " << m_size << ", capacity = " << m_capacity << endl;
+    
+    for(int i = ROOT_INDEX; i <= m_size; i++) {
+        cout << "Heap[" << i << "] = " << *m_heap[i] << endl;
+    }
+
+}
+
+
+template <typename T>
+void Heap<T>::swap(int a, int b) {
+
+    // Get the twins of a & b
+    int twin_a = m_heap[a]->m_twin;
+    int twin_b = m_heap[b]->m_twin;
+
+    // Tell their twins their new location.
+    m_other->m_heap[twin_a]->m_twin = b;
+    m_other->m_heap[twin_b]->m_twin = a;
+
+    // Swap them using the 0 index.
+    m_heap[0] = m_heap[a];
+    m_heap[a] = m_heap[b];
+    m_heap[b] = m_heap[0];
+
+    // This isn't neccessary, but I don't want to leave junk data lying
+    // around.
+    m_heap[0] = NULL;
+
+}
+
+
+
+//////////////////////////////////////////////////////
+// MinMaxHeap Class                                 //
+//////////////////////////////////////////////////////
+
+template <typename T>
+MinMaxHeap<T>::MinMaxHeap(int capacity): 
+    m_totSize(0), m_totCapacity(capacity) {
+
+    m_minHeap = new Heap(capacity, &minCmp);
+    m_maxHeap = new Heap(capacity, &maxCmp);
+
+}
+
 
 
 template <typename T>
 MinMaxHeap<T>::MinMaxHeap(const MinMaxHeap<T>& other) {
 
 
-
 }
+
 
 
 template <typename T>
 MinMaxHeap<T>::~MinMaxHeap() {
 
 
-
 }
+
 
 
 template <typename T>
 const MinMaxHeap<T>& MinMaxHeap<T>::operator=(const MinMaxHeap<T>& rhs) {
 
 
-
 }
 
-
-template <typename T>
-int MinMaxHeap<T>::size() {
-
-
-
-}
 
 
 template <typename T>
 void MinMaxHeap<T>::insert(const T& data) {
 
+    if(m_size >= m_capacity) {
+        throw HeapOverflow("MinMaxHeap::insert(): Heap already at capacity");
+    }
 
 
 }
+
 
 
 template <typename T>
 T MinMaxHeap<T>::deleteMin() {
 
 
-
 }
+
 
 
 template <typename T>
 T MinMaxHeap<T>::deleteMax() {
 
 
-
 }
+
 
 
 template <typename T>
 void MinMaxHeap<T>::dump() {
 
-
-
+    cout << "... MinMaxHeap::dump() ..." << endl;
+    cout << endl;
+    
+    cout << "------------Min Heap------------" << endl;
+    m_minHeap->dump(); 
+    cout << endl;
+    
+    cout << "------------Max Heap------------" << endl;
+    m_maxHeap->dump();    
+    cout << "--------------------------------" << endl;
+    
 }
-
 
 
 template <typename T>
 void MinMaxHeap<T>::locateMin(int pos, T& data, int& index) {
-
-
+    
+    data = minHeap[pos]->m_data;
+    index = minHeap[pos]->m_twin;
 
 }
 
 
-template <typename T>
 void MinMaxHeap<T>::locateMax(int pos, T& data, int& index) {
 
-
-
-}
-
-
-template <typename T, int m_size>
-Heap::Heap(const Heap<T>& other) {
-
-
+    data = maxHeap[pos]->m_data;
+    index = maxHeap[pos]->m_twin;
 
 }
 
-
-template <typename T, int m_size>
-void Heap::deleteAt(int index) {
-
-
-}
-
-
-// Returns int to tell us where in the heap it ended up.
-template <typename T, int m_size>
-int Heap::insert(const T& data) {
-
-
-}
-
-
-template <typename T, int m_size>
-T* Heap::pop() {
-
-
-
-}
-
-
-template <typename T, int m_size>
-T* Heap::peek() {
-
-
-
-}
-
-
-template <typename T, int m_size>
-void Heap::dump() {
-
-
-
-}
-
-
-
-template <typename T, int m_size>
-void Heap::swap(int a, int b) {
-
-
-
-}
 
 #endif
