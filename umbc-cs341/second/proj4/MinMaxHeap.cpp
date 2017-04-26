@@ -5,7 +5,7 @@
 
 
 template <typename T> 
-bool minCmp(const Item<T>& lhs, const Item<T>& rhs) {
+bool minCmp(const std::pair<T*,int>& lhs, const std::pair<T*,int>& rhs) {
 
    return lhs.data <= rhs.data; 
 
@@ -13,7 +13,7 @@ bool minCmp(const Item<T>& lhs, const Item<T>& rhs) {
     
 
 template <typename T> 
-bool maxCmp(const Item<T>& lhs, const Item<T>& rhs) {
+bool maxCmp(const std::pair<T*,int>& lhs, const std::pair<T*,int>& rhs) {
 
     return lhs.data >= rhs.data;
 
@@ -21,7 +21,7 @@ bool maxCmp(const Item<T>& lhs, const Item<T>& rhs) {
 
 
 // This helps with the dump() function.
-std::ostream& Item::operator<<(std::ostream& os, const Item<T>& item) {
+std::ostream& Item::operator<<(std::ostream& os, const std::pair<T*,int>& item) {
 
     os << "(";
     os << item.m_data;
@@ -39,10 +39,10 @@ std::ostream& Item::operator<<(std::ostream& os, const Item<T>& item) {
 //////////////////////////////////////////////////////
 
 template <typename T>
-Heap<T>::Heap(int capacity, bool (*cmp)(const Item<T>& *, const Item<T>& *)):
-    m_capacity(capacity), {
+Heap<T>::Heap(int capacity, bool (*cmp)(const std::pair<T*,int>& *, const std::pair<T*,int>& *)):
+    m_capacity(capacity), m_cmp(cmp) {
 
-    m_heap = new Item<T>[capacity + ROOT_INDEX];
+    m_heap = new std::pair<T*,int>[capacity + ROOT_INDEX];
     m_size = 0;
 
 }

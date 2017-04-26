@@ -17,16 +17,18 @@
 #include <iostream>
 #include <string>
 #include <stdexcept>
+#include <utility>
 
+using namespace std;
 
 template <typename T> class MinMaxHeap;
 template <typename T> class Heap;
 
 template <typename T> 
-bool minCmp(const Item<T>& lhs, const Item<T>& rhs);
+bool minCmp(const std::pair<T*,int>& lhs, const std::pair<T*,int>& rhs);
     
 template <typename T> 
-bool maxCmp(const Item<T>& lhs, const Item<T>& rhs);
+bool maxCmp(const std::pair<T*,int>& lhs, const std::pair<T*,int>& rhs);
 
 
 
@@ -40,33 +42,17 @@ class HeapOverflow : public std::overflow_error {
 
 
 template <typename T>
-class Item {
-public:
-    Item(T* data=NULL): m_data(data), m_twin(-1) {}
-
-    std::ostream& operator<<(std::ostream& os, const Item<T>& item);
-
-    // Originally I was going to make these private and use friend classes and
-    // functions, but I realized that might be two obvious to reference the
-    // comparison functions.
-    T* m_data;
-    int m_twin;
-};
-
-
-
-template <typename T>
 class Heap {
 public:
     
-    Heap(int capacity, bool (*cmp)(const Item<T>& *, const Item<T>& *));
+    Heap(int capacity, bool (*cmp)(const std::pair<T*,int>& *, const std::pair<T*,int>& *));
     Heap(const Heap<T>& other);
 
     ~Heap();
 
     // The subscript operator to get things out of the heap nicely. Defined
     // in header file because it's very simple.
-    Item<T>* operator[](int index)  {   return m_heap[index];   }
+    std::pair<T*,int>& operator[](int index)  {   return *(m_heap[index]);    }
 
     T* deleteAt(int index);
     
@@ -86,12 +72,12 @@ public:
 private:
     
     Heap<T>* m_other;
-    Item<T>* m_heap[];
+    std::pair<T*,int>* m_heap[];
 
     int m_size;
     int m_capacity;
 
-    bool (*m_cmp)(const Item<T>& *, const Item<T>& *);
+    bool (*m_cmp)(const std::pair<T*,int>& *, const std::pair<T*,int>& *);
 
     void swap(int a, int b);
 
