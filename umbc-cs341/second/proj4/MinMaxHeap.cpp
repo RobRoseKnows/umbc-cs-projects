@@ -2,10 +2,12 @@
 #define _MINMAXHEAP_CPP_
 
 #include "MinMaxHeap.h"
+#include <sstream>
 
+using namespace std;
 
 template <typename T> 
-bool minCmp(const std::pair<T*,int>& lhs, const std::pair<T*,int>& rhs) {
+bool minCmp(const Item<T>& lhs, const Item<T>& rhs) {
 
    return lhs.data <= rhs.data; 
 
@@ -13,7 +15,7 @@ bool minCmp(const std::pair<T*,int>& lhs, const std::pair<T*,int>& rhs) {
     
 
 template <typename T> 
-bool maxCmp(const std::pair<T*,int>& lhs, const std::pair<T*,int>& rhs) {
+bool maxCmp(const Item<T>& lhs, const Item<T>& rhs) {
 
     return lhs.data >= rhs.data;
 
@@ -21,15 +23,18 @@ bool maxCmp(const std::pair<T*,int>& lhs, const std::pair<T*,int>& rhs) {
 
 
 // This helps with the dump() function.
-std::ostream& Item::operator<<(std::ostream& os, const std::pair<T*,int>& item) {
+template<typename T>
+string Item<T>::print() {
 
-    os << "(";
-    os << item.m_data;
-    os << ",";
-    os << item.m_twin;
-    os << ")";
+    stringstream ss;
 
-    return os;
+    ss << "(";
+    ss << this.m_data;
+    ss << ",";
+    ss << this.m_twin;
+    ss << ")";
+
+    return ss.str();
 
 }
 
@@ -39,11 +44,10 @@ std::ostream& Item::operator<<(std::ostream& os, const std::pair<T*,int>& item) 
 //////////////////////////////////////////////////////
 
 template <typename T>
-Heap<T>::Heap(int capacity, bool (*cmp)(const std::pair<T*,int>& *, const std::pair<T*,int>& *)):
-    m_capacity(capacity), m_cmp(cmp) {
-
-    m_heap = new std::pair<T*,int>[capacity + ROOT_INDEX];
-    m_size = 0;
+Heap<T>::Heap(int capacity, bool (*cmp)(const Item<T>&, const Item<T>&)):
+    m_capacity(capacity), m_cmp(cmp), m_size(0) {
+    
+    m_array = new Item<T>[capacity + ROOT_INDEX];
 
 }
 
@@ -71,14 +75,65 @@ int Heap<T>::insert(const T& data) {
         throw HeapOverflow("Heap::insert(): Heap already at capacity");
     }
 
+    
 
 }
 
 
 template <typename T>
+void Heap<T>::bubbleUp(int index, Item<T>* obj) {
+
+    for( ; 
+            index > 1 && 
+            (*m_cmp)(obj, m_array[parent]); 
+            index /= 2) {
+        
+        swap(index, index / 2);
+
+    }
+
+}
+
+
+
+template <typename T>
+void Heap<T>::trickleDown(int index, Item<T>* obj) {
+
+
+    int child = index * 2;
+
+    for( ; 
+            child < m_size;
+            index = child, 
+            child *= 2) {
+
+        if(child < m_size && (*m_cmp)(m_array[child+1], m_array[child])) {
+            child++;
+        }
+
+        if((*m_cmp)(m_array[child], tmp)) {
+            swap(index, child);
+        } else {
+            break;
+        }
+
+    }    
+
+
+}
+
+
+
+template <typename T>
 T* Heap<T>::pop() {
 
-    T* toReturn = m_heap[ROOT_INDEX];
+    T* toReturn = m_array[ROOT_INDEX]->m_data;
+    int twIndex = m_array[ROOT_INDEX]->m_twin;
+
+    // Get rid of the one at the top
+    delete m_array[ROOT_INDEX];
+    m_array[ROOT_INDEX] = NULL;
+    swap(ROOT_INDEX, m_size);
 
 
 }
@@ -87,7 +142,7 @@ T* Heap<T>::pop() {
 template <typename T>
 T* Heap<T>::peek() {
 
-    return m_heap[ROOT_INDEX];
+    return m_array[ROOT_INDEX]->m_data;
 
 }
 
@@ -98,7 +153,7 @@ void Heap<T>::dump() {
     cout << "size = " << m_size << ", capacity = " << m_capacity << endl;
     
     for(int i = ROOT_INDEX; i <= m_size; i++) {
-        cout << "Heap[" << i << "] = " << *m_heap[i] << endl;
+        cout << "Heap[" << i << "] = " << m_array[i].print() << endl;
     }
 
 }
@@ -107,22 +162,24 @@ void Heap<T>::dump() {
 template <typename T>
 void Heap<T>::swap(int a, int b) {
 
+    if(a == b) return;
+
     // Get the twins of a & b
-    int twin_a = m_heap[a]->m_twin;
-    int twin_b = m_heap[b]->m_twin;
+    int twin_a = m_array[a]->m_twin;
+    int twin_b = m_array[b]->m_twin;
 
     // Tell their twins their new location.
-    m_other->m_heap[twin_a]->m_twin = b;
-    m_other->m_heap[twin_b]->m_twin = a;
+    if(twin_a >= 0)     m_other->m_array[twin_a]->m_twin = b;
+    if(twin_b >= 0)     m_other->m_array[twin_b]->m_twin = a;
 
     // Swap them using the 0 index.
-    m_heap[0] = m_heap[a];
-    m_heap[a] = m_heap[b];
-    m_heap[b] = m_heap[0];
+    m_array[0] = m_array[a];
+    m_array[a] = m_array[b];
+    m_array[b] = m_array[0];
 
     // This isn't neccessary, but I don't want to leave junk data lying
     // around.
-    m_heap[0] = NULL;
+    m_array[0] = NULL;
 
 }
 
@@ -136,8 +193,8 @@ template <typename T>
 MinMaxHeap<T>::MinMaxHeap(int capacity): 
     m_totSize(0), m_totCapacity(capacity) {
 
-    m_minHeap = new Heap(capacity, &minCmp);
-    m_maxHeap = new Heap(capacity, &maxCmp);
+    m_minHeap = new Heap<T>(capacity, &minCmp);
+    m_maxHeap = new Heap<T>(capacity, &maxCmp);
 
 }
 
@@ -170,10 +227,11 @@ const MinMaxHeap<T>& MinMaxHeap<T>::operator=(const MinMaxHeap<T>& rhs) {
 template <typename T>
 void MinMaxHeap<T>::insert(const T& data) {
 
-    if(m_size >= m_capacity) {
+    if(m_totSize >= m_totCapacity) {
         throw HeapOverflow("MinMaxHeap::insert(): Heap already at capacity");
     }
 
+    
 
 }
 
@@ -215,16 +273,12 @@ void MinMaxHeap<T>::dump() {
 template <typename T>
 void MinMaxHeap<T>::locateMin(int pos, T& data, int& index) {
     
-    data = minHeap[pos]->m_data;
-    index = minHeap[pos]->m_twin;
 
 }
 
-
+template<typename T>
 void MinMaxHeap<T>::locateMax(int pos, T& data, int& index) {
 
-    data = maxHeap[pos]->m_data;
-    index = maxHeap[pos]->m_twin;
 
 }
 

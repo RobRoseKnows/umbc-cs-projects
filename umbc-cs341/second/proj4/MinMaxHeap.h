@@ -23,20 +23,34 @@ using namespace std;
 
 template <typename T> class MinMaxHeap;
 template <typename T> class Heap;
+template <typename T> class Item;
 
 template <typename T> 
-bool minCmp(const std::pair<T*,int>& lhs, const std::pair<T*,int>& rhs);
+bool minCmp(const Item<T>& lhs, const Item<T>& rhs);
     
 template <typename T> 
-bool maxCmp(const std::pair<T*,int>& lhs, const std::pair<T*,int>& rhs);
+bool maxCmp(const Item<T>& lhs, const Item<T>& rhs);
 
 
 
 // I built a Heap class last semester for 341. I made sure to directly copy
 // but there are a few things (like this overflow error) that carried over. 
-class HeapOverflow : public std::overflow_error {
+class HeapOverflow : public overflow_error {
     public:
-        HeapOverflow(const std::string& what) : std::overflow_error(what) {}
+        HeapOverflow(const string& what) : overflow_error(what) {}
+};
+
+
+template <typename T>
+class Item {
+public:
+    Item(T* data)           : m_data(data), m_twin(-1) {}
+    Item(T* data, int twin) : m_data(data), m_twin(twin) {}
+
+    string print();
+
+    T* m_data;
+    int m_twin;
 };
 
 
@@ -45,14 +59,14 @@ template <typename T>
 class Heap {
 public:
     
-    Heap(int capacity, bool (*cmp)(const std::pair<T*,int>& *, const std::pair<T*,int>& *));
+    Heap(int capacity, bool (*cmp)(const Item<T>&, const Item<T>&));
     Heap(const Heap<T>& other);
 
     ~Heap();
 
-    // The subscript operator to get things out of the heap nicely. Defined
-    // in header file because it's very simple.
-    std::pair<T*,int>& operator[](int index)  {   return *(m_heap[index]);    }
+    T* getDataAt(int index)             {   return m_array[index]->m_data;   }
+    T* getTwinAt(int index)             {   return m_array[index]->m_twin;   }
+
 
     T* deleteAt(int index);
     
@@ -72,12 +86,18 @@ public:
 private:
     
     Heap<T>* m_other;
-    std::pair<T*,int>* m_heap[];
+    Item<T>* m_array[];
+    bool (*m_cmp)(const Item<T>&, const Item<T>&);
 
     int m_size;
     int m_capacity;
 
-    bool (*m_cmp)(const std::pair<T*,int>& *, const std::pair<T*,int>& *);
+    int getLeftChildIndex(int i) const  {   return i * 2;       }
+    int getRightChildIntex(int i) const {   return i * 2 + 1;   }
+    int getParentIndex(int i) const     {   return i / 2;       } 
+
+    void bubbleUp(int from, Item<T>* obj);
+    void trickleDown(int from, Item<T>* obj);
 
     void swap(int a, int b);
 
