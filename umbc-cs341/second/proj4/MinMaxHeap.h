@@ -26,10 +26,10 @@ template <typename T> class Heap;
 template <typename T> class Item;
 
 template <typename T> 
-bool minCmp(const Item<T>& lhs, const Item<T>& rhs);
+bool minCmp(const Item<T>* lhs, const Item<T>* rhs);
     
 template <typename T> 
-bool maxCmp(const Item<T>& lhs, const Item<T>& rhs);
+bool maxCmp(const Item<T>* lhs, const Item<T>* rhs);
 
 
 
@@ -41,15 +41,20 @@ class HeapOverflow : public overflow_error {
 };
 
 
+class HeapUnderflow : public underflow_error {
+    public:
+        HeapUnderflow(const string& what) : underflow_error(what) {}
+};
+
+
 template <typename T>
 class Item {
 public:
-    Item(T* data)           : m_data(data), m_twin(-1) {}
-    Item(T* data, int twin) : m_data(data), m_twin(twin) {}
+    Item(T data = NULL, int twin = -1) : m_data(data), m_twin(twin) {}
 
     string print();
 
-    T* m_data;
+    T m_data;
     int m_twin;
 };
 
@@ -59,35 +64,38 @@ template <typename T>
 class Heap {
 public:
     
-    Heap(int capacity, bool (*cmp)(const Item<T>&, const Item<T>&));
+    Heap(int capacity, bool (*cmp)(const Item<T>*, const Item<T>*));
     Heap(const Heap<T>& other);
 
     ~Heap();
 
-    T* getDataAt(int index)             {   return m_array[index]->m_data;   }
-    T* getTwinAt(int index)             {   return m_array[index]->m_twin;   }
+    T getDataAt(int index)      {   return m_array[index]->m_data;   }
+    int getTwinAt(int index)    {   return m_array[index]->m_twin;   }
 
+    Item<T>* getItemAt(int index)       {   return m_array[index];  }
 
-    T* deleteAt(int index);
+    pair<T, int> deleteAt(int index);
     
     // Returns int to tell us where in the heap it ended up.
-    int insert(const T& data);
+    int insert(const T& data, int twin=-1);
 
-    T* pop();
-    T* peek();
+    pair<T, int> pop();
+    Item<T> peek();
 
     void dump();
-    void setOther(const Heap<T>& other)   {   m_other = other;    }
+    void setOther(Heap<T>* other)   {   m_other = other;    }
 
     // Two simple functions that I can define in the header file.
     int size()      {   return m_size;      }
     int capacity()  {   return m_capacity;  }
 
+    int setTwinAt(int at, int twin)     {   m_array[at]->m_twin = twin; }
+
 private:
     
     Heap<T>* m_other;
-    Item<T>* m_array[];
-    bool (*m_cmp)(const Item<T>&, const Item<T>&);
+    Item<T>** m_array;
+    bool (*m_cmp)(const Item<T>*, const Item<T>*);
 
     int m_size;
     int m_capacity;
@@ -96,8 +104,8 @@ private:
     int getRightChildIntex(int i) const {   return i * 2 + 1;   }
     int getParentIndex(int i) const     {   return i / 2;       } 
 
-    void bubbleUp(int from, Item<T>* obj);
-    void trickleDown(int from, Item<T>* obj);
+    int bubbleUp(int from);
+    int trickleDown(int from);
 
     void swap(int a, int b);
 

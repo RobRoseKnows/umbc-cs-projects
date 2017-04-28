@@ -7,17 +7,17 @@
 using namespace std;
 
 template <typename T> 
-bool minCmp(const Item<T>& lhs, const Item<T>& rhs) {
+bool minCmp(const Item<T>* lhs, const Item<T>* rhs) {
 
-   return lhs.data <= rhs.data; 
+   return lhs->m_data <= rhs->m_data; 
 
 }
     
 
 template <typename T> 
-bool maxCmp(const Item<T>& lhs, const Item<T>& rhs) {
+bool maxCmp(const Item<T>* lhs, const Item<T>* rhs) {
 
-    return lhs.data >= rhs.data;
+    return lhs->m_data >= rhs->m_data;
 
 }
 
@@ -29,9 +29,9 @@ string Item<T>::print() {
     stringstream ss;
 
     ss << "(";
-    ss << this.m_data;
+    ss << this->m_data;
     ss << ",";
-    ss << this.m_twin;
+    ss << this->m_twin;
     ss << ")";
 
     return ss.str();
@@ -44,10 +44,10 @@ string Item<T>::print() {
 //////////////////////////////////////////////////////
 
 template <typename T>
-Heap<T>::Heap(int capacity, bool (*cmp)(const Item<T>&, const Item<T>&)):
+Heap<T>::Heap(int capacity, bool (*cmp)(const Item<T>*, const Item<T>*)):
     m_capacity(capacity), m_cmp(cmp), m_size(0) {
     
-    m_array = new Item<T>[capacity + ROOT_INDEX];
+    m_array = new Item<T>*[capacity + ROOT_INDEX];
 
 }
 
@@ -55,55 +55,114 @@ Heap<T>::Heap(int capacity, bool (*cmp)(const Item<T>&, const Item<T>&)):
 template <typename T>
 Heap<T>::Heap(const Heap<T>& other) {
 
+    m_capacity = other.m_capacity;
+    m_cmp = other.m_cmp;
+    m_size = other.m_size;
 
+    m_array = new Item<T>[other.m_capacity + ROOT_INDEX];
+
+    for(int i = ROOT_INDEX; i <= m_size; i++) {
+        m_array[i] = other.m_array[i];
+    }
 
 }
 
 
 template <typename T>
-T* Heap<T>::deleteAt(int index) {
+Heap<T>::~Heap() {
+
+    for(int i = 0; i <= m_capacity; i++) {
+
+        delete m_array[i];
+        m_array[i] = NULL;
+
+    }
+
+    delete [] m_array;
+
+    m_other = NULL;
+
+}
 
 
+template <typename T>
+pair<T, int> Heap<T>::deleteAt(int index) {
+
+    if(m_size <= 0) {
+        throw HeapUnderflow("No nodes left to remove!");
+    }
+
+    if(index > m_size) {
+        throw HeapUnderflow("No node exists at index!" );
+    }
+
+    T retData = m_array[index]->m_data;
+    int twIndex = m_array[index]->m_twin;
+    pair<T, int> toReturn = pair<T, int>(retData, twIndex); 
+
+    swap(index, m_size);
+    
+    // Get rid of the one at the top
+    delete m_array[m_size];
+    m_array[m_size] = NULL;
+
+    m_size--;
+
+    trickleDown(index);
+
+    return toReturn;
 
 }
     
 
 template <typename T>
-int Heap<T>::insert(const T& data) {
+int Heap<T>::insert(const T& data, int twin) {
 
-    if(m_size >= m_capacity) {
+    if(m_size + 1 > m_capacity) {
         throw HeapOverflow("Heap::insert(): Heap already at capacity");
     }
-
     
+    m_size++;
+    m_array[m_size] = new Item<T>(data, twin);
+
+    return bubbleUp(m_size);
 
 }
 
 
 template <typename T>
-void Heap<T>::bubbleUp(int index, Item<T>* obj) {
+int Heap<T>::bubbleUp(int index) {
+
+    int parent = index / 2;
+    Item<T>* temp = m_array[index];
 
     for( ; 
-            index > 1 && 
-            (*m_cmp)(obj, m_array[parent]); 
-            index /= 2) {
+            index >= 1 && 
+            (*m_cmp)(temp, m_array[parent]); 
+            index = parent) {
         
-        swap(index, index / 2);
+        parent = index / 2;
+        swap(index, parent);
 
     }
 
+    m_array[index] = temp;
+
+    return index;
+
 }
 
 
 
 template <typename T>
-void Heap<T>::trickleDown(int index, Item<T>* obj) {
+int Heap<T>::trickleDown(int index) {
 
-
+    // Get left child
     int child = index * 2;
+    Item<T>* tmp = m_array[index];
 
     for( ; 
-            child < m_size;
+            child <= m_size;
             index = child, 
             child *= 2) {
 
@@ -117,32 +176,46 @@ void Heap<T>::trickleDown(int index, Item<T>* obj) {
             break;
         }
 
-    }    
+    }
 
+    m_array[index] = tmp;
+
+    return index;
 
 }
 
 
 
 template <typename T>
-T* Heap<T>::pop() {
+pair<T, int> Heap<T>::pop() {
 
-    T* toReturn = m_array[ROOT_INDEX]->m_data;
+    if(m_size <= 0) {
+        throw HeapUnderflow("No nodes left to remove!");
+    }
+
+    T retData = m_array[ROOT_INDEX]->m_data;
     int twIndex = m_array[ROOT_INDEX]->m_twin;
+    pair<T, int> toReturn = pair<T, int>(retData, twIndex); 
 
-    // Get rid of the one at the top
-    delete m_array[ROOT_INDEX];
-    m_array[ROOT_INDEX] = NULL;
     swap(ROOT_INDEX, m_size);
+    
+    // Get rid of the one at the top
+    delete m_array[m_size];
+    m_array[m_size] = NULL;
 
+    m_size--;
+
+    trickleDown(ROOT_INDEX);
+
+    return toReturn;
 
 }
 
 
 template <typename T>
-T* Heap<T>::peek() {
+Item<T> Heap<T>::peek() {
 
-    return m_array[ROOT_INDEX]->m_data;
+    return *m_array[ROOT_INDEX];
 
 }
 
@@ -153,7 +226,7 @@ void Heap<T>::dump() {
     cout << "size = " << m_size << ", capacity = " << m_capacity << endl;
     
     for(int i = ROOT_INDEX; i <= m_size; i++) {
-        cout << "Heap[" << i << "] = " << m_array[i].print() << endl;
+        cout << "Heap[" << i << "] = " << m_array[i]->print() << endl;
     }
 
 }
@@ -193,8 +266,11 @@ template <typename T>
 MinMaxHeap<T>::MinMaxHeap(int capacity): 
     m_totSize(0), m_totCapacity(capacity) {
 
-    m_minHeap = new Heap<T>(capacity, &minCmp);
-    m_maxHeap = new Heap<T>(capacity, &maxCmp);
+    m_minHeap = new Heap<T>(capacity, minCmp);
+    m_maxHeap = new Heap<T>(capacity, maxCmp);
+
+    m_minHeap->setOther(m_maxHeap);
+    m_maxHeap->setOther(m_minHeap);
 
 }
 
@@ -203,6 +279,14 @@ MinMaxHeap<T>::MinMaxHeap(int capacity):
 template <typename T>
 MinMaxHeap<T>::MinMaxHeap(const MinMaxHeap<T>& other) {
 
+    m_totSize = other.m_totSize;
+    m_totCapacity = other.m_totCapacity;
+
+    m_minHeap = new Heap<T>(other.m_minHeap);
+    m_maxHeap = new Heap<T>(other.m_maxHeap);
+
+    m_minHeap->setOther(m_maxHeap);
+    m_maxHeap->setOther(m_minHeap);
 
 }
 
@@ -211,6 +295,8 @@ MinMaxHeap<T>::MinMaxHeap(const MinMaxHeap<T>& other) {
 template <typename T>
 MinMaxHeap<T>::~MinMaxHeap() {
 
+    delete m_minHeap;
+    delete m_maxHeap;
 
 }
 
@@ -231,6 +317,10 @@ void MinMaxHeap<T>::insert(const T& data) {
         throw HeapOverflow("MinMaxHeap::insert(): Heap already at capacity");
     }
 
+    int locInMin = m_minHeap->insert(data);
+    int locInMax = m_maxHeap->insert(data, locInMin);
+
+    m_minHeap->setTwinAt(locInMin, locInMax);
     
 
 }
@@ -240,6 +330,15 @@ void MinMaxHeap<T>::insert(const T& data) {
 template <typename T>
 T MinMaxHeap<T>::deleteMin() {
 
+    if(m_totSize <= 0) {
+        throw HeapUnderflow("In deleteMin: Heap has no items left.");
+    }
+
+    pair<T, int> minDeleteResult = m_minHeap->pop();
+
+    m_maxHeap->deleteAt(minDeleteResult.second);
+
+    return minDeleteResult.first;
 
 }
 
@@ -248,6 +347,15 @@ T MinMaxHeap<T>::deleteMin() {
 template <typename T>
 T MinMaxHeap<T>::deleteMax() {
 
+    if(m_totSize <= 0) {
+        throw HeapUnderflow("In deleteMin: Heap has no items left.");
+    }
+
+    pair<T, int> maxDeleteResult = m_maxHeap->pop();
+
+    m_minHeap->deleteAt(maxDeleteResult.second);
+
+    return maxDeleteResult.first;
 
 }
 
@@ -272,13 +380,19 @@ void MinMaxHeap<T>::dump() {
 
 template <typename T>
 void MinMaxHeap<T>::locateMin(int pos, T& data, int& index) {
-    
+
+    Item<T>* item = m_minHeap->getItemAt(pos);
+    data = item->m_data;
+    index = item->m_twin;
 
 }
 
 template<typename T>
 void MinMaxHeap<T>::locateMax(int pos, T& data, int& index) {
 
+    Item<T>* item = m_maxHeap->getItemAt(pos);
+    data = item->m_data;
+    index = item->m_twin;
 
 }
 
