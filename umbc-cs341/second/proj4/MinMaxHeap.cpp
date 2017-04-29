@@ -9,6 +9,10 @@ using namespace std;
 template <typename T> 
 bool minCmp(const Item<T>* lhs, const Item<T>* rhs) {
 
+    if(lhs == NULL || rhs == NULL) {
+        return false;
+    }
+
    return lhs->m_data <= rhs->m_data; 
 
 }
@@ -16,6 +20,10 @@ bool minCmp(const Item<T>* lhs, const Item<T>* rhs) {
 
 template <typename T> 
 bool maxCmp(const Item<T>* lhs, const Item<T>* rhs) {
+
+    if(lhs == NULL || rhs == NULL) {
+        return false;
+    }
 
     return lhs->m_data >= rhs->m_data;
 
@@ -163,8 +171,9 @@ int Heap<T>::trickleDown(int index) {
 
     for( ; 
             child <= m_size;
-            index = child, 
-            child *= 2) {
+            index = child) {
+
+        child = index * 2;
 
         if(child < m_size && (*m_cmp)(m_array[child+1], m_array[child])) {
             child++;
@@ -237,9 +246,12 @@ void Heap<T>::swap(int a, int b) {
 
     if(a == b) return;
 
+    int twin_a = -1;
+    int twin_b = -1;
+
     // Get the twins of a & b
-    int twin_a = m_array[a]->m_twin;
-    int twin_b = m_array[b]->m_twin;
+    if(m_array[a] != NULL) twin_a = m_array[a]->m_twin;
+    if(m_array[b] != NULL) twin_b = m_array[b]->m_twin;
 
     // Tell their twins their new location.
     if(twin_a >= 0)     m_other->m_array[twin_a]->m_twin = b;

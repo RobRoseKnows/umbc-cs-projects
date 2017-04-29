@@ -89,7 +89,7 @@ public:
     int size()      {   return m_size;      }
     int capacity()  {   return m_capacity;  }
 
-    int setTwinAt(int at, int twin)     {   m_array[at]->m_twin = twin; }
+    void setTwinAt(int at, int twin)    {   m_array[at]->m_twin = twin; }
 
 private:
     

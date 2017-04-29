@@ -6,18 +6,18 @@
 
 CXX = g++
 DEBUG = -g
-FLAGS = -std=c++98 $(DEBUG)
+CPPFLAGS = -Wall -ansi -std=c++98 $(DEBUG)
 PRIM_OBJS = MinMaxHeap.o Driver.o
 TEST3_OBJS = MinMaxHeap.o test3.o NoCopyString.o
 
 all: $(PRIM_OBJS)
-	$(CXX) $(FLAGS) $(PRIM_OBJS) -o a.out
+	$(CXX) $(CPPFLAGS) $(PRIM_OBJS) -o a.out
 
 test3.out: $(TEST3_OBJS)
-	$(CXX) $(FLAGS) $^ -o $@
+	$(CXX) $(CPPFLAGS) $^ -o $@
 
 test%.out: MinMaxHeap.o test%.o 
-	$(CXX) $(FLAGS) $^ -o $@
+	$(CXX) $(CPPFLAGS) $^ -o $@
 
 val: all
 	valgrind --leak-check=full ./a.out
