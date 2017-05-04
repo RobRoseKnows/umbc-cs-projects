@@ -40,24 +40,12 @@ typedef struct {
 } Fish;
 
 
-int Animal_eat(void *this, char *arg);
 
-int Animal_speak(void *this, char *arg);
+Animal *new_Animal(void);
 
-int Animal_display(void *this, char *arg);
+Lion *new_Lion(void);
 
+Fish *new_Fish(void);
 
-int Lion_eat(void *this, char *arg);
-
-int Lion_speak(void *this, char *arg);
-
-int Lion_display(void *this, char *arg);
-
-
-int Fish_eat(void *this, char *arg);
-
-int Fish_speak(void *this, char *arg);
-
-int Fish_display(void *this, char *arg);
 
 int invoke(Animal *this, int method_slot, char *arg);
