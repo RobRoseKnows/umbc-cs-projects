@@ -7,12 +7,12 @@
 CXX = g++
 DEBUG = -g
 CPPFLAGS = -Wall -ansi -std=c++98 $(DEBUG)
-PRIM_OBJS = MinMaxHeap.o Driver.o
+PRIM_OBJS = HashTable.o Driver.o
 
 all: $(PRIM_OBJS)
 	$(CXX) $(CPPFLAGS) $(PRIM_OBJS) -o a.out
 
-test%.out: MinMaxHeap.o test%.o 
+test%.out: HashTable.o test%.o 
 	$(CXX) $(CPPFLAGS) $^ -o $@
 
 val: all

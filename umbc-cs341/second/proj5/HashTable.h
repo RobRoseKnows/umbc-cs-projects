@@ -16,9 +16,13 @@
 #include <stdio.h>
 #include <cstring>
 
-class TableOutOfRange : public out_of_range {
+// The bounds for the hash table sizes.
+#define UPPER_BOUND 199999
+#define LOWER_BOUND 101
+
+class TableTooLarge : public out_of_range {
     public:
-        TableOutOfRange(const string& what) : out_of_range(what) {}
+        TableTooLarge(const string& what) : out_of_range(what) {}
 };
 
 
@@ -57,6 +61,8 @@ class HashTable {
 
     // Finds the closest prime greater than or equal to the provided num. 
     const int findPrime(int num);
+
+    void freeTable(char** table, int size);
 
 //////////////////////////////////////////////////////
 // Grading Methods                                  //
@@ -99,6 +105,7 @@ class HashTable {
     char ** H0;
     // ReHash
     char ** H1;
+    
     // Hash and ReHash were on a boat, hash fell off, who was left?
 
     // If the rehash fails, give up and move everything to a new table.

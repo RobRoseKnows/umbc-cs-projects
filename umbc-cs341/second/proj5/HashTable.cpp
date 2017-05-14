@@ -9,6 +9,7 @@
  */
 
 #include "HashTable.h"
+#include "primes.h"
 
 char * const HashTable::DELETED = (char *) 1;
 
@@ -16,9 +17,15 @@ char * const HashTable::DELETED = (char *) 1;
 // Structors/Operators                              //
 //////////////////////////////////////////////////////
 
-HashTable::HashTable(int n) {
+HashTable::HashTable(int n): 
+    m_H0Capacity(n), m_H1Capacity(-1), m_H2Capacity(-1),
+    m_H0Size(0), m_H1Size(-1), m_H2Size(-1),
+    m_H0LoadFactor(0), m_H1LoadFactor(-1),
+    m_isRehashing(false) {
 
-
+    H0 = new char*[n];
+    H1 = NULL;
+    H2 = NULL;
 
 }
 
@@ -26,7 +33,13 @@ HashTable::HashTable(int n) {
 
 HashTable::~HashTable() {
 
+    for(int i = 0; i < m_H0Capacity; i++)   free(H0[i]);
+    for(int i = 0; i < m_H1Capacity; i++)   free(H1[i]);
+    for(int i = 0; i < m_H2Capacity; i++)   free(H2[i]);
 
+    delete [] H0;
+    delete [] H1;
+    delete [] H2;
 
 }
 
@@ -84,21 +97,64 @@ char * remove(const char *str) {
 
 
 
+// Finds a new capacity for the rehash table.
 int findNewCapacity(unsigned int currSize) {
 
+    int newSize = currSize * 4;
+    
+    if(newSize <= LOWER_BOUND) {
+        newSize = 101;
+    } else if(newSize > UPPER_BOUND) {
+        throw TableTooLarge("New table would require > 199,999 items."); 
+    } else {
+        newSize = findPrime(newSize);
+    }
 
+    return newSize;
 
 }
 
 
 
-// Finds the closest prime greater than or equal to the provided num. 
+// Finds a prime number close to the new desired size. 
 const int findPrime(int num) {
 
+    int L = 0;
+    int R = numPrimes - 1;
 
+    int primeToReturn = 101;
+
+    while(L <= R) {
+
+        int M = L + (R - L) / 2;
+        
+        primeToReturn = primes[M];
+        
+        if(primes[M] < num) {
+            L = M + 1;
+        } else if(primes[M] > num) {
+            R = M - 1;
+        } else {
+            return primeToReturn;
+        }
+
+    }
+
+    return primeToReturn;
 
 }
 
+
+
+void freeTable(char** table, int size) {
+
+    for(int i = 0; i < size; i++) {
+        free(table[i]);
+    }
+
+    delete [] table;
+
+}
 
 
 //////////////////////////////////////////////////////
@@ -107,7 +163,7 @@ const int findPrime(int num) {
  
 
 int tableSize(int table=0) {
-    
+
     switch(table) {
         case 0:
             return m_H0Capacity;
