@@ -59,20 +59,17 @@ HashTable::HashTable(HashTable& other) {
     m_isRehashing   = other.m_isRehashing;
     m_isReRehashing = other.m_isReRehashing;
 
-    if(!other.m_isRehashing) {
+    if(other.m_isRehashing) {
+        other.forceRehashDuringCopy();
+    }
 
-        H0 = new char*[other.m_H0Capacity];
-        H1 = NULL;
-        H2 = NULL;
+    // I don't think we're supposed to use malloc here?
+    H0 = new char*[other.m_H0Capacity];
+    H1 = NULL;
+    H2 = NULL;
 
-        for(int i = 0; i < other.m_H0Capacity; i++) {
-            H0[i] = strdup(other.H0[i]);
-        }
-
-    } else {
-
-
-
+    for(int i = 0; i < other.m_H0Capacity; i++) {
+        H0[i] = strdup(other.H0[i]);
     }
 
 }
@@ -506,7 +503,7 @@ void HashTable::insertIntoH0(char *str) {
         bool added = false;
 
         // Keep going until we either add it or we go too far.
-        while(!added && probeLen < MAX_PROBE_LEN) {     
+        while(!added && probeLen < MAX_PROBE_LEN) {
 
             if(H0[index] == NULL || H0[index] == DELETED) {
 
