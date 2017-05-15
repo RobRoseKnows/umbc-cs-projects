@@ -46,7 +46,7 @@ class HashTable {
 
 
 //////////////////////////////////////////////////////
-// Methods                                          //
+// Primary Methods                                  //
 //////////////////////////////////////////////////////
 
     unsigned int effectiveHash(const char *str, int table=0); 
@@ -57,12 +57,34 @@ class HashTable {
 
     char * remove(const char *str);
 
+//////////////////////////////////////////////////////
+// Utility Methods                                  //
+//////////////////////////////////////////////////////
+
     int findNewCapacity(unsigned int currSize);
 
     // Finds the closest prime greater than or equal to the provided num. 
     const int findPrime(int num);
 
     void freeTable(char** table, int size);
+
+    // This is what's called when we try to make a copy of a table while
+    // we're in the middle of rehashing it. In this case we don't need to
+    // create the new tables we're rehashing into.
+    void forceRehashDuringCopy();
+    
+    // This is used when we need to rehash during normal table operation.
+    // First the section calling the rehash sets the rehashing flags
+    // (m_isRehashing and/or m_isReRehashing) and then calls this function.
+    // Unlike the copy rehashing fuction, this one creates the new tables
+    // it will be rehashing into. 
+    //
+    // To be used if the load factor of the original table is < 3% or if the
+    // rehash table's load factor exceeds 50%.
+    void forceRehashNormal();
+    
+    int nextIndex(int index, int table=0);
+    
 
 //////////////////////////////////////////////////////
 // Grading Methods                                  //
@@ -98,6 +120,16 @@ class HashTable {
     char * removeForH1(const char *str);
 
 //////////////////////////////////////////////////////
+// ReReHash (H2) Methods                            //
+//////////////////////////////////////////////////////
+
+    void insertForH2(const char *str);
+
+    bool findForH2(const char *str);
+
+    char * removeForH2(const char *str);
+
+//////////////////////////////////////////////////////
 // Member Variables                                 //
 ////////////////////////////////////////////////////// 
 
@@ -126,7 +158,7 @@ class HashTable {
     double m_H1LoadFactor;
 
     bool m_isRehashing;
-
+    bool m_isReRehashing;
 
 //////////////////////////////////////////////////////
 // Given Values                                     //
