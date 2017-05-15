@@ -271,7 +271,7 @@ Graph::EgIterator Graph::egEnd() {
 Graph::NbIterator::NbIterator(Graph *Gptr, int v, bool isEnd) {
 
     // Check to make sure the vertex is in the graph.
-    if(Gptr == NULL || v >= Gptr->size()) {
+    if(Gptr != NULL && v >= Gptr->size()) {
         throw std::out_of_range("OUT OF RANGE: NbIterator constructor: that vertex does not exist.");
     }
 
