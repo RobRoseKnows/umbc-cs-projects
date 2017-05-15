@@ -96,6 +96,7 @@ class HashTable {
 
     int prevIndex(int index, int table=H0_TABLE_NUM);
 
+
 //////////////////////////////////////////////////////
 // Grading Methods                                  //
 //////////////////////////////////////////////////////
@@ -121,11 +122,13 @@ class HashTable {
 
     void initRehash();
 
-    int nextH0(int index)       {   nextIndex(index, H0_TABLE_NUM);     }
+    int nextH0(int index)   {   return nextIndex(index, H0_TABLE_NUM);  }
 
-    int prevH0(int index)       {   prevIndex(index, H0_TABLE_NUM);     }
+    int prevH0(int index)   {   return prevIndex(index, H0_TABLE_NUM);  }
 
-    int hashH0(const char *str) {   effectiveHash(str, H0_TABLE_NUM);   }
+    int hashH0(const char *str) {   return effectiveHash(str, H0_TABLE_NUM); }
+    
+    void moveH0ClusterAt(int index);
 
 //////////////////////////////////////////////////////
 // ReHash (H1) Methods                              //
@@ -139,11 +142,13 @@ class HashTable {
 
     void initReRehash();
 
-    int nextH1(int index)       {   nextIndex(index, H1_TABLE_NUM);     }
+    int nextH1(int index)   {   return nextIndex(index, H1_TABLE_NUM);  }
 
-    int prevH1(int index)       {   prevIndex(index, H1_TABLE_NUM);     }
+    int prevH1(int index)   {   return prevIndex(index, H1_TABLE_NUM);  }
 
-    int hashH1(const char *str) {   effectiveHash(str, H1_TABLE_NUM);   }
+    int hashH1(const char *str) {   return effectiveHash(str, H1_TABLE_NUM); }
+
+    void moveH1ClusterAt(int index);
 
 //////////////////////////////////////////////////////
 // ReReHash (H2) Methods                            //
@@ -155,11 +160,11 @@ class HashTable {
 
     char * removeFromH2(const char *str);
     
-    int nextH2(int index)       {   nextIndex(index, H2_TABLE_NUM);     }
+    int nextH2(int index)   {   return nextIndex(index, H2_TABLE_NUM);  }
 
-    int prevH2(int index)       {   prevIndex(index, H2_TABLE_NUM);     }
+    int prevH2(int index)   {   return prevIndex(index, H2_TABLE_NUM);  }
     
-    int hashH2(const char *str) {   effectiveHash(str, H2_TABLE_NUM);   }
+    int hashH2(const char *str) {   return effectiveHash(str, H2_TABLE_NUM); }
 
 //////////////////////////////////////////////////////
 // Member Variables                                 //
@@ -191,6 +196,24 @@ class HashTable {
 
     bool m_isRehashing;
     bool m_isReRehashing;
+
+//////////////////////////////////////////////////////
+// Dump Related Methods                             //
+//////////////////////////////////////////////////////
+
+    void dump();
+
+    void printH0();
+
+    void printH1();
+
+    // Never used
+    void printH2();
+
+    void printTable(char** table, int capacity, char* name);
+
+    // This is used to get either a blank, a DELETED or a string.
+    char* getString(char* str);
 
 //////////////////////////////////////////////////////
 // Given Values                                     //

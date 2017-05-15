@@ -11,6 +11,8 @@
 #include "HashTable.h"
 #include "primes.h"
 
+#include <iostream>
+
 char * const HashTable::DELETED = (char *) 1;
 
 //////////////////////////////////////////////////////
@@ -63,8 +65,8 @@ HashTable::HashTable(HashTable& other) {
         H1 = NULL;
         H2 = NULL;
 
-        for(int i = 0; i < other.m_H0Capacity) {
-            H0[i] = strcpy(other.H0[i]);
+        for(int i = 0; i < other.m_H0Capacity; i++) {
+            H0[i] = strdup(other.H0[i]);
         }
 
     } else {
@@ -89,14 +91,14 @@ const HashTable& HashTable::operator=(HashTable& rhs) {
 // Primary Methods                                  //
 //////////////////////////////////////////////////////
 
-int HashTable::effectiveHash(const char *str, int table=0) {
+int HashTable::effectiveHash(const char *str, int table) {
 
     switch(table) {
-        case 0:
+        case H0_TABLE_NUM:
             return hashCode(str) % m_H0Capacity;
-        case 1:
+        case H1_TABLE_NUM:
             return hashCode(str) % m_H1Capacity;
-        case 2:
+        case H2_TABLE_NUM:
             return hashCode(str) % m_H2Capacity;
         default:
             return 0;
@@ -243,7 +245,7 @@ void HashTable::forceRehashDuringCopy() {
         while(iH0 < m_H0Capacity) {
 
             if(H0[iH0] != NULL) {
-                insertIntoH2(H0[iH0])
+                insertIntoH2(H0[iH0]);
             }
 
             iH0++;
@@ -256,7 +258,7 @@ void HashTable::forceRehashDuringCopy() {
         while(iH1 < m_H1Capacity) {
 
             if(H1[iH1] != NULL) {
-                insertIntoH2(H1[iH1])
+                insertIntoH2(H1[iH1]);
             }
 
             iH1++;
@@ -348,7 +350,7 @@ void HashTable::forceRehashNormal() {
         while(iH0 < m_H0Capacity) {
 
             if(H0[iH0] != NULL) {
-                insertIntoH2(H0[iH0])
+                insertIntoH2(H0[iH0]);
             }
 
             iH0++;
@@ -363,7 +365,7 @@ void HashTable::forceRehashNormal() {
         while(iH1 < m_H1Capacity) {
 
             if(H1[iH1] != NULL) {
-                insertIntoH2(H1[iH1])
+                insertIntoH2(H1[iH1]);
             }
 
             iH1++;
@@ -408,7 +410,7 @@ int HashTable::nextIndex(int index, int table) {
 }
 
 
-int prevIndex(int index, int table) {
+int HashTable::prevIndex(int index, int table) {
 
     int size = tableSize(table);
 
@@ -421,6 +423,8 @@ int prevIndex(int index, int table) {
 
 }
 
+
+
 //////////////////////////////////////////////////////
 // Grading Methods                                  //
 //////////////////////////////////////////////////////
@@ -429,11 +433,11 @@ int prevIndex(int index, int table) {
 int HashTable::tableSize(int table) {
 
     switch(table) {
-        case 0:
+        case H0_TABLE_NUM:
             return m_H0Capacity;
-        case 1:
+        case H1_TABLE_NUM:
             return m_H1Capacity;
-        case 2:
+        case H2_TABLE_NUM:
             return m_H2Capacity;
         default:
             return -1;
@@ -446,11 +450,11 @@ int HashTable::tableSize(int table) {
 int HashTable::size(int table) {
 
     switch(table) {
-        case 0:
+        case H0_TABLE_NUM:
             return m_H0Size;
-        case 1:
+        case H1_TABLE_NUM:
             return m_H1Size;
-        case 2:
+        case H2_TABLE_NUM:
             return m_H2Size;
         default:
             return -1;
@@ -463,11 +467,11 @@ int HashTable::size(int table) {
 const char * HashTable::at(int index, int table) {
 
     switch(table) {
-        case 0:
+        case H0_TABLE_NUM:
             return H0[index];
-        case 1:
+        case H1_TABLE_NUM:
             return H1[index];
-        case 2:
+        case H2_TABLE_NUM:
             return H2[index];
         default:
             return NULL;
@@ -527,38 +531,7 @@ void HashTable::insertIntoH0(char *str) {
         // If the table is in the process of rehashing, we should move things
         // over to the new table now.
         if(m_isRehashing) {
-
-            int backwards = hashH0(str);
-            int forwards = nextH0(backwards);
-
-            // Work our way backwards and remove the cluster. Only stop when
-            // we're no longer NULL.
-            while(H0[backwards] != NULL) {
-
-                // We don't need to move DELETED entries to the new table.
-                if(H0[backwards] != DELETED) {
-                    // TODO: Will this be a pointer to a cstring or a cstring?
-                    insertIntoH1(H0[backwards]);
-                }
-
-                H0[backwards] = NULL;
-
-                backwards = prevH0(backwards);
-
-            }
-
-            while(H0[forwards] != NULL) {
-                
-                if(H0[forwards] != DELETED) {
-                    insertIntoH1(H0[forwards]);
-                }
-
-                H0[forwards] = NULL;
-
-                forwards = nextH0(forwards);
-
-            }
-
+            moveH0ClusterAt(hashH0(str));
         }
     }
 
@@ -605,6 +578,48 @@ void HashTable::initRehash() {
 }
 
 
+void HashTable::moveH0ClusterAt(int index) {
+
+    int backwards = index;
+    int forwards = nextH0(index);
+
+    // Work our way backwards and remove the cluster. Only stop when
+    // we're no longer NULL.
+    while(H0[backwards] != NULL) {
+
+        // We don't need to move DELETED entries to the new table.
+        if(H0[backwards] != DELETED) {
+            // TODO: Will this be a pointer to a cstring or a cstring?
+            insertIntoH1(H0[backwards]);
+
+            m_H0Size--;
+            m_H1Size++;
+        }
+
+        H0[backwards] = NULL;
+
+        backwards = prevH0(backwards);
+
+    }
+
+    while(H0[forwards] != NULL) {
+
+        if(H0[forwards] != DELETED) {
+            insertIntoH1(H0[forwards]);
+
+            m_H0Size--;
+            m_H1Size++;
+        }
+
+        H0[forwards] = NULL;
+
+        forwards = nextH0(forwards);
+
+    }
+
+
+}
+
 
 //////////////////////////////////////////////////////
 // ReHash (H1) Methods                              //
@@ -641,6 +656,17 @@ void HashTable::initReRehash() {
 
 void HashTable::insertIntoH2(char *str) {
 
+    int whereTo = hashH2(str);
+
+    // In the (somewhat) unlikely event of a collision, find us an open spot.
+    while(H2[whereTo] != NULL) {
+        whereTo = nextH2(whereTo);
+    }
+
+    H2[whereTo] = str;
+
+    // Increase size.
+    m_H2Size++;
 
 }
 
@@ -656,4 +682,82 @@ char * HashTable::removeFromH2(const char *str) {
 
 }
 
+
+//////////////////////////////////////////////////////
+// Dump Related Methods                             //
+//////////////////////////////////////////////////////
+
+
+void HashTable::dump() {
+
+    printH0();
+   
+    cout << endl << endl;
+
+    if(m_isRehashing) {
+        printH1();
+    }
+
+}
+
+
+void HashTable::printH0() {
+
+    cout << "HashTable #1: size = " << m_H0Size 
+        << ", tableSize = " << m_H0Capacity << endl;
+    
+    printTable(H0, m_H0Capacity, "H0");
+
+}
+
+
+void HashTable::printH1() {
+    
+    cout << "HashTable #2: size = " << m_H1Size 
+        << ", tableSize = " << m_H1Capacity << endl;
+
+    printTable(H1, m_H1Capacity, "H1");
+
+}
+
+
+// Never used
+void HashTable::printH2() {
+    
+    cout << "HashTable #3: size = " << m_H2Size 
+        << ", tableSize = " << m_H2Capacity << endl;
+
+    printTable(H2, m_H2Capacity, "H2");
+
+}
+
+
+void HashTable::printTable(char** table, int capacity, char* name) {
+
+    for(int i = 0; i < capacity; i++) {
+
+        char* str = getString(table[i]);
+        int hash = hashCode(str) % capacity;
+        
+        if(strcmp(str, "DELETED") != 0 || strcmp(str, "") != 0) {
+            printf("%s[%d] = %s (%d)", name, i, str, hash);
+        } else {
+            printf("%s[%d] = %s", name, i, str);
+        }
+
+    }
+
+}
+
+char* HashTable::getString(char* str) {
+
+    if(str == NULL) {
+        return "";
+    } else if(strcmp(str, DELETED) == 0) {
+        return "DELETED";
+    } else {
+        return str;
+    }
+
+}
 
