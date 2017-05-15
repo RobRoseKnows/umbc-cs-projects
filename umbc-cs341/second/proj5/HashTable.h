@@ -93,7 +93,8 @@ class HashTable {
     void forceRehashNormal();
     
     int nextIndex(int index, int table=H0_TABLE_NUM);
-    
+
+    int prevIndex(int index, int table=H0_TABLE_NUM);
 
 //////////////////////////////////////////////////////
 // Grading Methods                                  //
@@ -112,35 +113,53 @@ class HashTable {
 // Hash (H0) Methods                                //
 //////////////////////////////////////////////////////
 
-    void insertForH0(const char *str);
+    void insertIntoH0(char *str);
 
-    bool findForH0(const char *str);
+    bool findInH0(const char *str);
 
-    char * removeForH0(const char *str);
+    char * removeFromH0(const char *str);
 
     void initRehash();
+
+    int nextH0(int index)       {   nextIndex(index, H0_TABLE_NUM);     }
+
+    int prevH0(int index)       {   prevIndex(index, H0_TABLE_NUM);     }
+
+    int hashH0(const char *str) {   effectiveHash(str, H0_TABLE_NUM);   }
 
 //////////////////////////////////////////////////////
 // ReHash (H1) Methods                              //
 //////////////////////////////////////////////////////
 
-    void insertForH1(const char *str);
+    void insertIntoH1(char *str);
 
-    bool findForH1(const char *str);
+    bool findInH1(const char *str);
 
-    char * removeForH1(const char *str);
+    char * removeFromH1(const char *str);
 
     void initReRehash();
+
+    int nextH1(int index)       {   nextIndex(index, H1_TABLE_NUM);     }
+
+    int prevH1(int index)       {   prevIndex(index, H1_TABLE_NUM);     }
+
+    int hashH1(const char *str) {   effectiveHash(str, H1_TABLE_NUM);   }
 
 //////////////////////////////////////////////////////
 // ReReHash (H2) Methods                            //
 //////////////////////////////////////////////////////
 
-    void insertForH2(const char *str);
+    void insertIntoH2(char *str);
 
-    bool findForH2(const char *str);
+    bool findInH2(const char *str);
 
-    char * removeForH2(const char *str);
+    char * removeFromH2(const char *str);
+    
+    int nextH2(int index)       {   nextIndex(index, H2_TABLE_NUM);     }
+
+    int prevH2(int index)       {   prevIndex(index, H2_TABLE_NUM);     }
+    
+    int hashH2(const char *str) {   effectiveHash(str, H2_TABLE_NUM);   }
 
 //////////////////////////////////////////////////////
 // Member Variables                                 //
