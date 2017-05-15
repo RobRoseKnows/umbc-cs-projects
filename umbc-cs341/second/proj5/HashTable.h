@@ -20,6 +20,15 @@
 #define UPPER_BOUND 199999
 #define LOWER_BOUND 101
 
+// The max probe length
+#define MAX_PROBE_LEN 10
+
+#define H0_TABLE_NUM 0
+#define H1_TABLE_NUM 1
+#define H2_TABLE_NUM 2
+
+using namespace std;
+
 class TableTooLarge : public out_of_range {
     public:
         TableTooLarge(const string& what) : out_of_range(what) {}
@@ -36,7 +45,7 @@ class HashTable {
 // Structors/Operators                              //
 //////////////////////////////////////////////////////
 
-    HashTable(int n=101);
+    HashTable(int n=LOWER_BOUND);
 
     ~HashTable();
 
@@ -49,7 +58,7 @@ class HashTable {
 // Primary Methods                                  //
 //////////////////////////////////////////////////////
 
-    unsigned int effectiveHash(const char *str, int table=0); 
+    int effectiveHash(const char *str, int table=H0_TABLE_NUM); 
 
     void insert(const char *str);
 
@@ -83,7 +92,7 @@ class HashTable {
     // rehash table's load factor exceeds 50%.
     void forceRehashNormal();
     
-    int nextIndex(int index, int table=0);
+    int nextIndex(int index, int table=H0_TABLE_NUM);
     
 
 //////////////////////////////////////////////////////
@@ -91,13 +100,13 @@ class HashTable {
 //////////////////////////////////////////////////////
 
     // Grading program
-    bool isRehashing()  {   return m_isRehasing;    }
+    bool isRehashing()  {   return m_isRehashing;    }
     
-    int tableSize(int table=0);
+    int tableSize(int table=H0_TABLE_NUM);
     
-    int size(int table=0);
+    int size(int table=H0_TABLE_NUM);
 
-    const char * at(int index, int table=0); 
+    const char * at(int index, int table=H0_TABLE_NUM); 
 
 //////////////////////////////////////////////////////
 // Hash (H0) Methods                                //
@@ -109,6 +118,8 @@ class HashTable {
 
     char * removeForH0(const char *str);
 
+    void initRehash();
+
 //////////////////////////////////////////////////////
 // ReHash (H1) Methods                              //
 //////////////////////////////////////////////////////
@@ -118,6 +129,8 @@ class HashTable {
     bool findForH1(const char *str);
 
     char * removeForH1(const char *str);
+
+    void initReRehash();
 
 //////////////////////////////////////////////////////
 // ReReHash (H2) Methods                            //
@@ -144,14 +157,14 @@ class HashTable {
     char ** H2;
 
     // Total number of items we can fit in each of the tables.
-    unsigned int m_H0Capacity;
-    unsigned int m_H1Capacity;
-    unsigned int m_H2Capacity;
+    int m_H0Capacity;
+    int m_H1Capacity;
+    int m_H2Capacity;
 
     // Total number of items currently in each table.
-    unsigned int m_H0Size;
-    unsigned int m_H1Size;
-    unsigned int m_H2Size;
+    int m_H0Size;
+    int m_H1Size;
+    int m_H2Size;
 
     // Load factors.
     double m_H0LoadFactor;

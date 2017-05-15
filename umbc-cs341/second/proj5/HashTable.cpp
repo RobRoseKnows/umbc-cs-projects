@@ -45,7 +45,7 @@ HashTable::~HashTable() {
 
 
 
-HashTable(HashTable& other) {
+HashTable::HashTable(HashTable& other) {
     m_H0Capacity    = other.m_H0Capacity;
     m_H1Capacity    = other.m_H1Capacity;
     m_H2Capacity    = other.m_H2Capacity;
@@ -77,7 +77,7 @@ HashTable(HashTable& other) {
 
 
 
-const HashTable& operator=(HashTable& rhs) {
+const HashTable& HashTable::operator=(HashTable& rhs) {
 
 
 
@@ -89,7 +89,7 @@ const HashTable& operator=(HashTable& rhs) {
 // Primary Methods                                  //
 //////////////////////////////////////////////////////
 
-unsigned int effectiveHash(const char *str, int table=0) {
+int HashTable::effectiveHash(const char *str, int table=0) {
 
     switch(table) {
         case 0:
@@ -106,7 +106,7 @@ unsigned int effectiveHash(const char *str, int table=0) {
 
 
 
-void insert(const char *str) {
+void HashTable::insert(const char *str) {
 
 
 
@@ -114,7 +114,7 @@ void insert(const char *str) {
 
 
 
-bool find(const char *str) {
+bool HashTable::find(const char *str) {
 
 
 
@@ -122,7 +122,7 @@ bool find(const char *str) {
 
 
 
-char * remove(const char *str) {
+char * HashTable::remove(const char *str) {
 
 
 
@@ -135,12 +135,12 @@ char * remove(const char *str) {
 //////////////////////////////////////////////////////
 
 // Finds a new capacity for the rehash table.
-int findNewCapacity(unsigned int currSize) {
+int HashTable::findNewCapacity(unsigned int currSize) {
 
     int newSize = currSize * 4;
     
     if(newSize <= LOWER_BOUND) {
-        newSize = 101;
+        newSize = LOWER_BOUND;
     } else if(newSize > UPPER_BOUND) {
         throw TableTooLarge("New table would require > 199,999 items."); 
     } else {
@@ -154,12 +154,12 @@ int findNewCapacity(unsigned int currSize) {
 
 
 // Finds a prime number close to the new desired size. 
-const int findPrime(int num) {
+const int HashTable::findPrime(int num) {
 
     int L = 0;
     int R = numPrimes - 1;
 
-    int primeToReturn = 101;
+    int primeToReturn = LOWER_BOUND;
 
     while(L <= R) {
 
@@ -184,7 +184,7 @@ const int findPrime(int num) {
 
 // Utility function to free all the memory in an array and then deallocate 
 // the array.
-void freeTable(char** table, int size) {
+void HashTable::freeTable(char** table, int size) {
 
     for(int i = 0; i < size; i++) {
         free(table[i]);
@@ -197,7 +197,7 @@ void freeTable(char** table, int size) {
 
 // Called by another table when we try to copy this table while it's
 // rehashing.
-void forceRehashDuringCopy() {
+void HashTable::forceRehashDuringCopy() {
 
     if(m_isRehashing && !m_isReRehashing) {
         
@@ -216,7 +216,7 @@ void forceRehashDuringCopy() {
             // and return.
             if(H1 == NULL)  return;
 
-            i = nextIndex(i, 0);
+            i++;
 
         }
 
@@ -244,7 +244,7 @@ void forceRehashDuringCopy() {
                 insertForH2(H0[iH0])
             }
 
-            iH0 = nextIndex(iH0, 0);
+            iH0++;
 
         }
 
@@ -257,7 +257,7 @@ void forceRehashDuringCopy() {
                 insertForH2(H1[iH1])
             }
 
-            iH1 = nextIndex(iH1, 1);
+            iH1++;
 
         }
 
@@ -285,7 +285,7 @@ void forceRehashDuringCopy() {
 
 // This is called when the load factor of H0 is less than 3% or when the load
 // factor of H1 passes 50%.
-void forceRehashNormal() {
+void HashTable::forceRehashNormal() {
 
     if(m_isRehashing && !m_isReRehashing) {
        
@@ -308,7 +308,10 @@ void forceRehashNormal() {
             // and return.
             if(H1 == NULL)  return;
 
-            i = nextIndex(i, 0);
+            // This has to be the iterator instead of the wrap around
+            // nextIndex() method because otherwise it will enter an infinite
+            // loop.
+            i++;
 
         }
 
@@ -329,7 +332,6 @@ void forceRehashNormal() {
 
         // This is all for creating a new Table 2 so we can insert everything
         // into it.
-        freeTable(H2, m_H2Capacity);
 
         m_H2Capacity = findNewCapacity(m_H0Capacity + m_H1Capacity);
         m_H2Size = 0;
@@ -347,7 +349,7 @@ void forceRehashNormal() {
                 insertForH2(H0[iH0])
             }
 
-            iH0 = nextIndex(iH0, 0);
+            iH0++;
 
         }
 
@@ -362,7 +364,7 @@ void forceRehashNormal() {
                 insertForH2(H1[iH1])
             }
 
-            iH1 = nextIndex(iH1, 1);
+            iH1++;
 
         }
 
@@ -390,7 +392,7 @@ void forceRehashNormal() {
 }
 
 
-int nextIndex(int index, int table=0) {
+int HashTable::nextIndex(int index, int table) {
 
     int size = tableSize(table);
 
@@ -409,7 +411,7 @@ int nextIndex(int index, int table=0) {
 //////////////////////////////////////////////////////
  
 
-int tableSize(int table=0) {
+int HashTable::tableSize(int table) {
 
     switch(table) {
         case 0:
@@ -426,7 +428,7 @@ int tableSize(int table=0) {
     
 
 
-int size(int table=0) {
+int HashTable::size(int table) {
 
     switch(table) {
         case 0:
@@ -443,7 +445,7 @@ int size(int table=0) {
 
 
 
-const char * at(int index, int table=0) {
+const char * HashTable::at(int index, int table) {
 
     switch(table) {
         case 0:
@@ -464,30 +466,89 @@ const char * at(int index, int table=0) {
 // Hash (H0) Methods                                //
 //////////////////////////////////////////////////////
 
-    void insertForH0(const char *str);
+void HashTable::insertForH0(const char *str) {
 
-    bool findForH0(const char *str);
+    if(m_H0LoadFactor > .5) {
+    
+        initRehash();
+        insertForH1(str);
+        
+        // Return because there's nothing else we need to do.
+        return;
+    
+    }
 
-    char * removeForH0(const char *str);
+    int index = effectiveHash();
+    int probeLen = 0;
+
+    while(probeLen < MAX_PROBE_LEN) {
+
+
+
+        index = nextIndex(index, H0_TABLE_NUM)
+    }
+
+
+    m_H0LoadFactor = (m_H0Size / m_H0Capacity);
+
+}
+
+bool HashTable::findForH0(const char *str) {
+    
+    if(m_H0LoadFactor > .5) {
+        initRehash();
+    }
+
+
+
+    m_H0LoadFactor = (m_H0Size / m_H0Capacity);
+
+}
+
+char * HashTable::removeForH0(const char *str) {
+
+    if(m_H0LoadFactor > .5) {
+        initRehash();
+    }
+
+
+
+    m_H0LoadFactor = (m_H0Size / m_H0Capacity);
+
+}
+
+void HashTable::initRehash() {
+
+    m_isRehashing = true;
+
+    m_H1Capacity = findNewCapacity(m_H0Capacity);
+    m_H1Size = 0;
+        
+    H1 = new char*[m_H1Capacity];
+
+    for(int i = 0; i < m_H1Capacity; i++)
+        H1[i] = NULL;
+
+}
 
 //////////////////////////////////////////////////////
 // ReHash (H1) Methods                              //
 //////////////////////////////////////////////////////
 
-    void insertForH1(const char *str);
+void HashTable::insertForH1(const char *str);
 
-    bool findForH1(const char *str);
+bool HashTable::findForH1(const char *str);
 
-    char * removeForH1(const char *str);
+char * HashTable::removeForH1(const char *str);
 
 //////////////////////////////////////////////////////
 // ReReHash (H2) Methods                            //
 //////////////////////////////////////////////////////
 
-    void insertForH2(const char *str);
+void HashTable::insertForH2(const char *str);
 
-    bool findForH2(const char *str);
+bool HashTable::findForH2(const char *str);
 
-    char * removeForH2(const char *str);
+char * HashTable::removeForH2(const char *str);
 
 
