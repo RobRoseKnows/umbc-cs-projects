@@ -500,52 +500,58 @@ const char * HashTable::at(int index, int table) {
 
 void HashTable::insertIntoH0(char *str) {
 
-
-nnnnnnnnnnnnnnnnnnnnnnn
-
-nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
-nnnnnnnnnnnnnnnnnnnnnnnnnn
-nnnn
-nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
-nnnn
-nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
-nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
-nnnnnnnnnnnnnnnnnnnnn
-nnnnnnnnnnnnnnnnnnnnnnnnnn
-nnnnnnnnn
-nnnnnnnnnnnn
-
-nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
-nnnnnnnnnnnnnnnnnnnnnnnnn
-nnnnnnnnnnnnnnnnnnnnnnnnnnn
-
-nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
-nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
-
-nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
-
-nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
-nnnnnnnnnnnnnnnnnnnnnnnnnnnnn
-nnnnnnnnnnnnnnnnnnnnnnnnnnn
-
-nnnnnnnnnnnnn
-
-nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
-nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
-
-nnnnnnnnn
-
-nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
-nnnnnnnnnnnnnnnnnnnn
-nnnnnnnnnnnnnnnnnnnnnnnnn
-nnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
-nnnnnnnnn
+    if(m_H0LoadFactor > .5) {
+        initRehash();
+    }
 
 
-nnnnn
+    bool isRemoved = false;
+    char * toReturn = NULL;
 
-nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
-nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
+    int index = hashH0(str);
+    int probeLen = 0;
+
+    // Keep going until we either add it or we go too far.
+    while(!isRemoved && probeLen < MAX_PROBE_LEN) {
+
+        if(strcmp(H0[index], str) == 0) {
+
+            isRemoved = true;
+            toReturn = H0[index];
+            H0[index] = DELETED;
+            m_H0Size--;
+
+        }
+
+        // Next index is given by a method so we can wrap around properly.
+        index = nextH0(index);
+
+    }
+ 
+    // If the cluster is to big, init rehashing.
+    if(probeLen >= MAX_PROBE_LEN) {
+        initRehash();
+    }
+
+
+    // If we didn't find the thing we wanted but we are rehashing, go check
+    // the next table too.
+    if(!isRemoved && m_isRehashing) {
+
+        toReturn = removeFromH1(str);
+
+    }
+    
+
+    if(m_isRehashing) {
+        moveH0ClusterAt(hashH0(str));
+    }
+
+    m_H0LoadFactor = (m_H0Size / m_H0Capacity);
+
+    return toReturn;
+
+
     if(m_isRehashing) {
         moveH0ClusterAt(hashH0(str));
     }
@@ -656,7 +662,7 @@ char * HashTable::removeFromH0(const char *str) {
 
     // If we didn't find the thing we wanted but we are rehashing, go check
     // the next table too.
-    if(!isFound && m_isRehashing) {
+    if(!isRemoved && m_isRehashing) {
 
         toReturn = removeFromH1(str);
 
@@ -807,7 +813,7 @@ char * HashTable::removeFromH1(const char *str) {
 
     // If we didn't find the thing we wanted but we are rehashing, go check
     // the next table too.
-    if(!isFound && m_isReRehashing) {
+    if(!isRemove && m_isReRehashing) {
 
         toReturn = removeFromH2(str);
 
@@ -834,7 +840,7 @@ void HashTable::initReRehash() {
 
     m_isReRehashing = true;
 
-    forceRehashDuringNormal();
+    forceRehashNormal();
 
 }
 
@@ -914,8 +920,6 @@ void HashTable::insertIntoH2(char *str) {
 bool HashTable::findInH2(const char *str) {
 
     int whereTo = hashH2(str);
-
-    bool found = false;
 
     while(H2[whereTo] != NULL) {
         if(H2[whereTo] != DELETED && strcmp(H2[whereTo],str) == 0) {
