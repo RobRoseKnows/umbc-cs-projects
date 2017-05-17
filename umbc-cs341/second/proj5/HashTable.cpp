@@ -15,9 +15,9 @@
 
 char * const HashTable::DELETED = (char *) 1;
 
-//////////////////////////////////////////////////////
-// Structors/Operators                              //
-//////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+// Structors/Operators                                          //
+//////////////////////////////////////////////////////////////////
 
 HashTable::HashTable(int n): 
     m_H0Capacity(n), m_H1Capacity(-1), m_H2Capacity(-1),
@@ -25,7 +25,7 @@ HashTable::HashTable(int n):
     m_H0LoadFactor(0), m_H1LoadFactor(-1),
     m_isRehashing(false), m_isReRehashing(false) {
 
-    H0 = calloc(n, sizeof(char*));
+    H0 = new char * [n];
     H1 = NULL;
     H2 = NULL;
 
@@ -63,8 +63,7 @@ HashTable::HashTable(HashTable& other) {
         other.forceRehashDuringCopy();
     }
 
-    // I don't think we're supposed to use malloc here?
-    H0 = calloc(other.m_H0Capacity, sizeof(char*));
+    H0 = new char * [other.m_H0Capacity];
     H1 = NULL;
     H2 = NULL;
 
@@ -87,9 +86,9 @@ const HashTable& HashTable::operator=(HashTable& rhs) {
 
 
 
-//////////////////////////////////////////////////////
-// Primary Methods                                  //
-//////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+// Primary Methods                                              //
+//////////////////////////////////////////////////////////////////
 
 int HashTable::effectiveHash(const char *str, int table) {
 
@@ -112,7 +111,19 @@ void HashTable::insert(const char *str) {
 
     char *newStr = strdup(str);
 
-    insertIntoH0(newStr);
+    if(m_isRehashing && find(newStr)){ 
+        // It's already in the first table, we don't want to insert it again. 
+        // Shortcircuiting means we won't do an unneccessary find if we are
+        // not in the process of rehashing.
+        return;
+    } else if(m_isRehashing) {
+        // If it's not already in the first table but we are rehashing the
+        // table, insert the thing into the second table.
+        insertIntoH1(newStr);
+    } else {
+        // Otherwise just insert into the base table.
+        insertIntoH0(newStr);
+    }
 
 }
 
@@ -134,9 +145,9 @@ char * HashTable::remove(const char *str) {
 
 
 
-//////////////////////////////////////////////////////
-// Utility Methods                                  //
-//////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+// Utility Methods                                              //
+//////////////////////////////////////////////////////////////////
 
 // Finds a new capacity for the rehash table.
 int HashTable::findNewCapacity(unsigned int currSize) {
@@ -344,9 +355,7 @@ void HashTable::forceRehashNormal() {
         m_H2Capacity = findNewCapacity(m_H0Capacity + m_H1Capacity);
         m_H2Size = 0;
         
-        H2 = calloc(m_H2Capacity, sizeof(char*));
-
-
+        H2 = new char[m_H2Capacity];
 
         int iH0 = 0;
 
@@ -429,9 +438,9 @@ int HashTable::prevIndex(int index, int table) {
 
 
 
-//////////////////////////////////////////////////////
-// Grading Methods                                  //
-//////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+// Grading Methods                                              //
+//////////////////////////////////////////////////////////////////
  
 
 int HashTable::tableSize(int table) {
@@ -485,18 +494,12 @@ const char * HashTable::at(int index, int table) {
 
 
 
-//////////////////////////////////////////////////////
-// Hash (H0) Methods                                //
-//////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+// Hash (H0) Methods                                            //
+//////////////////////////////////////////////////////////////////
 
 void HashTable::insertIntoH0(char *str) {
 
-
-    if(findInH0(str)) {
-
-        
-
-    }
 
     if(m_isRehashing) {
 
@@ -550,18 +553,68 @@ void HashTable::insertIntoH0(char *str) {
 
 }
 
+
+//////////////////////////////////////////////////////
+//
+//
 bool HashTable::findInH0(const char *str) {
-    
+   
+    bool isFound = false;
+
     if(m_H0LoadFactor > .5) {
+
         initRehash();
+        isFound = findInH1(str);
+    
+    } else {
+
+        int index = hashH0(str);
+        int probeLen = 0;
+
+        // Keep going until we either add it or we go too far.
+        while(!isFound && probeLen < MAX_PROBE_LEN) {
+
+            if(H0[index] == NULL) {
+
+                H0[index] = str;
+                isFound = true;
+                m_H0Size++;
+
+            }
+
+            // Next index is given by a method so we can wrap around properly.
+            index = nextH0(index);
+
+        }
+
+        // If we didn't actually add anything, we need to rehash because the
+        if(!isFound) {
+
+            initRehash();
+            findInH1(str);
+
+        }
+
+
+        // If the table is in the process of rehashing, we should move things
+        // over to the new table now.
+        if(m_isRehashing) {
+            moveH0ClusterAt(hashH0(str));
+        }
     }
 
 
 
     m_H0LoadFactor = (m_H0Size / m_H0Capacity);
 
+    return 
+
 }
 
+
+//////////////////////////////////////////////////////
+//
+//
 char * HashTable::removeFromH0(const char *str) {
 
     if(m_H0LoadFactor > .5) {
@@ -569,11 +622,17 @@ char * HashTable::removeFromH0(const char *str) {
     }
 
 
+    
+
 
     m_H0LoadFactor = (m_H0Size / m_H0Capacity);
 
 }
 
+
+//////////////////////////////////////////////////////
+//
+//
 void HashTable::initRehash() {
 
     m_isRehashing = true;
@@ -589,6 +648,10 @@ void HashTable::initRehash() {
 }
 
 
+
+//////////////////////////////////////////////////////
+//
+//
 void HashTable::moveH0ClusterAt(int index) {
 
     int backwards = index;
@@ -632,28 +695,45 @@ void HashTable::moveH0ClusterAt(int index) {
 }
 
 
-//////////////////////////////////////////////////////
-// ReHash (H1) Methods                              //
-//////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+// ReHash (H1) Methods                                          //
+//////////////////////////////////////////////////////////////////
 
+
+
+//////////////////////////////////////////////////////
+//
+//
 void HashTable::insertIntoH1(char *str) {
 
 
 }
 
 
+
+//////////////////////////////////////////////////////
+//
+//
 bool HashTable::findInH1(const char *str) {
 
 
 }
 
 
+
+//////////////////////////////////////////////////////
+//
+//
 char * HashTable::removeFromH1(const char *str) {
 
 
 }
 
 
+
+//////////////////////////////////////////////////////
+//
+//
 void HashTable::initReRehash() {
 
 
@@ -661,10 +741,15 @@ void HashTable::initReRehash() {
 
 
 
-//////////////////////////////////////////////////////
-// ReReHash (H2) Methods                            //
-//////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+// ReReHash (H2) Methods                                        //
+//////////////////////////////////////////////////////////////////
 
+
+
+//////////////////////////////////////////////////////
+//
+//
 void HashTable::insertIntoH2(char *str) {
 
     int whereTo = hashH2(str);
@@ -682,21 +767,29 @@ void HashTable::insertIntoH2(char *str) {
 }
 
 
+
+//////////////////////////////////////////////////////
+//
+//
 bool HashTable::findInH2(const char *str) {
 
 
 }
 
 
+
+//////////////////////////////////////////////////////
+//
+//
 char * HashTable::removeFromH2(const char *str) {
 
 
 }
 
 
-//////////////////////////////////////////////////////
-// Dump Related Methods                             //
-//////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+// Dump Related Methods                                         //
+//////////////////////////////////////////////////////////////////
 
 
 void HashTable::dump() {
