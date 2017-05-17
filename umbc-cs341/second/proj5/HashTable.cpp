@@ -25,7 +25,7 @@ HashTable::HashTable(int n):
     m_H0LoadFactor(0), m_H1LoadFactor(-1),
     m_isRehashing(false), m_isReRehashing(false) {
 
-    H0 = new char*[n];
+    H0 = calloc(n, sizeof(char*));
     H1 = NULL;
     H2 = NULL;
 
@@ -64,14 +64,17 @@ HashTable::HashTable(HashTable& other) {
     }
 
     // I don't think we're supposed to use malloc here?
-    H0 = new char*[other.m_H0Capacity];
+    H0 = calloc(other.m_H0Capacity, sizeof(char*));
     H1 = NULL;
     H2 = NULL;
 
     for(int i = 0; i < other.m_H0Capacity; i++) {
-        H0[i] = strdup(other.H0[i]);
+        if(H0[i] != DELETED) {
+            H0[i] = strdup(other.H0[i]);
+        } else {
+            H0[i] = DELETED;
+        }
     }
-
 }
 
 
@@ -191,7 +194,7 @@ void HashTable::freeTable(char** table, int size) {
         free(table[i]);
     }
 
-    delete [] table;
+    free(table);
 
 }
 
@@ -206,7 +209,11 @@ void HashTable::forceRehashDuringCopy() {
 
         while(i < m_H0Capacity) {
     
-            if(H0[i] != NULL) {
+            // I don't need to do any fancy conditionals here because if 
+            // it needs to be moved to another table, the insert function
+            // will do that on its own (or at least set up what needs to
+            // be done).
+            if(H0[i] != NULL && H0[i] != DELETED) {
                 insertIntoH1(H0[i]);
             }
             
@@ -241,7 +248,7 @@ void HashTable::forceRehashDuringCopy() {
         // Go through original hashtable
         while(iH0 < m_H0Capacity) {
 
-            if(H0[iH0] != NULL) {
+            if(H0[iH0] != NULL && H0[iH0] != DELETED) {
                 insertIntoH2(H0[iH0]);
             }
 
@@ -254,7 +261,7 @@ void HashTable::forceRehashDuringCopy() {
         // Go through rehash hashtable.
         while(iH1 < m_H1Capacity) {
 
-            if(H1[iH1] != NULL) {
+            if(H1[iH1] != NULL && H1[iH1] != DELETED) {
                 insertIntoH2(H1[iH1]);
             }
 
@@ -298,7 +305,7 @@ void HashTable::forceRehashNormal() {
 
         while(i < m_H0Capacity) {
     
-            if(H0[i] != NULL) {
+            if(H0[i] != NULL && H0[i] == DELETED) {
                 insertIntoH1(H0[i]);
             }
             
@@ -337,7 +344,7 @@ void HashTable::forceRehashNormal() {
         m_H2Capacity = findNewCapacity(m_H0Capacity + m_H1Capacity);
         m_H2Size = 0;
         
-        H2 = new char*[m_H2Capacity];
+        H2 = calloc(m_H2Capacity, sizeof(char*));
 
 
 
@@ -346,7 +353,7 @@ void HashTable::forceRehashNormal() {
         // Go through original hashtable
         while(iH0 < m_H0Capacity) {
 
-            if(H0[iH0] != NULL) {
+            if(H0[iH0] != NULL && H0[iH0] != DELETED) {
                 insertIntoH2(H0[iH0]);
             }
 
@@ -361,7 +368,7 @@ void HashTable::forceRehashNormal() {
         // Go through rehash hashtable.
         while(iH1 < m_H1Capacity) {
 
-            if(H1[iH1] != NULL) {
+            if(H1[iH1] != NULL && H1[iH1] != DELETED) {
                 insertIntoH2(H1[iH1]);
             }
 
@@ -483,6 +490,13 @@ const char * HashTable::at(int index, int table) {
 //////////////////////////////////////////////////////
 
 void HashTable::insertIntoH0(char *str) {
+
+
+    if(findInH0(str)) {
+
+        
+
+    }
 
     if(m_isRehashing) {
 
