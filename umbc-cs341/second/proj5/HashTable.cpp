@@ -82,7 +82,41 @@ HashTable::HashTable(HashTable& other) {
 
 const HashTable& HashTable::operator=(HashTable& rhs) {
 
+    freeTable(H0, m_H0Capacity);
+    freeTable(H1, m_H1Capacity);
+    freeTable(H2, m_H2Capacity);
+        
+    m_H0Capacity    = rhs.m_H0Capacity;
+    m_H1Capacity    = rhs.m_H1Capacity;
+    m_H2Capacity    = rhs.m_H2Capacity;
+    m_H0Size        = rhs.m_H0Size;
+    m_H1Size        = rhs.m_H1Size;
+    m_H2Size        = rhs.m_H2Size;
+    m_H0LoadFactor  = rhs.m_H0LoadFactor;
+    m_H1LoadFactor  = rhs.m_H1LoadFactor;
+    m_isRehashing   = rhs.m_isRehashing;
+    m_isReRehashing = rhs.m_isReRehashing;
 
+    if(rhs.m_isRehashing) {
+        rhs.forceRehashDuringCopy();
+    }
+
+
+    H0 = new char * [rhs.m_H0Capacity];
+    H1 = NULL;
+    H2 = NULL;
+
+    for(int i = 0; i < rhs.m_H0Capacity; i++) {
+        if(H0[i] != DELETED && H0[i] != NULL) {
+            H0[i] = strdup(rhs.H0[i]);
+        } else if(H0[i] != NULL){
+            H0[i] = DELETED;
+        } else {
+            H0[i] = NULL;
+        }
+    }
+
+    return *this;
 
 }
 
@@ -235,7 +269,7 @@ void HashTable::freeTable(char** table, int size) {
         }
     }
 
-    free(table);
+    delete [] table;
 
 }
 
