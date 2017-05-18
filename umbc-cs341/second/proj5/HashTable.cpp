@@ -532,6 +532,8 @@ void HashTable::insertIntoH0(char *str) {
             // Next index is given by a method so we can wrap around properly.
             index = nextH0(index);
 
+            probeLen++;
+
         }
 
         // If the cluster is to big, init rehashing.
@@ -592,6 +594,8 @@ bool HashTable::findInH0(const char *str) {
 
         // Next index is given by a method so we can wrap around properly.
         index = nextH0(index);
+
+        probeLen++;
 
     }
 
@@ -658,6 +662,8 @@ char * HashTable::removeFromH0(const char *str) {
 
         // Next index is given by a method so we can wrap around properly.
         index = nextH0(index);
+
+        probeLen++;
 
     }
  
@@ -728,6 +734,8 @@ void HashTable::moveH0ClusterAt(int index) {
 
             m_H0Size--;
             m_H1Size++;
+
+            free(H0[backwards]);
         }
 
         H0[backwards] = NULL;
@@ -743,6 +751,8 @@ void HashTable::moveH0ClusterAt(int index) {
 
             m_H0Size--;
             m_H1Size++;
+
+            free(H0[forwards]);
         }
 
         H0[forwards] = NULL;
@@ -799,6 +809,8 @@ void HashTable::insertIntoH1(char *str) {
             // Next index is given by a method so we can wrap around properly.
             index = nextH1(index);
 
+            probeLen++;
+
         }
 
         // If the cluster is to big, init rehashing.
@@ -854,6 +866,8 @@ bool HashTable::findInH1(const char *str) {
 
         // Next index is given by a method so we can wrap around properly.
         index = nextH1(index);
+
+        probeLen++;
 
     }
 
@@ -913,6 +927,8 @@ char * HashTable::removeFromH1(const char *str) {
         // Next index is given by a method so we can wrap around properly.
         index = nextH1(index);
 
+        probeLen++;
+
     }
  
     // If the cluster is to big, init rehashing.
@@ -964,6 +980,8 @@ void HashTable::moveH1ClusterAt(int index) {
             // TODO: Will this be a pointer to a cstring or a cstring?
             insertIntoH2(H1[backwards]);
 
+            free(H1[backwards]);
+
             m_H1Size--;
             m_H2Size++;
         }
@@ -978,6 +996,8 @@ void HashTable::moveH1ClusterAt(int index) {
 
         if(H1[forwards] != DELETED) {
             insertIntoH2(H1[forwards]);
+
+            free(H1[forwards]);
 
             m_H1Size--;
             m_H2Size++;
@@ -1124,7 +1144,7 @@ void HashTable::printTable(char** table, int capacity, char* name) {
         char* str = getString(table[i]);
         int hash = hashCode(str) % capacity;
         
-        if(strcmp(str, "DELETED") != 0 || strcmp(str, "") != 0) {
+        if(table[i] != DELETED && table[i] != NULL) {
             printf("%s[%d] = %s (%d)\n", name, i, str, hash);
         } else {
             printf("%s[%d] = %s\n", name, i, str);
