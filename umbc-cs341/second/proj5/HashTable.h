@@ -86,7 +86,7 @@ private:
 // Utility Methods                                  //
 //////////////////////////////////////////////////////
 
-    int findNewCapacity(unsigned int currSize);
+    int findNewCapacity(int currSize);
 
     // Finds the closest prime greater than or equal to the provided num. 
     const int findPrime(int num);

@@ -68,10 +68,12 @@ HashTable::HashTable(HashTable& other) {
     H2 = NULL;
 
     for(int i = 0; i < other.m_H0Capacity; i++) {
-        if(H0[i] != DELETED) {
+        if(H0[i] != DELETED && H0[i] != NULL) {
             H0[i] = strdup(other.H0[i]);
-        } else {
+        } else if(H0[i] != NULL){
             H0[i] = DELETED;
+        } else {
+            H0[i] = NULL;
         }
     }
 }
@@ -94,11 +96,11 @@ int HashTable::effectiveHash(const char *str, int table) {
 
     switch(table) {
         case H0_TABLE_NUM:
-            return hashCode(str) % m_H0Capacity;
+            return (hashCode(str) % m_H0Capacity);
         case H1_TABLE_NUM:
-            return hashCode(str) % m_H1Capacity;
+            return (hashCode(str) % m_H1Capacity);
         case H2_TABLE_NUM:
-            return hashCode(str) % m_H2Capacity;
+            return (hashCode(str) % m_H2Capacity);
         default:
             return 0;
     }
@@ -110,6 +112,14 @@ int HashTable::effectiveHash(const char *str, int table) {
 void HashTable::insert(const char *str) {
 
     char *newStr = strdup(str);
+
+    if(m_H0LoadFactor > .5) {
+        initRehash();
+    } else if(m_isRehashing && m_H0LoadFactor < .03) {
+        forceRehashNormal();
+    } else if(m_isRehashing && m_H1LoadFactor > .5) {
+        initReRehash();
+    }
 
     if(m_isRehashing && find(newStr)){ 
         // It's already in the first table, we don't want to insert it again. 
@@ -131,6 +141,14 @@ void HashTable::insert(const char *str) {
 
 bool HashTable::find(const char *str) {
 
+    if(!m_isRehashing && m_H0LoadFactor > .5) {
+        initRehash();
+    } else if(m_isRehashing && m_H0LoadFactor < .03) {
+        forceRehashNormal();
+    } else if(m_isRehashing && m_H1LoadFactor > .5) {
+        initReRehash();
+    }
+
     return findInH0(str);
 
 }
@@ -139,6 +157,14 @@ bool HashTable::find(const char *str) {
 
 char * HashTable::remove(const char *str) {
 
+    if(!m_isRehashing && m_H0LoadFactor > .5) {
+        initRehash();
+    } else if(m_isRehashing && m_H0LoadFactor < .03) {
+        forceRehashNormal();
+    } else if(m_isRehashing && m_H1LoadFactor > .5) {
+        initReRehash();
+    }
+    
     return removeFromH0(str);
 
 }
@@ -150,7 +176,7 @@ char * HashTable::remove(const char *str) {
 //////////////////////////////////////////////////////////////////
 
 // Finds a new capacity for the rehash table.
-int HashTable::findNewCapacity(unsigned int currSize) {
+int HashTable::findNewCapacity(int currSize) { 
 
     int newSize = currSize * 4;
     
@@ -161,6 +187,8 @@ int HashTable::findNewCapacity(unsigned int currSize) {
     } else {
         newSize = findPrime(newSize);
     }
+
+    //cout << "NC: curr: " << currSize << " new: " << newSize << endl;
 
     return newSize;
 
@@ -202,7 +230,9 @@ const int HashTable::findPrime(int num) {
 void HashTable::freeTable(char** table, int size) {
 
     for(int i = 0; i < size; i++) {
-        free(table[i]);
+        if(table[i] != DELETED && table[i] != NULL) {
+            //free(table[i]);
+        }
     }
 
     free(table);
@@ -213,6 +243,8 @@ void HashTable::freeTable(char** table, int size) {
 // Called by another table when we try to copy this table while it's
 // rehashing.
 void HashTable::forceRehashDuringCopy() {
+
+    //cout << "Force rehash during copy." << endl;
 
     if(m_isRehashing && !m_isReRehashing) {
         
@@ -306,6 +338,8 @@ void HashTable::forceRehashDuringCopy() {
 // factor of H1 passes 50%.
 void HashTable::forceRehashNormal() {
 
+    //cout << "Force rehash normal" << endl;
+
     if(m_isRehashing && !m_isReRehashing) {
        
         // We don't create a new table 1 here because Table 1 should have
@@ -352,9 +386,9 @@ void HashTable::forceRehashNormal() {
         // This is all for creating a new Table 2 so we can insert everything
         // into it.
 
-        m_H2Capacity = findNewCapacity(m_H0Capacity + m_H1Capacity);
+        m_H2Capacity = findNewCapacity(m_H0Size + m_H1Size);
         m_H2Size = 0;
-        
+
         H2 = new char*[m_H2Capacity];
 
         int iH0 = 0;
@@ -500,13 +534,6 @@ const char * HashTable::at(int index, int table) {
 
 void HashTable::insertIntoH0(char *str) {
 
-    if(m_H0LoadFactor > .5) {
-        initRehash();
-    }
-
-    if(m_H0LoadFactor < .03) {
-        forceRehashNormal();
-    }
 
     bool added = false;
 
@@ -558,7 +585,7 @@ void HashTable::insertIntoH0(char *str) {
         moveH0ClusterAt(hashH0(str));
     }
 
-    m_H0LoadFactor = (m_H0Size / m_H0Capacity);
+    m_H0LoadFactor = (((double) m_H0Size) / m_H0Capacity);
 
 }
 
@@ -570,23 +597,14 @@ bool HashTable::findInH0(const char *str) {
    
     bool isFound = false;
 
-    if(m_H0LoadFactor > .5) {
-
-        initRehash();
-
-    }
-
-    if(m_H0LoadFactor < .03) {
-        forceRehashNormal();
-    }
 
     int index = hashH0(str);
     int probeLen = 0;
 
     // Keep going until we either add it or we go too far.
-    while(!isFound && probeLen < MAX_PROBE_LEN) {
+    while(H0[index] != NULL && !isFound && probeLen < MAX_PROBE_LEN) {
 
-        if(strcmp(H0[index], str) == 0) {
+        if(H0[index] != DELETED && strcmp(H0[index], str) == 0) {
 
             isFound = true;
 
@@ -608,8 +626,11 @@ bool HashTable::findInH0(const char *str) {
     // If we didn't actually add anything, we need to rehash because the
     if(!isFound && m_isRehashing) {
 
-        isFound = findInH1(str);
-
+        if(H1 != NULL) {
+            isFound = findInH1(str);
+        } else {
+            isFound = false;
+        }
     }
 
 
@@ -622,7 +643,7 @@ bool HashTable::findInH0(const char *str) {
     }
 
 
-    m_H0LoadFactor = (m_H0Size / m_H0Capacity);
+    m_H0LoadFactor = (((double) m_H0Size) / m_H0Capacity);
 
     return isFound; 
 
@@ -634,14 +655,6 @@ bool HashTable::findInH0(const char *str) {
 //
 char * HashTable::removeFromH0(const char *str) {
 
-    if(m_H0LoadFactor > .5) {
-        initRehash();
-    }
-
-    if(m_H0LoadFactor < .03) {
-        forceRehashNormal();
-    }
-
     bool isRemoved = false;
     char * toReturn = NULL;
 
@@ -649,9 +662,9 @@ char * HashTable::removeFromH0(const char *str) {
     int probeLen = 0;
 
     // Keep going until we either add it or we go too far.
-    while(!isRemoved && probeLen < MAX_PROBE_LEN) {
+    while(H0[index] != NULL && !isRemoved && probeLen < MAX_PROBE_LEN) {
 
-        if(strcmp(H0[index], str) == 0) {
+        if(H0[index] != DELETED && (strcmp(H0[index], str) == 0)) {
 
             isRemoved = true;
             toReturn = H0[index];
@@ -686,7 +699,7 @@ char * HashTable::removeFromH0(const char *str) {
         moveH0ClusterAt(hashH0(str));
     }
 
-    m_H0LoadFactor = (m_H0Size / m_H0Capacity);
+    m_H0LoadFactor = (((double) m_H0Size) / m_H0Capacity);
 
     return toReturn;
 
@@ -697,13 +710,19 @@ char * HashTable::removeFromH0(const char *str) {
 //
 //
 void HashTable::initRehash() {
+   
 
     if(!m_isRehashing) {
-        
+
+    
         m_isRehashing = true;
 
-        m_H1Capacity = findNewCapacity(m_H0Capacity);
+        m_H1Capacity = findNewCapacity(m_H0Size);
         m_H1Size = 0;
+
+        m_H1LoadFactor = (((double) m_H1Size) / m_H1Capacity);
+
+        //cout << "Capp: " << m_H1Capacity << endl;
 
         H1 = new char*[m_H1Capacity];
 
@@ -730,12 +749,11 @@ void HashTable::moveH0ClusterAt(int index) {
         // We don't need to move DELETED entries to the new table.
         if(H0[backwards] != DELETED) {
             // TODO: Will this be a pointer to a cstring or a cstring?
-            insertIntoH1(H0[backwards]);
+            insert(H0[backwards]);
 
             m_H0Size--;
             m_H1Size++;
 
-            free(H0[backwards]);
         }
 
         H0[backwards] = NULL;
@@ -747,12 +765,12 @@ void HashTable::moveH0ClusterAt(int index) {
     while(H0[forwards] != NULL) {
 
         if(H0[forwards] != DELETED) {
-            insertIntoH1(H0[forwards]);
+            
+            insert(H0[forwards]);
 
             m_H0Size--;
             m_H1Size++;
 
-            free(H0[forwards]);
         }
 
         H0[forwards] = NULL;
@@ -761,6 +779,8 @@ void HashTable::moveH0ClusterAt(int index) {
 
     }
 
+    m_H0LoadFactor = (((double) m_H0Size) / m_H0Capacity);
+    m_H1LoadFactor = (((double) m_H1Size) / m_H1Capacity);
 
 }
 
@@ -776,22 +796,12 @@ void HashTable::moveH0ClusterAt(int index) {
 //
 void HashTable::insertIntoH1(char *str) {
 
-    if(m_H1LoadFactor > .5) {
-        initReRehash();
-    }
-
-    // If the original table is below 3% load, finish the rehash.
-    if(m_H0LoadFactor < .03) {
-        forceRehashNormal();
-    }
-
     bool added = false;
 
     // If it's not rehashing, go down in here and insert it here. If it is, 
     // it will insert the item into H2 below this if statement in another one
     // that checks whether or not it has been added.
-    if(!m_isRehashing) {
-
+    
         int index = hashH1(str);
         int probeLen = 0;
 
@@ -818,7 +828,7 @@ void HashTable::insertIntoH1(char *str) {
             initReRehash();
         }
 
-    }
+    
 
     // If we didn't find the thing we wanted but we are rehashing, go check
     // the next table too.
@@ -828,11 +838,11 @@ void HashTable::insertIntoH1(char *str) {
 
         // Because ReRehash forces the throw up hands situation, we add this
         // to the main table.
-        insertIntoH0(str);
+        insert(str);
 
     }
 
-    m_H1LoadFactor = (m_H1Size / m_H1Capacity);  
+    m_H1LoadFactor = (((double) m_H1Size) / m_H1Capacity);  
 
 }
 
@@ -843,22 +853,16 @@ void HashTable::insertIntoH1(char *str) {
 //
 bool HashTable::findInH1(const char *str) {
 
-    if(m_H1LoadFactor > .5) {
-        initReRehash();
-    }
-
-    if(m_H0LoadFactor < .03) {
-        forceRehashNormal();
-    }
-
     int index = hashH1(str);
     int probeLen = 0;
     bool isFound = false;
 
+    cout << index << endl;
+
     // Keep going until we either add it or we go too far.
     while(!isFound && H1[index] != NULL && probeLen < MAX_PROBE_LEN) {
 
-        if(strcmp(H1[index], str) == 0) {
+        if(H1[index] != DELETED && strcmp(H1[index], str) == 0) {
 
             isFound = true;
 
@@ -869,6 +873,7 @@ bool HashTable::findInH1(const char *str) {
 
         probeLen++;
 
+        cout << index << endl;
     }
 
     // If the cluster is to big, init rehashing.
@@ -885,7 +890,7 @@ bool HashTable::findInH1(const char *str) {
 
     }
 
-    m_H1LoadFactor = (m_H1Size / m_H1Capacity);
+    m_H1LoadFactor = (((double) m_H1Size) / m_H1Capacity);
 
     return isFound; 
 }
@@ -897,15 +902,6 @@ bool HashTable::findInH1(const char *str) {
 //
 char * HashTable::removeFromH1(const char *str) {
 
-
-    if(m_H1LoadFactor > .5) {
-        initReRehash();
-    }
-
-    if(m_H0LoadFactor < .03) {
-        forceRehashNormal();
-    }
-
     bool isRemoved = false;
     char * toReturn = NULL;
 
@@ -915,7 +911,7 @@ char * HashTable::removeFromH1(const char *str) {
     // Keep going until we either add it or we go too far.
     while(!isRemoved && H1[index] != NULL && probeLen < MAX_PROBE_LEN) {
 
-        if(strcmp(H1[index], str) == 0) {
+        if(H1[index] != DELETED && strcmp(H1[index], str) == 0) {
 
             isRemoved = true;
             toReturn = H1[index];
@@ -945,7 +941,7 @@ char * HashTable::removeFromH1(const char *str) {
 
     }
 
-    m_H1LoadFactor = (m_H1Size / m_H1Capacity);
+    m_H1LoadFactor = (((double) m_H1Size) / m_H1Capacity);
 
     return toReturn;
 
@@ -959,7 +955,9 @@ char * HashTable::removeFromH1(const char *str) {
 //
 void HashTable::initReRehash() {
 
-    if(!m_isReRehashing){
+    //cout << "initReRehash" << endl;
+
+    if(!m_isReRehashing && m_isRehashing){
         m_isReRehashing = true;
         forceRehashNormal();
     }
@@ -980,7 +978,6 @@ void HashTable::moveH1ClusterAt(int index) {
             // TODO: Will this be a pointer to a cstring or a cstring?
             insertIntoH2(H1[backwards]);
 
-            free(H1[backwards]);
 
             m_H1Size--;
             m_H2Size++;
@@ -997,7 +994,6 @@ void HashTable::moveH1ClusterAt(int index) {
         if(H1[forwards] != DELETED) {
             insertIntoH2(H1[forwards]);
 
-            free(H1[forwards]);
 
             m_H1Size--;
             m_H2Size++;
@@ -1008,6 +1004,8 @@ void HashTable::moveH1ClusterAt(int index) {
         forwards = nextH1(forwards);
 
     }
+    
+    m_H1LoadFactor = (((double) m_H1Size) / m_H1Capacity);
 
 }
 
