@@ -113,7 +113,7 @@ void HashTable::insert(const char *str) {
 
     char *newStr = strdup(str);
 
-    if(m_H0LoadFactor > .5) {
+    if(!m_isRehashing && m_H0LoadFactor > .5) {
         initRehash();
     } else if(m_isRehashing && m_H0LoadFactor < .03) {
         forceRehashNormal();
@@ -749,7 +749,7 @@ void HashTable::moveH0ClusterAt(int index) {
         // We don't need to move DELETED entries to the new table.
         if(H0[backwards] != DELETED) {
             // TODO: Will this be a pointer to a cstring or a cstring?
-            insert(H0[backwards]);
+            insertIntoH1(H0[backwards]);
 
             m_H0Size--;
             m_H1Size++;
@@ -766,7 +766,7 @@ void HashTable::moveH0ClusterAt(int index) {
 
         if(H0[forwards] != DELETED) {
             
-            insert(H0[forwards]);
+            insertIntoH1(H0[forwards]);
 
             m_H0Size--;
             m_H1Size++;
