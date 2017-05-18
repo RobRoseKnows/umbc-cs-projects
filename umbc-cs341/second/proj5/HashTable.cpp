@@ -786,7 +786,7 @@ void HashTable::insertIntoH1(char *str) {
         int probeLen = 0;
 
         // Keep going until we either add it or we go too far.
-        while(!added) {
+        while(!added && probeLen < MAX_PROBE_LEN) {
 
             if(H1[index] == NULL || H1[index] == DELETED) {
 
@@ -796,8 +796,6 @@ void HashTable::insertIntoH1(char *str) {
 
             }
 
-            probeLen++;
-            
             // Next index is given by a method so we can wrap around properly.
             index = nextH1(index);
 
