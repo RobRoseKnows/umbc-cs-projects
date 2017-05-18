@@ -770,9 +770,59 @@ void HashTable::insertIntoH1(char *str) {
         initReRehash();
     }
 
+    // If the original table is below 3% load, finish the rehash.
     if(m_H0LoadFactor < .03) {
         forceRehashNormal();
     }
+
+    bool added = false;
+
+    // If it's not rehashing, go down in here and insert it here. If it is, 
+    // it will insert the item into H2 below this if statement in another one
+    // that checks whether or not it has been added.
+    if(!m_isRehashing) {
+
+        int index = hashH1(str);
+        int probeLen = 0;
+
+        // Keep going until we either add it or we go too far.
+        while(!added) {
+
+            if(H1[index] == NULL || H1[index] == DELETED) {
+
+                added = true;
+                H1[index] = str;
+                m_H0Size++;
+
+            }
+
+            probeLen++;
+            
+            // Next index is given by a method so we can wrap around properly.
+            index = nextH1(index);
+
+        }
+
+        // If the cluster is to big, init rehashing.
+        if(probeLen >= MAX_PROBE_LEN) {
+            initReRehash();
+        }
+
+    }
+
+    // If we didn't find the thing we wanted but we are rehashing, go check
+    // the next table too.
+    if(!added) {
+
+        initReRehash();
+
+        // Because ReRehash forces the throw up hands situation, we add this
+        // to the main table.
+        insertIntoH0(str);
+
+    }
+
+    m_H1LoadFactor = (m_H1Size / m_H1Capacity);  
 
 }
 
