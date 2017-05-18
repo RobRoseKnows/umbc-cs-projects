@@ -504,52 +504,52 @@ void HashTable::insertIntoH0(char *str) {
         initRehash();
     }
 
+    if(m_H0LoadFactor < .03) {
+        forceRehashNormal();
+    }
 
-    bool isRemoved = false;
-    char * toReturn = NULL;
+    bool added = false;
 
-    int index = hashH0(str);
-    int probeLen = 0;
+    // If it's not rehashing, go down in here and insert it here. If it is, 
+    // it will insert the item into H1 below this if statement in another one
+    // that checks whether or not it has been added.
+    if(!m_isRehashing) {
 
-    // Keep going until we either add it or we go too far.
-    while(!isRemoved && probeLen < MAX_PROBE_LEN) {
+        int index = hashH0(str);
+        int probeLen = 0;
 
-        if(strcmp(H0[index], str) == 0) {
+        // Keep going until we either add it or we go too far.
+        while(!added && probeLen < MAX_PROBE_LEN) {
 
-            isRemoved = true;
-            toReturn = H0[index];
-            H0[index] = DELETED;
-            m_H0Size--;
+            if(H0[index] == NULL || H0[index] == DELETED) {
+
+                added = true;
+                H0[index] = str;
+                m_H0Size++;
+
+            }
+
+            // Next index is given by a method so we can wrap around properly.
+            index = nextH0(index);
 
         }
 
-        // Next index is given by a method so we can wrap around properly.
-        index = nextH0(index);
+        // If the cluster is to big, init rehashing.
+        if(probeLen >= MAX_PROBE_LEN) {
+            initRehash();
+        }
 
     }
- 
-    // If the cluster is to big, init rehashing.
-    if(probeLen >= MAX_PROBE_LEN) {
-        initRehash();
-    }
-
 
     // If we didn't find the thing we wanted but we are rehashing, go check
     // the next table too.
-    if(!isRemoved && m_isRehashing) {
+    if(!added) {
 
-        toReturn = removeFromH1(str);
+        initRehash();
+        insertIntoH1(str);
 
     }
-    
 
-    if(m_isRehashing) {
-        moveH0ClusterAt(hashH0(str));
-    }
-
-    m_H0LoadFactor = (m_H0Size / m_H0Capacity);
-
-    return toReturn;
 
 
     if(m_isRehashing) {
@@ -572,6 +572,10 @@ bool HashTable::findInH0(const char *str) {
 
         initRehash();
 
+    }
+
+    if(m_H0LoadFactor < .03) {
+        forceRehashNormal();
     }
 
     int index = hashH0(str);
@@ -630,6 +634,9 @@ char * HashTable::removeFromH0(const char *str) {
         initRehash();
     }
 
+    if(m_H0LoadFactor < .03) {
+        forceRehashNormal();
+    }
 
     bool isRemoved = false;
     char * toReturn = NULL;
@@ -685,16 +692,19 @@ char * HashTable::removeFromH0(const char *str) {
 //
 void HashTable::initRehash() {
 
-    m_isRehashing = true;
-
-    m_H1Capacity = findNewCapacity(m_H0Capacity);
-    m_H1Size = 0;
+    if(!m_isRehashing) {
         
-    H1 = new char*[m_H1Capacity];
+        m_isRehashing = true;
 
-    for(int i = 0; i < m_H1Capacity; i++)
-        H1[i] = NULL;
+        m_H1Capacity = findNewCapacity(m_H0Capacity);
+        m_H1Size = 0;
 
+        H1 = new char*[m_H1Capacity];
+
+        for(int i = 0; i < m_H1Capacity; i++)
+            H1[i] = NULL;
+
+    }
 }
 
 
@@ -756,6 +766,13 @@ void HashTable::moveH0ClusterAt(int index) {
 //
 void HashTable::insertIntoH1(char *str) {
 
+    if(m_H1LoadFactor > .5) {
+        initReRehash();
+    }
+
+    if(m_H0LoadFactor < .03) {
+        forceRehashNormal();
+    }
 
 }
 
@@ -766,6 +783,13 @@ void HashTable::insertIntoH1(char *str) {
 //
 bool HashTable::findInH1(const char *str) {
 
+    if(m_H1LoadFactor > .5) {
+        initReRehash();
+    }
+
+    if(m_H0LoadFactor < .03) {
+        forceRehashNormal();
+    }
 
 }
 
@@ -781,6 +805,9 @@ char * HashTable::removeFromH1(const char *str) {
         initReRehash();
     }
 
+    if(m_H0LoadFactor < .03) {
+        forceRehashNormal();
+    }
 
     bool isRemoved = false;
     char * toReturn = NULL;
@@ -838,10 +865,10 @@ char * HashTable::removeFromH1(const char *str) {
 //
 void HashTable::initReRehash() {
 
-    m_isReRehashing = true;
-
-    forceRehashNormal();
-
+    if(!m_isReRehashing){
+        m_isReRehashing = true;
+        forceRehashNormal();
+    }
 }
 
 
