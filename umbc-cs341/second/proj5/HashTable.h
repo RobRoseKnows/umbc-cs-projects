@@ -41,6 +41,8 @@ class HashTable {
 // `public:` and `private:` I'm assuming we don't need to worry about that for
 // this project.
 
+public:
+
 //////////////////////////////////////////////////////
 // Structors/Operators                              //
 //////////////////////////////////////////////////////
@@ -58,14 +60,28 @@ class HashTable {
 // Primary Methods                                  //
 //////////////////////////////////////////////////////
 
-    int effectiveHash(const char *str, int table=H0_TABLE_NUM); 
-
     void insert(const char *str);
 
     bool find(const char *str);
 
     char * remove(const char *str);
 
+//////////////////////////////////////////////////////
+// Grading Methods                                  //
+//////////////////////////////////////////////////////
+
+    // Grading program
+    bool isRehashing()  {   return m_isRehashing;    }
+    
+    int tableSize(int table=H0_TABLE_NUM);
+    
+    int size(int table=H0_TABLE_NUM);
+
+    const char * at(int index, int table=H0_TABLE_NUM); 
+
+    void dump();
+
+private:
 //////////////////////////////////////////////////////
 // Utility Methods                                  //
 //////////////////////////////////////////////////////
@@ -96,19 +112,7 @@ class HashTable {
 
     int prevIndex(int index, int table=H0_TABLE_NUM);
 
-
-//////////////////////////////////////////////////////
-// Grading Methods                                  //
-//////////////////////////////////////////////////////
-
-    // Grading program
-    bool isRehashing()  {   return m_isRehashing;    }
-    
-    int tableSize(int table=H0_TABLE_NUM);
-    
-    int size(int table=H0_TABLE_NUM);
-
-    const char * at(int index, int table=H0_TABLE_NUM); 
+    int effectiveHash(const char *str, int table=H0_TABLE_NUM); 
 
 //////////////////////////////////////////////////////
 // Hash (H0) Methods                                //
@@ -201,7 +205,6 @@ class HashTable {
 // Dump Related Methods                             //
 //////////////////////////////////////////////////////
 
-    void dump();
 
     void printH0();
 

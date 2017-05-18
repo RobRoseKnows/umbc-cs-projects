@@ -131,7 +131,7 @@ void HashTable::insert(const char *str) {
 
 bool HashTable::find(const char *str) {
 
-
+    return findInH0(str);
 
 }
 
@@ -139,7 +139,7 @@ bool HashTable::find(const char *str) {
 
 char * HashTable::remove(const char *str) {
 
-
+    return removeFromH0(str);
 
 }
 
@@ -839,6 +839,41 @@ bool HashTable::findInH1(const char *str) {
         forceRehashNormal();
     }
 
+    int index = hashH1(str);
+    int probeLen = 0;
+    bool isFound = false;
+
+    // Keep going until we either add it or we go too far.
+    while(!isFound && H1[index] != NULL && probeLen < MAX_PROBE_LEN) {
+
+        if(strcmp(H1[index], str) == 0) {
+
+            isFound = true;
+
+        }
+
+        // Next index is given by a method so we can wrap around properly.
+        index = nextH1(index);
+
+    }
+
+    // If the cluster is to big, init rehashing.
+    if(probeLen >= MAX_PROBE_LEN) {
+        initReRehash();
+        isFound = find(str);
+    }
+
+
+    // If we didn't actually add anything, we need to rehash because the
+    if(!isFound) {
+
+        isFound = findInH2(str);
+
+    }
+
+    m_H1LoadFactor = (m_H1Size / m_H1Capacity);
+
+    return isFound; 
 }
 
 
@@ -864,7 +899,7 @@ char * HashTable::removeFromH1(const char *str) {
     int probeLen = 0;
 
     // Keep going until we either add it or we go too far.
-    while(!isRemoved && probeLen < MAX_PROBE_LEN) {
+    while(!isRemoved && H1[index] != NULL && probeLen < MAX_PROBE_LEN) {
 
         if(strcmp(H1[index], str) == 0) {
 
@@ -888,15 +923,10 @@ char * HashTable::removeFromH1(const char *str) {
 
     // If we didn't find the thing we wanted but we are rehashing, go check
     // the next table too.
-    if(!isRemove && m_isReRehashing) {
+    if(!isRemoved && m_isReRehashing) {
 
         toReturn = removeFromH2(str);
 
-    }
-    
-
-    if(m_isReRehashing) {
-        moveH1ClusterAt(hashH1(str));
     }
 
     m_H1LoadFactor = (m_H1Size / m_H1Capacity);
@@ -1095,9 +1125,9 @@ void HashTable::printTable(char** table, int capacity, char* name) {
         int hash = hashCode(str) % capacity;
         
         if(strcmp(str, "DELETED") != 0 || strcmp(str, "") != 0) {
-            printf("%s[%d] = %s (%d)", name, i, str, hash);
+            printf("%s[%d] = %s (%d)\n", name, i, str, hash);
         } else {
-            printf("%s[%d] = %s", name, i, str);
+            printf("%s[%d] = %s\n", name, i, str);
         }
 
     }
@@ -1108,7 +1138,7 @@ char* HashTable::getString(char* str) {
 
     if(str == NULL) {
         return "";
-    } else if(strcmp(str, DELETED) == 0) {
+    } else if(str == DELETED) {
         return "DELETED";
     } else {
         return str;
