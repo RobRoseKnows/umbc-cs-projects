@@ -39,10 +39,37 @@ HashTable::HashTable(int n):
 
 HashTable::~HashTable() {
 
-    freeTable(H0, m_H0Capacity);
-    freeTable(H1, m_H1Capacity);
-    freeTable(H2, m_H2Capacity);
+    if(H0 != NULL) {
+        for(int iH0 = 0; iH0 < m_H0Capacity; iH0++) {
+            if(H0[iH0] != DELETED && H0[iH0] != NULL) {
+                free(H0[iH0]);
+            }
+        }
+    }
 
+    delete [] H0;
+
+    if(H1 != NULL) {
+        for(int iH1 = 0; iH1 < m_H1Capacity; iH1++) {
+            if(H1[iH1] != DELETED && H1[iH1] != NULL) {
+                free(H1[iH1]);
+            }
+        }
+    }
+
+    delete [] H1;
+
+    if(H2 != NULL) {
+        for(int iH2 = 0; iH2 < m_H2Capacity; iH2++) {
+            if(H2[iH2] != DELETED && H2[iH2] != NULL) {
+                free(H2[iH2]);
+            }
+        }
+    }
+
+    delete [] H2;
+
+    
 }
 
 
@@ -82,9 +109,9 @@ HashTable::HashTable(HashTable& other) {
 
 const HashTable& HashTable::operator=(HashTable& rhs) {
 
-    freeTable(H0, m_H0Capacity);
-    freeTable(H1, m_H1Capacity);
-    freeTable(H2, m_H2Capacity);
+    delete [] H0;
+    delete [] H1;
+    delete [] H2;
         
     m_H0Capacity    = rhs.m_H0Capacity;
     m_H1Capacity    = rhs.m_H1Capacity;
@@ -263,13 +290,15 @@ const int HashTable::findPrime(int num) {
 // the array.
 void HashTable::freeTable(char** table, int size) {
 
-    for(int i = 0; i < size; i++) {
-        if(table[i] != DELETED && table[i] != NULL) {
-            //free(table[i]);
-        }
-    }
+    if(table == NULL) return;
 
-    delete [] table;
+    //for(int i = 0; i < size; i++) {
+      //  if(table[i] != DELETED && table[i] != NULL) {
+            
+       // }
+    //}
+
+    //delete [] table;
 
 }
 
@@ -305,13 +334,15 @@ void HashTable::forceRehashDuringCopy() {
 
         }
 
+        m_H0Size = m_H1Size;
+        m_H0Capacity = m_H1Capacity;
 
         // Transfer everything.
         H0 = H1;
 
 
         // Clean up
-        freeTable(H1, m_H1Capacity);
+        delete [] H1;
 
         m_isRehashing = false;
 
@@ -346,14 +377,16 @@ void HashTable::forceRehashDuringCopy() {
 
         }
 
+        m_H0Size = m_H2Size;
+        m_H0Capacity = m_H2Capacity;
 
         // Transfer everything to new table.
         H0 = H2;
 
 
         // Clean up
-        freeTable(H1, m_H1Capacity);
-        freeTable(H2, m_H2Capacity);
+        delete [] H1;
+        delete [] H2;
 
         m_isRehashing = false;
         m_isReRehashing = false;
@@ -402,13 +435,15 @@ void HashTable::forceRehashNormal() {
 
         }
 
+        m_H0Size = m_H1Size;
+        m_H0Capacity = m_H1Capacity;
 
         // Transfer everything to new table.
         H0 = H1;
 
 
         // Clean up Table 1
-        freeTable(H1, m_H1Capacity);
+        delete [] H1;
 
         m_isRehashing = false;
         
@@ -453,14 +488,16 @@ void HashTable::forceRehashNormal() {
 
         }
 
+        m_H0Size = m_H2Size;
+        m_H0Capacity = m_H2Capacity;
 
         // Transfer everything from the intermediate table 2 to Table 0.
         H0 = H2;
 
 
         // Clean up the other two tables because we don't neeed them anymore
-        freeTable(H1, m_H1Capacity);
-        freeTable(H2, m_H2Capacity);
+        delete [] H1;
+        delete [] H2;
         
         m_isRehashing = false;
         m_isReRehashing = false;
@@ -568,39 +605,35 @@ const char * HashTable::at(int index, int table) {
 
 void HashTable::insertIntoH0(char *str) {
 
+    if(m_isRehashing) {
+        insertIntoH1(str);
+        return;
+    }
 
     bool added = false;
 
     // If it's not rehashing, go down in here and insert it here. If it is, 
     // it will insert the item into H1 below this if statement in another one
     // that checks whether or not it has been added.
-    if(!m_isRehashing) {
 
-        int index = hashH0(str);
-        int probeLen = 0;
+    int index = hashH0(str);
+    int probeLen = 0;
 
-        // Keep going until we either add it or we go too far.
-        while(!added && probeLen < MAX_PROBE_LEN) {
+    // Keep going until we either add it or we go too far.
+    while(!added && probeLen < MAX_PROBE_LEN) {
 
-            if(H0[index] == NULL || H0[index] == DELETED) {
+        if(H0[index] == NULL || H0[index] == DELETED) {
 
-                added = true;
-                H0[index] = str;
-                m_H0Size++;
-
-            }
-
-            // Next index is given by a method so we can wrap around properly.
-            index = nextH0(index);
-
-            probeLen++;
+            added = true;
+            H0[index] = str;
+            m_H0Size++;
 
         }
 
-        // If the cluster is to big, init rehashing.
-        if(probeLen >= MAX_PROBE_LEN) {
-            initRehash();
-        }
+        // Next index is given by a method so we can wrap around properly.
+        index = nextH0(index);
+
+        probeLen++;
 
     }
 
@@ -609,11 +642,13 @@ void HashTable::insertIntoH0(char *str) {
     if(!added) {
 
         initRehash();
-        insertIntoH1(str);
 
     }
 
-
+    // If the cluster is to big, init rehashing.
+    if(probeLen >= MAX_PROBE_LEN) {
+        initRehash();
+    }
 
     if(m_isRehashing) {
         moveH0ClusterAt(hashH0(str));
@@ -787,6 +822,9 @@ void HashTable::moveH0ClusterAt(int index) {
 
             m_H0Size--;
             m_H1Size++;
+ 
+            m_H0LoadFactor = (((double) m_H0Size) / m_H0Capacity);
+            m_H1LoadFactor = (((double) m_H1Size) / m_H1Capacity);
 
         }
 
@@ -804,6 +842,9 @@ void HashTable::moveH0ClusterAt(int index) {
 
             m_H0Size--;
             m_H1Size++;
+    
+            m_H0LoadFactor = (((double) m_H0Size) / m_H0Capacity);
+            m_H1LoadFactor = (((double) m_H1Size) / m_H1Capacity);
 
         }
 
@@ -835,34 +876,27 @@ void HashTable::insertIntoH1(char *str) {
     // If it's not rehashing, go down in here and insert it here. If it is, 
     // it will insert the item into H2 below this if statement in another one
     // that checks whether or not it has been added.
-    
-        int index = hashH1(str);
-        int probeLen = 0;
 
-        // Keep going until we either add it or we go too far.
-        while(!added && probeLen < MAX_PROBE_LEN) {
+    int index = hashH1(str);
+    int probeLen = 0;
 
-            if(H1[index] == NULL || H1[index] == DELETED) {
+    // Keep going until we either add it or we go too far.
+    while(!added && probeLen < MAX_PROBE_LEN) {
 
-                added = true;
-                H1[index] = str;
-                m_H0Size++;
+        if(H1[index] == NULL || H1[index] == DELETED) {
 
-            }
-
-            // Next index is given by a method so we can wrap around properly.
-            index = nextH1(index);
-
-            probeLen++;
+            added = true;
+            H1[index] = str;
+            m_H1Size++;
 
         }
 
-        // If the cluster is to big, init rehashing.
-        if(probeLen >= MAX_PROBE_LEN) {
-            initReRehash();
-        }
+        // Next index is given by a method so we can wrap around properly.
+        index = nextH1(index);
 
-    
+        probeLen++;
+
+    }
 
     // If we didn't find the thing we wanted but we are rehashing, go check
     // the next table too.
@@ -870,10 +904,11 @@ void HashTable::insertIntoH1(char *str) {
 
         initReRehash();
 
-        // Because ReRehash forces the throw up hands situation, we add this
-        // to the main table.
-        insert(str);
+    }
 
+    // If the cluster is to big, init rehashing.
+    if(probeLen >= MAX_PROBE_LEN) {
+        initReRehash();
     }
 
     m_H1LoadFactor = (((double) m_H1Size) / m_H1Capacity);  
@@ -1014,7 +1049,6 @@ void HashTable::moveH1ClusterAt(int index) {
 
 
             m_H1Size--;
-            m_H2Size++;
         }
 
         H1[backwards] = NULL;
@@ -1030,7 +1064,6 @@ void HashTable::moveH1ClusterAt(int index) {
 
 
             m_H1Size--;
-            m_H2Size++;
         }
 
         H1[forwards] = NULL;
@@ -1170,6 +1203,8 @@ void HashTable::printH2() {
 
 
 void HashTable::printTable(char** table, int capacity, char* name) {
+
+    if(table == NULL) return;
 
     for(int i = 0; i < capacity; i++) {
 
