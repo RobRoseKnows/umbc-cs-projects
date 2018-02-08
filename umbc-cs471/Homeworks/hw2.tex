@@ -1,0 +1,136 @@
+\documentclass[12pt]{article}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\parindent}{0in}
+\setlength{\parskip}{\baselineskip}
+
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{booktabs,multirow}
+
+\title{CMSC 471 - HW2}
+
+\begin{document}
+
+CMSC 471 Spring 2018\hfill Homework \#2\\
+Robert Rose (02/07)
+
+\hrulefill
+
+\begin{enumerate}
+\item You have an algorithm that is trying to classify pictures as either pictures of cats or dogs. The underlying distribution of these pictures is 30\% dogs and 70\% cats.
+  \begin{enumerate}
+  \item How good would your algorithm's accuracy have to be to do better than randomly guessing a cat or a dog?
+    \begin{align*}
+P(A\mid B) = \frac{P(B \mid A) \, P(A)}{P(B)}
+    \end{align*}
+  \item How good would your algorithm's accuracy have to be to do better than guessing only cats?
+    \begin{align*}
+P(A\mid B) = \frac{P(B \mid A) \, P(A)}{P(B)}
+    \end{align*}
+  \item How good would your algorithm's accuracy have to be to do better than guessing cats 70\% of the time and dogs 30\% of the time?
+    \begin{align*}
+P(A\mid B) = \frac{P(B \mid A) \, P(A)}{P(B)}
+    \end{align*}
+  \end{enumerate}
+\newpage
+
+\item Which lottery would you play, assuming the utility of a dollar is given by:
+    \begin{equation*}
+        Utility(\text{Prize}) = \log_2(\text{Prize} + 1)
+    \end{equation*}
+
+  \vspace{-1em}
+
+  \begin{table}[h!]
+    \begin{center}
+      \caption{Lotteries}
+      \label{tab:table1}
+      \begin{tabular}{l|c|l}
+        \textbf{Lottery} & \textbf{Odds} & \textbf{Prize}\\
+        \hline
+        A\textsubscript{low}    & 0.2 & \$8\\
+        A\textsubscript{high}   & 0.8 & \$128\\
+        B\textsubscript{low}    & 0.2 & \$2\\
+        B\textsubscript{high}  & 0.8 & \$256\\
+      \end{tabular}
+    \end{center}
+  \end{table}
+
+  \vspace{-1em}
+
+  \begin{enumerate}
+  \item Which lottery would you play?
+    \begin{align*}
+        Utility(\text{A}) &= P(\text{A\textsubscript{low}}) \times Utility(\text{A\textsubscript{low}}) + P(\text{A\textsubscript{high}}) \times Utility(\text{A\textsubscript{high}})\\
+        &= 0.2 \times \log_2(\text{A\textsubscript{low\textsubscript{prize}}} + 1) + 0.8 \times \log_2(\text{A\textsubscript{high\textsubscript{prize}}} + 1)\\
+        &= 0.2 \times \log_2(\$8 + 1) + 0.8 \times \log_2(\$128 + 1)\\
+        &= 0.2 \times \log_2(\$9) + 0.8 \times \log_2(\$129)\\
+        &= 0.2 \times 3.170 + 0.8 \times 7.011\\
+        &= .634 + 5.609\\
+        &= 6.243\\\\
+        Utility(\text{B}) &= P(\text{B\textsubscript{low}}) \times Utility(\text{B\textsubscript{low}}) + P(\text{B\textsubscript{high}}) \times Utility(\text{B\textsubscript{high}})\\
+        &= 0.2 \times \log_2(\text{B\textsubscript{low\textsubscript{prize}}} + 1) + 0.8 \times \log_2(\text{B\textsubscript{high\textsubscript{prize}}} + 1)\\
+        &= 0.2 \times \log_2(\$2 + 1) + 0.8 \times \log_2(\$256 + 1)\\
+        &= 0.2 \times \log_2(\$3) + 0.8 \times \log_2(\$257)\\
+        &= 0.2 \times 1.585 + 0.8 \times 8.006\\
+        &= .317 + 6.404\\
+        &= 6.721
+    \end{align*}
+
+    I would play the second lottery (Lottery B), because its overall utility is higher.\\
+  \newpage
+  \item What is the expected value of each lottery?
+    \begin{align*}
+        EV(\text{A}) &= P(\text{A\textsubscript{low}}) \times \text{A\textsubscript{low\textsubscript{prize}}} + P(\text{A\textsubscript{high}}) \times \text{A\textsubscript{high\textsubscript{prize}}}\\
+        &= 0.2 \times \$8 + 0.8 \times \$128\\
+        &= \boxed{\$104.00}\\\\
+        EV(\text{B}) &= P(\text{B\textsubscript{low}}) \times \text{B\textsubscript{low\textsubscript{prize}}} + P(\text{B\textsubscript{high}}) \times \text{B\textsubscript{high\textsubscript{prize}}}\\
+        &= 0.2 \times \$2 + 0.8 \times \$256\\
+        &= \boxed{\$205.20}
+    \end{align*}
+  \end{enumerate}
+\newpage
+
+\item A bubonic plague test gives a positive result with probability 98\% when the patient is indeed affected by bubonic plague, while it gives a negative result with 99\% probability when the patient is not affected by bubonic plague. A patient is drawn at random from a population in which 0.1\% of individuals are affected by bubonic plague.
+  \begin{enumerate}
+  \item If he is found positive, what is the probability that he is indeed affected by bubonic plague?
+
+    \begin{align*}
+        P(\text{Infected}\mid\text{+}) &= \frac{P(\text{+}\mid\text{Infected}) P(\text{Infected})}{P(+)} \\
+        &= \frac{P(\text{+}\mid\text{Infected}) P(\text{Infected})}{P(\text{+}\mid\text{Infected}) P(\text{Infected}) + P(\text{+}\mid\neg\text{Infected}) P(\neg\text{Infected})} \\[8pt]
+        &= \frac{0.98 \times 0.001}{0.98 \times 0.001 + (1 - P(\text{--}\mid\neg\text{Infected})) \times (1 - P(\text{Infected}))} \\[8pt]
+        &= \frac{0.98 \times 0.001}{0.98 \times 0.001 + (1 - 0.99) \times (1 - 0.001)} \\[8pt]
+        &= \frac{0.98 \times 0.001}{0.98 \times 0.001 + 0.01 \times 0.999} \\[8pt]
+        &\approx 8.933\%
+    \end{align*}
+
+  \end{enumerate}
+\newpage
+
+\item Question 4
+  \begin{enumerate}
+  \item Part A
+
+  SOLUTION
+
+  \item Part B
+
+  SOLUTION
+  \end{enumerate}
+\newpage
+
+\item Question 5
+  \begin{enumerate}
+  \item Part A
+
+  SOLUTION
+
+  \item Part B
+
+  SOLUTION
+  \end{enumerate}
+\newpage
+
+\end{enumerate}
+\end{document}
