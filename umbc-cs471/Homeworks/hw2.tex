@@ -12,25 +12,125 @@
 
 \begin{document}
 
+%\begin{align*}
+% P(A\mid B) = \frac{P(B \mid A) \, P(A)}{P(B)}
+%\end{align*}
+
 CMSC 471 Spring 2018\hfill Homework \#2\\
 Robert Rose (02/07)
 
 \hrulefill
 
 \begin{enumerate}
-\item You have an algorithm that is trying to classify pictures as either pictures of cats or dogs. The underlying distribution of these pictures is 30\% dogs and 70\% cats.
+\item You have an algorithm that is trying to classify pictures as either pictures of cats or dogs. The underlying distribution of these pictures is 30\% dogs and 70\% cats. Assuming accuracy refers to the percentage of images categorized correctly.
   \begin{enumerate}
   \item How good would your algorithm's accuracy have to be to do better than randomly guessing a cat or a dog?
+    \vspace{-1em}
+    \begin{table}[h!]
+      \begin{center}
+          \caption{Confusion Matrix for Random Classifier}
+          \label{tab:table2}
+          \begin{tabular}{l|c|c}
+            & \textbf{Predicted Dog} & \textbf{Predicted Cat} \\
+            \hline
+            \textbf{Dog} & 0.15 & 0.15 \\
+            \textbf{Cat} & 0.35 & 0.35 \\
+          \end{tabular}
+      \end{center}
+    \end{table}
+
+    \vspace{-2em}
+
     \begin{align*}
-P(A\mid B) = \frac{P(B \mid A) \, P(A)}{P(B)}
+      P(\text{True Dog}) &= P(\text{Dog}) \times P(\text{Predicted Dog})\\
+        &= 0.30 \times 0.50\\
+        &= 0.15\\
+        P(\text{True Cat}) &= P(\text{Cat}) \times P(\text{Predicted Cat})\\
+        &= 0.70 \times 0.50\\
+        &= 0.35\\
+      P(\text{False Dog}) &= P(\text{Cat}) \times P(\text{Predicted Dog})\\
+        &= 0.70 \times 0.50\\
+        &= 0.35\\
+        P(\text{False Cat}) &= P(\text{Dog}) \times P(\text{Predicted Cat})\\
+        &= 0.30 \times 0.50\\
+        &= 0.15\\
+        ACC &= \frac{\text{True Dog} + \text{True Cat}}{\text{True Dog} + \text{True Cat} + \text{False Dog} + \text{False Cat}}\\[8pt]
+        &= \frac{0.15 + 0.35}{0.15 + 0.35 + 0.35 + 0.15}\\[8pt]
+        &= \boxed{50\%}
   \end{align*}
+
+  \newpage
+
   \item How good would your algorithm's accuracy have to be to do better than guessing only cats?
+  \vspace{-1em}
+    \begin{table}[h!]
+      \begin{center}
+          \caption{Confusion Matrix for All-Cat Classifier}
+          \label{tab:table2}
+          \begin{tabular}{l|c|c}
+            & \textbf{Predicted Dog} & \textbf{Predicted Cat} \\
+            \hline
+            \textbf{Dog} & 0.00 & 0.30 \\
+            \textbf{Cat} & 0.00 & 0.70 \\
+          \end{tabular}
+      \end{center}
+    \end{table}
+
+    \vspace{-3em}
+
     \begin{align*}
-P(A\mid B) = \frac{P(B \mid A) \, P(A)}{P(B)}
+      P(\text{True Dog}) &= P(\text{Dog}) \times P(\text{Predicted Dog})\\
+        &= 0.30 \times 0.00\\
+        &= 0.00\\
+        P(\text{True Cat}) &= P(\text{Cat}) \times P(\text{Predicted Cat})\\
+        &= 0.70 \times 1.00\\
+        &= 0.70\\
+      P(\text{False Dog}) &= P(\text{Cat}) \times P(\text{Predicted Dog})\\
+        &= 0.70 \times 0.00\\
+        &= 0.00\\
+        P(\text{False Cat}) &= P(\text{Dog}) \times P(\text{Predicted Cat})\\
+        &= 0.30 \times 1.00\\
+        &= 0.30\\
+        ACC &= \frac{\text{True Dog} + \text{True Cat}}{\text{True Dog} + \text{True Cat} + \text{False Dog} + \text{False Cat}}\\[8pt]
+        &= \frac{0.00 + 0.70}{0.00 + 0.70 + 0.00 + 0.30}\\[8pt]
+        &= \boxed{70\%}
   \end{align*}
+
+  \newpage
+
   \item How good would your algorithm's accuracy have to be to do better than guessing cats 70\% of the time and dogs 30\% of the time?
+  \vspace{-1em}
+    \begin{table}[h!]
+      \begin{center}
+          \caption{Confusion Matrix for Distribution Classifier}
+          \label{tab:table2}
+          \begin{tabular}{l|c|c}
+            & \textbf{Predicted Dog} & \textbf{Predicted Cat} \\
+            \hline
+            \textbf{Dog} & 0.09 & 0.21 \\
+            \textbf{Cat} & 0.49 & 0.21 \\
+          \end{tabular}
+      \end{center}
+    \end{table}
+
+    \vspace{-3em}
+
     \begin{align*}
-P(A\mid B) = \frac{P(B \mid A) \, P(A)}{P(B)}
+      P(\text{True Dog}) &= P(\text{Dog}) \times P(\text{Predicted Dog})\\
+        &= 0.30 \times 0.30\\
+        &= 0.09\\
+        P(\text{True Cat}) &= P(\text{Cat}) \times P(\text{Predicted Cat})\\
+        &= 0.70 \times 0.70\\
+        &= 0.49\\
+      P(\text{False Dog}) &= P(\text{Cat}) \times P(\text{Predicted Dog})\\
+        &= 0.70 \times 0.30\\
+        &= 0.21\\
+        P(\text{False Cat}) &= P(\text{Dog}) \times P(\text{Predicted Cat})\\
+        &= 0.30 \times 0.70\\
+        &= 0.21\\
+        ACC &= \frac{\text{True Dog} + \text{True Cat}}{\text{True Dog} + \text{True Cat} + \text{False Dog} + \text{False Cat}}\\[8pt]
+        &= \frac{0.09 + 0.49}{0.09 + 0.49 + 0.21 + 0.21}\\[8pt]
+        &= \boxed{58\%}
   \end{align*}
   \end{enumerate}
 \newpage
