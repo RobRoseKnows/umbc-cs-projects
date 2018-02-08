@@ -40,7 +40,7 @@ P(A\mid B) = \frac{P(B \mid A) \, P(A)}{P(B)}
     Utility(\text{Prize}) = \log_2(\text{Prize} + 1)
   \end{equation*}
 
-  \vspace{-1em}
+  \vspace{-2em}
 
   \begin{table}[h!]
     \begin{center}
@@ -57,7 +57,7 @@ P(A\mid B) = \frac{P(B \mid A) \, P(A)}{P(B)}
     \end{center}
   \end{table}
 
-  \vspace{-1em}
+  \vspace{-2em}
 
   \begin{enumerate}
   \item Which lottery would you play?
@@ -102,7 +102,7 @@ P(A\mid B) = \frac{P(B \mid A) \, P(A)}{P(B)}
     &= \frac{0.98 \times 0.001}{0.98 \times 0.001 + (1 - P(\text{--}\mid\neg\text{Infected})) \times (1 - P(\text{Infected}))} \\[8pt]
     &= \frac{0.98 \times 0.001}{0.98 \times 0.001 + (1 - 0.99) \times (1 - 0.001)} \\[8pt]
         &= \frac{0.98 \times 0.001}{0.98 \times 0.001 + 0.01 \times 0.999} \\[8pt]
-    &\approx 8.933\%
+    &\approx \boxed{8.933\%}
   \end{align*}
 
   \end{enumerate}
@@ -118,15 +118,45 @@ P(A\mid B) = \frac{P(B \mid A) \, P(A)}{P(B)}
     &= \frac{0.90 \times 0.75}{0.90 \times 0.75 + 0.60 \times 0.25} \\[8pt]
     &= \frac{0.675}{0.675 + 0.15} \\[8pt]
         &= \frac{0.675}{0.825} \\[8pt]
-    &= 81.\overline{81}\%
+    &= \boxed{81.\overline{81}\%}
   \end{align*}
 
   \end{enumerate}
 \newpage
 
 \item The following is a confusion matrix showing how well an algorithm is doing on a test set of a thousand samples:
+  \vspace{-2em}
+
+  \begin{table}[h!]
+    \begin{center}
+      \caption{Confusion Matrix}
+      \label{tab:table2}
+      \begin{tabular}{l|c|c}
+         & \textbf{Predicted Positive} & \textbf{Predicted Negative}\\
+        \hline
+        \textbf{Positive} & 300 & 100\\
+        \textbf{Negative} & 200 & 400\\
+      \end{tabular}
+    \end{center}
+  \end{table}
+
+  \vspace{-2em}
   \begin{enumerate}
   \item If your company makes \$5 per true positive, loses \$2 per false positive and \$1 per false negative (true negatives are revenue neutral) what is the expected profit on using this algorithm exactly \underline{\textbf{one}} time?
+
+  \vspace{-1em}
+
+    \begin{align*}
+        P(\text{TP}) &= 0.30\\
+        P(\text{FP}) &= 0.20\\
+        P(\text{TN}) &= 0.40\\
+        P(\text{FN}) &= 0.10\\\\
+        E(\text{Profit}) &= \text{R\textsubscript{TP}} \times P(\text{TP}) + \text{R\textsubscript{FP}} \times P(\text{FP}) + \text{R\textsubscript{TN}} \times P(\text{TN}) + \text{R\textsubscript{FN}} \times P(\text{FN})\\
+        &= (\$5 \times 0.30) + (-\$2 \times 0.20) + (\$0 \times 0.40) + (-\$1 \times 0.10)\\
+        &= \$1.50 - \$0.40 - \$0.10\\
+        &= \boxed{\$1.00}
+    \end{align*}
+
   \end{enumerate}
 \newpage
 
