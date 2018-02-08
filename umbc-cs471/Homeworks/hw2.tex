@@ -23,22 +23,22 @@ Robert Rose (02/07)
   \item How good would your algorithm's accuracy have to be to do better than randomly guessing a cat or a dog?
     \begin{align*}
 P(A\mid B) = \frac{P(B \mid A) \, P(A)}{P(B)}
-    \end{align*}
+  \end{align*}
   \item How good would your algorithm's accuracy have to be to do better than guessing only cats?
     \begin{align*}
 P(A\mid B) = \frac{P(B \mid A) \, P(A)}{P(B)}
-    \end{align*}
+  \end{align*}
   \item How good would your algorithm's accuracy have to be to do better than guessing cats 70\% of the time and dogs 30\% of the time?
     \begin{align*}
 P(A\mid B) = \frac{P(B \mid A) \, P(A)}{P(B)}
-    \end{align*}
+  \end{align*}
   \end{enumerate}
 \newpage
 
 \item Which lottery would you play, assuming the utility of a dollar is given by:
-    \begin{equation*}
-        Utility(\text{Prize}) = \log_2(\text{Prize} + 1)
-    \end{equation*}
+  \begin{equation*}
+    Utility(\text{Prize}) = \log_2(\text{Prize} + 1)
+  \end{equation*}
 
   \vspace{-1em}
 
@@ -49,9 +49,9 @@ P(A\mid B) = \frac{P(B \mid A) \, P(A)}{P(B)}
       \begin{tabular}{l|c|l}
         \textbf{Lottery} & \textbf{Odds} & \textbf{Prize}\\
         \hline
-        A\textsubscript{low}    & 0.2 & \$8\\
+        A\textsubscript{low}  & 0.2 & \$8\\
         A\textsubscript{high}   & 0.8 & \$128\\
-        B\textsubscript{low}    & 0.2 & \$2\\
+        B\textsubscript{low}  & 0.2 & \$2\\
         B\textsubscript{high}  & 0.8 & \$256\\
       \end{tabular}
     \end{center}
@@ -62,7 +62,7 @@ P(A\mid B) = \frac{P(B \mid A) \, P(A)}{P(B)}
   \begin{enumerate}
   \item Which lottery would you play?
     \begin{align*}
-        Utility(\text{A}) &= P(\text{A\textsubscript{low}}) \times Utility(\text{A\textsubscript{low}}) + P(\text{A\textsubscript{high}}) \times Utility(\text{A\textsubscript{high}})\\
+    Utility(\text{A}) &= P(\text{A\textsubscript{low}}) \times Utility(\text{A\textsubscript{low}}) + P(\text{A\textsubscript{high}}) \times Utility(\text{A\textsubscript{high}})\\
         &= 0.2 \times \log_2(\text{A\textsubscript{low\textsubscript{prize}}} + 1) + 0.8 \times \log_2(\text{A\textsubscript{high\textsubscript{prize}}} + 1)\\
         &= 0.2 \times \log_2(\$8 + 1) + 0.8 \times \log_2(\$128 + 1)\\
         &= 0.2 \times \log_2(\$9) + 0.8 \times \log_2(\$129)\\
@@ -76,19 +76,19 @@ P(A\mid B) = \frac{P(B \mid A) \, P(A)}{P(B)}
         &= 0.2 \times 1.585 + 0.8 \times 8.006\\
         &= .317 + 6.404\\
         &= 6.721
-    \end{align*}
+  \end{align*}
 
     I would play the second lottery (Lottery B), because its overall utility is higher.\\
   \newpage
   \item What is the expected value of each lottery?
     \begin{align*}
-        EV(\text{A}) &= P(\text{A\textsubscript{low}}) \times \text{A\textsubscript{low\textsubscript{prize}}} + P(\text{A\textsubscript{high}}) \times \text{A\textsubscript{high\textsubscript{prize}}}\\
+      EV(\text{A}) &= P(\text{A\textsubscript{low}}) \times \text{A\textsubscript{low\textsubscript{prize}}} + P(\text{A\textsubscript{high}}) \times \text{A\textsubscript{high\textsubscript{prize}}}\\
         &= 0.2 \times \$8 + 0.8 \times \$128\\
         &= \boxed{\$104.00}\\\\
         EV(\text{B}) &= P(\text{B\textsubscript{low}}) \times \text{B\textsubscript{low\textsubscript{prize}}} + P(\text{B\textsubscript{high}}) \times \text{B\textsubscript{high\textsubscript{prize}}}\\
         &= 0.2 \times \$2 + 0.8 \times \$256\\
         &= \boxed{\$205.20}
-    \end{align*}
+  \end{align*}
   \end{enumerate}
 \newpage
 
@@ -96,39 +96,37 @@ P(A\mid B) = \frac{P(B \mid A) \, P(A)}{P(B)}
   \begin{enumerate}
   \item If he is found positive, what is the probability that he is indeed affected by bubonic plague?
 
-    \begin{align*}
-        P(\text{Infected}\mid\text{+}) &= \frac{P(\text{+}\mid\text{Infected}) P(\text{Infected})}{P(+)} \\
-        &= \frac{P(\text{+}\mid\text{Infected}) P(\text{Infected})}{P(\text{+}\mid\text{Infected}) P(\text{Infected}) + P(\text{+}\mid\neg\text{Infected}) P(\neg\text{Infected})} \\[8pt]
-        &= \frac{0.98 \times 0.001}{0.98 \times 0.001 + (1 - P(\text{--}\mid\neg\text{Infected})) \times (1 - P(\text{Infected}))} \\[8pt]
-        &= \frac{0.98 \times 0.001}{0.98 \times 0.001 + (1 - 0.99) \times (1 - 0.001)} \\[8pt]
+  \begin{align*}
+    P(\text{Infected}\mid\text{+}) &= \frac{P(\text{+}\mid\text{Infected}) P(\text{Infected})}{P(\text{+})} \\
+    &= \frac{P(\text{+}\mid\text{Infected}) P(\text{Infected})}{P(\text{+}\mid\text{Infected})  P(\text{Infected}) + P(\text{+}\mid\neg\text{Infected}) P(\neg\text{Infected})} \\[8pt]
+    &= \frac{0.98 \times 0.001}{0.98 \times 0.001 + (1 - P(\text{--}\mid\neg\text{Infected})) \times (1 - P(\text{Infected}))} \\[8pt]
+    &= \frac{0.98 \times 0.001}{0.98 \times 0.001 + (1 - 0.99) \times (1 - 0.001)} \\[8pt]
         &= \frac{0.98 \times 0.001}{0.98 \times 0.001 + 0.01 \times 0.999} \\[8pt]
-        &\approx 8.933\%
-    \end{align*}
+    &\approx 8.933\%
+  \end{align*}
 
   \end{enumerate}
 \newpage
 
-\item Question 4
+\item A friend who works in a big city owns two cars, one small and one large. Three-quarters of the time he drives the small car to work, and one-quarter of the time he drives the large car. If he takes the small car, he usually has little trouble parking, and so is at work on time with probability 0.9. If he takes the large car, he is at work on time with probability 0.6.
   \begin{enumerate}
-  \item Part A
+  \item Given that he was on time on a particular morning, what is the probability that he drove the small car?
 
-  SOLUTION
+  \begin{align*}
+    P(\text{Small}\mid\text{On Time}) &= \frac{P(\text{On Time}\mid\text{Small}) P(\text{Small})}{P(\text{On Time})} \\
+    &= \frac{P(\text{On Time}\mid\text{Small}) P(\text{Small})}{P(\text{On Time}\mid\text{Small})  P(\text{Small}) + P(\text{On Time}\mid\text{Large})  P(\text{Large})} \\[8pt]
+    &= \frac{0.90 \times 0.75}{0.90 \times 0.75 + 0.60 \times 0.25} \\[8pt]
+    &= \frac{0.675}{0.675 + 0.15} \\[8pt]
+        &= \frac{0.675}{0.825} \\[8pt]
+    &= 81.\overline{81}\%
+  \end{align*}
 
-  \item Part B
-
-  SOLUTION
   \end{enumerate}
 \newpage
 
-\item Question 5
+\item The following is a confusion matrix showing how well an algorithm is doing on a test set of a thousand samples:
   \begin{enumerate}
-  \item Part A
-
-  SOLUTION
-
-  \item Part B
-
-  SOLUTION
+  \item If your company makes \$5 per true positive, loses \$2 per false positive and \$1 per false negative (true negatives are revenue neutral) what is the expected profit on using this algorithm exactly \underline{\textbf{one}} time?
   \end{enumerate}
 \newpage
 
