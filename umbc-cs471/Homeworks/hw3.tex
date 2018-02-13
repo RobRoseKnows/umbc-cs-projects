@@ -13,17 +13,32 @@
 \begin{document}
 
 CMSC 471 Spring 2018\hfill Homework \#3\\
-Robert Rose (02/12)
+Robert Rose (02/13)
 
 \hrulefill
 
 \begin{enumerate}
-\item You have an algorithm that is trying to classify pictures as either pictures of cats or dogs. The underlying distribution of these pictures is 30\% dogs and 70\% cats. Assuming accuracy refers to the percentage of images categorized correctly.
+\item \textbf{3.15} Consider a state space where the start state is number 1 and each state is $k$ has two successors: the numbers $2k$ and $2k + 1$
   \begin{enumerate}
-  \item How good would your algorithm's accuracy have to be to do better than randomly guessing a cat or a dog?
-
+  \item Draw the portion of the state space for states 1 to 15.
+  \item Suppose the goal state is 11. List the order in which nodes will be visited for breadth-first search, depth-limited search with limit 3, and iterative deepening search.
+  \item How well would bidirectional search work on this problem? What is the branching factor in each direction of the bidirectional search?
+  \item Does the answer to (c) suggest a reformulation of the problem that would allow you to solve the problem of getting from state 1 to a given goal state with almost no search?
+  \item Call the action going from $k$ to $2k$ Left, and the action from going to $2k + 1$ Right. Can you find an algorithm that outputs the solution to this problem without any search at all?
   \end{enumerate}
 \newpage
+
+\item \textbf{3.26} Consider the unbounded version of the regular 2D grid shown in Figure 3.9. The start state is at the origin, (0,0), and the goal state is at ($x$, $y$).
+  \begin{enumerate}
+  \item What is the branching factor $b$ in this state space?
+  \item How many distinct states are there at depth $k$ (for $k > 0$)?
+  \item What is the maximum number of nodes expanded by breadth-first tree search?
+  \item What is the maximum number of nodes expanded by breadth-first graph search?
+  \item Is $h = \left|u - x\right| + \left|v - y\right|$ an admissible heuristic for a state at ($u, v$)? Explain.
+  \item How many nodes are expanded by A* graph search using $h$?
+  \item Does $h$ remain admissible if some links are removed?
+  \item Does $h$ remain admissible if some links are added between nonadjacent states?
+  \end{enumerate}
 
 \end{enumerate}
 \end{document}
