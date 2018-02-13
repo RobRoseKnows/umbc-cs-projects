@@ -30,43 +30,26 @@ Robert Rose (02/13)
 &A_1 = \text{likes vehicle \#1} & A_2 = \text{likes vehicle \#2}\\
 &A_3 = \text{likes vehicle \#3} &
 \end{align*}
+Suppose that $P(A_1) = .55, P(A_2) = .65, P(A_3) = .70, P(A_1 \cup A_2) = .80, P(A_2 \cap A_3) = .40$, and $P(A_1 \cup A_2 \cup A_3) = .88.$
   \begin{enumerate}
-  \item What is the branching factor $b$ in this state space?
-  \item How many distinct states are there at depth $k$ (for $k > 0$)?
-  \item What is the maximum number of nodes expanded by breadth-first tree search?
-  \item What is the maximum number of nodes expanded by breadth-first graph search?
-  \item Is $h = \left|u - x\right| + \left|v - y\right|$ an admissible heuristic for a state at ($u, v$)? Explain.
-  \item How many nodes are expanded by A* graph search using $h$?
-  \item Does $h$ remain admissible if some links are removed?
-  \item Does $h$ remain admissible if some links are added between nonadjacent states?
+  \item What is the probability that the individual likes both vehicle \#1 vehicle \#2?
+  \item Determine and interpret $P(A_2 \mid A_3)$.
+  \item Are A\textsubscript{2} and A\textsubscript{3} independent events? Answer in two different ways.
+  \item If you learn that the individual did not like vehicle \#1, what now is the probability that he/she liked at least one of the other two vehicles?
   \end{enumerate}
 
 \newpage
 
-\item \textbf{3.1.5} Consider the unbounded version of the regular 2D grid shown in Figure 3.9. The start state is at the origin, (0,0), and the goal state is at ($x$, $y$).
-  \begin{enumerate}
-  \item What is the branching factor $b$ in this state space?
-  \item How many distinct states are there at depth $k$ (for $k > 0$)?
-  \item What is the maximum number of nodes expanded by breadth-first tree search?
-  \item What is the maximum number of nodes expanded by breadth-first graph search?
-  \item Is $h = \left|u - x\right| + \left|v - y\right|$ an admissible heuristic for a state at ($u, v$)? Explain.
-  \item How many nodes are expanded by A* graph search using $h$?
-  \item Does $h$ remain admissible if some links are removed?
-  \item Does $h$ remain admissible if some links are added between nonadjacent states?
-  \end{enumerate}
+\item \textbf{3.1.5} If the sample space $S$ is an infinite set, does this necessarily imply that any rv $X$ defined from $S$ will have an infinite set of possible values? If yes, say why. If no, give an example.
+
 
 \newpage
 
-\item \textbf{3.2.15} Consider the unbounded version of the regular 2D grid shown in Figure 3.9. The start state is at the origin, (0,0), and the goal state is at ($x$, $y$).
+\item \textbf{3.2.15} Many manufacturers have quality control programs that include inspection of incoming materials for defects. Suppose a computer manufacturer receives circuit boards in batches of five. Two boards are selected from each batch for inspection. We can represent possible outcomes of the selection process by pairs. For example, the pair $(1, 2)$ represents the selection of boards 1 and 2 for inspection.
   \begin{enumerate}
-  \item What is the branching factor $b$ in this state space?
-  \item How many distinct states are there at depth $k$ (for $k > 0$)?
-  \item What is the maximum number of nodes expanded by breadth-first tree search?
-  \item What is the maximum number of nodes expanded by breadth-first graph search?
-  \item Is $h = \left|u - x\right| + \left|v - y\right|$ an admissible heuristic for a state at ($u, v$)? Explain.
-  \item How many nodes are expanded by A* graph search using $h$?
-  \item Does $h$ remain admissible if some links are removed?
-  \item Does $h$ remain admissible if some links are added between nonadjacent states?
+  \item List the ten different possible outcomes.
+  \item Suppose that boards 1 and 2 ar the only defective boards in a batch. Two boards are chosen at random. Define $X$ to be the number of defective boards observed among those inspected. Find the probability distribution of $X$.
+  \item Let $F(x)$ denote the cdf of $X$. First determine $F(0) = P(X\leq0)$. $F(1)$, and $F(2)$; then obtain $F(x)$ for all other x.
   \end{enumerate}
 
 \end{enumerate}
