@@ -26,11 +26,11 @@ class Graph(object):
         if max(node_from, node_to) > self.max_node:
             self.max_node = max(node_from, node_to)
 
-    def close_graph(self):
+    def close_graph(self) -> None:
         for node in range(self.max_node + 1):
             self._adjlist[node]
 
-    def get_edge_set(self, node):
+    def get_edge_set(self, node) -> set:
         return self._adjlist[node]
 
 
@@ -42,13 +42,14 @@ class SearchType(Enum):
     def __str__(self):
         return self.name
 
-def build_graph(file_in: file) -> Graph:
+def build_graph(file_in) -> Graph:
     graph = Graph()
     for line in file_in:
-        src, dest, weight = line.split()
+        src, dest, weight = map(int, line.split())
         graph.add_edge(src, dest, weight)
+    return graph
 
-def config_arg_parser() -> ArgumentParser:
+def config_arg_parser() -> argparse.ArgumentParser():
     arg_parser = argparse.ArgumentParser()
 
     arg_parser.add_argument("input_file", type=str, help="The input file with the directed graph nodes and edges.")
@@ -56,24 +57,53 @@ def config_arg_parser() -> ArgumentParser:
     arg_parser.add_argument("end_node", type=int, help="The end node to search for.")
     arg_parser.add_argument("search_type", type=SearchType, help="What search type to use.", choices=list(SearchType))
 
+    return arg_parser
+
 def bfs(G, src, dest):
-    path = []
+    nodes_visited = set()
+    nodes_to_visit = deque([[src]])
 
+    while nodes_to_visit:
+        path = nodes_to_visit.popleft()
+        on = path[-1]
+        if on not in nodes_visited:
+            nodes_visited.add(on)
 
-    return path
+            if on == dest:
+                return path
+
+            for edge in sorted(G.get_edge_set(on)):
+                to = edge.to_node
+                nodes_to_visit.append(path + [to])
+
+    return []
 
 def dfs(G, src, dest):
-    path = []
+    nodes_visited = set()
+    nodes_to_visit = [[src]]
 
+    while nodes_to_visit:
+        path = nodes_to_visit.pop()
+        on = path[-1]
+        if on not in nodes_visited:
+            nodes_visited.add(on)
 
-    return path
+            if on == dest:
+                return path
+
+            for edge in sorted(G.get_edge_set(on)):
+                to = edge.to_node
+                nodes_to_visit.append(path + [to])
+
+    return []
 
 def ucs(G, src, dest):
     path = []
+    nodes_visited = set()
 
     return path
 
-def main():
+def run():
     arg_parser = config_arg_parser()
     args = arg_parser.parse_args()
     G = Graph()
@@ -93,4 +123,4 @@ def main():
     else:
         return []
 
-main()
+print(run())
