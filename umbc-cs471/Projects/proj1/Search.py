@@ -110,12 +110,14 @@ def ucs(G, src, dest):
     on = src
 
     while dest in nodes_to_visit:
+        # Exit condition, means the nodes are not connected.
+        if on is None:
+            return []
+
         nodes_to_visit.discard(on)
         neighbor_dist = dict()
         for edge in G.get_edge_set(on):
             neighbor_dist[edge.to_node] = dist[on] + edge.weight
-
-        neighbor_final_dist = set()
 
         for next_node, tent_dist in neighbor_dist.items():
             if next_node not in dist:
@@ -124,12 +126,21 @@ def ucs(G, src, dest):
             elif tent_dist < dist[next_node]:
                 dist[next_node] = tent_dist
                 prev[next_node] = on
-            neighbor_final_dist.add(PotentialNodes(distance=dist[next_node], node=next_node))
 
-        if neighbor_final_dist:
-            on = min(neighbor_final_dist).node
-        else:
-            on = None
+        min_dist = None
+        min_node = None
+
+        for node in nodes_to_visit:
+            if node in nodes_to_visit and node in dist:
+                if min_dist is None and min_node is None:
+                    min_dist = dist[node]
+                    min_node = node
+                elif dist[node] < min_dist:
+                    min_dist = dist[node]
+                    min_node = node
+
+        on = min_node
+
 
     if dest in prev:
         back = dest
