@@ -26,9 +26,8 @@ class Graph(object):
         if max(node_from, node_to) > self.max_node:
             self.max_node = max(node_from, node_to)
 
-    def close_graph(self) -> None:
-        for node in range(self.max_node + 1):
-            self._adjlist[node]
+    def get_vertex_set(self) -> set:
+        return self._adjlist.keys()
 
     def get_edge_set(self, node) -> set:
         return self._adjlist[node]
@@ -98,8 +97,50 @@ def dfs(G, src, dest):
     return []
 
 def ucs(G, src, dest):
-    path = []
-    nodes_visited = set()
+    PotentialNodes = namedtuple('PotentialNodes', ['distance', 'node'])
+
+    path = deque()
+
+    nodes_to_visit = set(G.get_vertex_set())
+    dist = dict()
+    prev = dict()
+
+    dist[src] = 0
+
+    on = src
+
+    while dest in nodes_to_visit:
+        nodes_to_visit.discard(on)
+        neighbor_dist = dict()
+        for edge in G.get_edge_set(on):
+            neighbor_dist[edge.to_node] = dist[on] + edge.weight
+
+        neighbor_final_dist = set()
+
+        for next_node, tent_dist in neighbor_dist.items():
+            if next_node not in dist:
+                dist[next_node] = tent_dist
+                prev[next_node] = on
+            elif tent_dist < dist[next_node]:
+                dist[next_node] = tent_dist
+                prev[next_node] = on
+            neighbor_final_dist.add(PotentialNodes(distance=dist[next_node], node=next_node))
+
+        if neighbor_final_dist:
+            on = min(neighbor_final_dist).node
+        else:
+            on = None
+
+    if dest in prev:
+        back = dest
+    else:
+        return []
+
+    while back in prev:
+        path.appendleft(back)
+        back = prev[back]
+
+    path.appendleft(src)
 
     return path
 
@@ -123,4 +164,4 @@ def run():
     else:
         return []
 
-print(run())
+print(list(run()))
