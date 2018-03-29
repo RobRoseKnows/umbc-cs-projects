@@ -7,32 +7,33 @@ import random
 RAND = random.Random()
 RAND.seed(1337)
 
+def minusPlusZero(val : int) -> (int, int, int):
+    return (val - 1, val + 1, val)
+
+def high_next(on_x : int, on_y : int, xmin : int, ymin : int, xmax : int, ymax : int) -> (int, int):
+    x_vals = list(filter(lambda x: xmin <= x <= xmax, minusZeroPlus(on_x)))
+    y_vals = list(filter(lambda y: ymin <= y <= ymax, minusZeroPlus(on_y)))
+
+    combos = [ (x, y) for x in x_vals for y in y_vals ]
+
+    heuristics = [ my_func(x, y) for x, y in combos ]
+
+    high_index = heuristics.index(max(heuristics))
+    return combos[high_index]
+
+
 def hill_climbing(xinit : int, yinit : int, xmin : int, ymin : int, xmax : int, ymax : int):
     on_x = xinit
     on_y = yinit
 
     while True:
-        # Check to see if one of the neighbors goes out of bounds in the x-direction
-        inbound_x_neg = xmin <= on_x - 1 <= xmax
-        inbound_x_pos = xmin <= on_x + 1 <= xmax
-
-        # Check if they go out of bounds in the y-direction.
-        inbound_y_neg = ymin <= on_y - 1 <= ymax
-        inbound_y_pos = ymin <= on_y + 1 <= ymax
-
-        # Check if x & y are both inbound
-        inbound_x = inbound_x_neg and inbound_x_pos
-        inbound_y = inbound_y_neg and inbound_y_pos
-
-        inbound_all = inbound_x and inbound_y
-
-        # Check if inbound on negative or positive
-        inbound_neg = inbound_x_neg and inbound_y_neg
-        inbound_pos = inbound_x_pos and inbound_y_pos
-
-        if()
-
-        next_x, next_y = high_next()
+        next_x, next_y = high_next(on_x, on_y, xmin, ymin, xmax, ymax)
+        if next_x == on_x and next_y == on_y:
+            #We found the local maxima, go ahead and return.
+            return next_x, next_y
+        else:
+            on_x = next_x
+            on_y = next_y
 
 
 # Graph program taken from prompt.
