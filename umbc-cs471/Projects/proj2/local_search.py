@@ -100,8 +100,9 @@ def run():
     arg_parser = config_arg_parser()
     args = arg_parser.parse_args()
 
-    with open(args.input_file) as file_in:
-        exec(file_in.read()) # VERY DANGEROUS! DO NOT DO IRL!
+    func_file_body = open(args.input_file).read() # VERY DANGEROUS! DO NOT DO IRL!
+    func_text = "def my_func(x,y):\n\t" + file_in.read()
+    exec(func_text)
 
     xmin = args.xmin
     ymin = args.ymin
