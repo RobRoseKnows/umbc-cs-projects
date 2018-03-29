@@ -1,11 +1,15 @@
 #!bin/python3
 
 import argparse
-
 import random
+
+from collections import Counter
 
 RAND = random.Random()
 RAND.seed(1337)
+
+# Maximum number of restarts to do
+MAX_RESTARTS = 50
 
 def minusPlusZero(val : int) -> (int, int, int):
     return (val - 1, val + 1, val)
@@ -74,6 +78,23 @@ def config_arg_parser() -> argparse.ArgumentParser():
 
     return arg_parser
 
+def random_restarts(xmin, ymin, xmax, ymax):
+
+    count = Counter()
+    number_iterations = 0
+
+    while number_iterations < MAX_RESTARTS:
+        number_iterations += 1
+        state_x = RAND.randint(xmin, xmax)
+        state_y = RAND.randint(ymin, ymax)
+
+        maxima_loc = hill_climbing(state_x, state_y, xmin, ymin, xmax, ymax)
+
+        count[maxima_loc] += 1
+
+    maxima = count.most_common(1)[0][0]
+    return [maxima[0], maxima[1]]
+
 
 def run():
     arg_parser = config_arg_parser()
@@ -87,4 +108,6 @@ def run():
     xmax = args.xmax
     ymax = args.ymax
 
+    return random_restarts(xmin, ymin, xmax, ymax)
 
+run()
