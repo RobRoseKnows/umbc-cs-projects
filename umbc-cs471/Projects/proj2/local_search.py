@@ -15,8 +15,8 @@ def minusPlusZero(val : int) -> (int, int, int):
     return (val - 1, val + 1, val)
 
 def high_next(on_x : int, on_y : int, xmin : int, ymin : int, xmax : int, ymax : int) -> (int, int):
-    x_vals = list(filter(lambda x: xmin <= x <= xmax, minusZeroPlus(on_x)))
-    y_vals = list(filter(lambda y: ymin <= y <= ymax, minusZeroPlus(on_y)))
+    x_vals = list(filter(lambda x: xmin <= x <= xmax, minusPlusZero(on_x)))
+    y_vals = list(filter(lambda y: ymin <= y <= ymax, minusPlusZero(on_y)))
 
     combos = [ (x, y) for x in x_vals for y in y_vals ]
 
@@ -101,7 +101,7 @@ def run():
     args = arg_parser.parse_args()
 
     with open(args.input_file) as file_in:
-        exec(file_in) # VERY DANGEROUS! DO NOT DO IRL!
+        exec(file_in.read()) # VERY DANGEROUS! DO NOT DO IRL!
 
     xmin = args.xmin
     ymin = args.ymin
