@@ -11,7 +11,7 @@ RAND = random.Random()
 #RAND.seed(1338)
 
 # Maximum number of restarts to do
-MAX_RESTARTS = 60
+MAX_RESTARTS = 200
 
 
 # Putting the current value first is how we make sure it eventually terminates.
