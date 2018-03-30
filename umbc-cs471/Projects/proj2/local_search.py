@@ -5,14 +5,28 @@ import random
 
 from collections import Counter
 
+from math import sin, cos, pi
+
+def sinc(x):
+    if x == 0:
+       return 1
+    return sin(x) / x
+
+def my_func(x, y):
+    return sinc(x**2+y**2)
+
 RAND = random.Random()
-RAND.seed(1337)
+#RAND.seed(1338)
 
 # Maximum number of restarts to do
-MAX_RESTARTS = 50
+MAX_RESTARTS = 60
 
+# def my_func(x, y):
+#     return -((x+1)**2+y**2)+1
+
+# Putting the current value first is how we make sure it eventually terminates.
 def minusPlusZero(val : int) -> (int, int, int):
-    return (val - 1, val + 1, val)
+    return (val, val - 1, val + 1)
 
 def high_next(on_x : int, on_y : int, xmin : int, ymin : int, xmax : int, ymax : int) -> (int, int):
     x_vals = list(filter(lambda x: xmin <= x <= xmax, minusPlusZero(on_x)))
@@ -90,9 +104,22 @@ def random_restarts(xmin, ymin, xmax, ymax):
 
         maxima_loc = hill_climbing(state_x, state_y, xmin, ymin, xmax, ymax)
 
+        # print("Init state: " + str(state_x) + ", " + str(state_y) + "  Maximum: " + str(maxima_loc))
+
         count[maxima_loc] += 1
 
-    maxima = count.most_common(1)[0][0]
+    # print(str(count))
+
+    keys = list(count.keys())
+    heuristics = [ my_func(x, y) for x, y in keys ]
+    high_index = heuristics.index(max(heuristics))
+
+    # for key in count.keys():
+    #     # print(key)
+    #     print(str(key) + ": " + str(count[key]) + " = " + str(my_func(key[0], key[1])))
+
+    # maxima = count.most_common(1)[0][0]
+    maxima = keys[high_index]
     return [maxima[0], maxima[1]]
 
 
@@ -100,9 +127,11 @@ def run():
     arg_parser = config_arg_parser()
     args = arg_parser.parse_args()
 
-    func_file_body = open(args.input_file).read() # VERY DANGEROUS! DO NOT DO IRL!
-    func_text = "def my_func(x,y):\n\t" + file_in.read()
-    exec(func_text)
+    #func_file_body = open(args.input_file).read() # VERY DANGEROUS! DO NOT DO IRL!
+    #print(func_file_body)
+    #func_text = func_file_body + "\n"
+    #print(func_text)
+    #exec(func_text)
 
     xmin = args.xmin
     ymin = args.ymin
@@ -111,4 +140,7 @@ def run():
 
     return random_restarts(xmin, ymin, xmax, ymax)
 
-run()
+result = run()
+
+print(result)
+# print(my_func(result[0], result[1]))
