@@ -7,6 +7,20 @@ from collections import namedtuple
 
 Data_Point = namedtuple('Data_Point', ['label', 'data'])
 
+# The __init__ part of this code was taken from [this](https://stackoverflow.com/a/43237270/1021259)
+# StackOverflow answer, but I edited it to use defaultdict instead.
+class Tree(defaultdict):
+
+    #cast a (nested) dict to a (nested) Tree class
+    def __init__(self, data={}):
+        self.default_factory = type(self)
+        for k, data in data.items():
+            if isinstance(data, dict):
+                self[k] = type(self)(data)
+            else:
+                self[k] = data
+
+
 #def algo():
 
 
@@ -32,7 +46,6 @@ def open_csv_and_read(file_name : str, test_set : bool = False) -> list:
                 curr_label = None
             ret += [Data_Point(curr_label, curr_data)]
     return ret
-
 
 
 def run(args):
