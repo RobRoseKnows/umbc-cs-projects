@@ -21,7 +21,7 @@ def config_arg_parser() -> argparse.ArgumentParser():
 def open_csv_and_read(file_name : str, test_set : bool = False) -> list:
     ret = []
     with open(file_name, newline='') as csv_file:
-        csv_reader = csv.reader(csv_file, delimiter=',', quoting='QUOTE_NONNUMERIC')
+        csv_reader = csv.reader(csv_file, delimiter=',')
         for row in csv_reader:
             if not test_set:
                 # So I can use the same reader for both test and training data, this checks to see if the data is test or training.
@@ -36,8 +36,8 @@ def open_csv_and_read(file_name : str, test_set : bool = False) -> list:
 
 
 def run(args):
-    print(open_csv_and_read(args.train_file))
-    print(open_csv_and_read(args.test_file, True))
+    training_data = open_csv_and_read(args.train_file)
+    testing_data = open_csv_and_read(args.test_file, True)
 
 arg_parser = config_arg_parser()
 args = arg_parser.parse_args()
