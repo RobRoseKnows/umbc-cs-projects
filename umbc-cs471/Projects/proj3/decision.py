@@ -3,7 +3,7 @@
 import argparse
 import csv
 
-from collections import namedtuple
+from collections import namedtuple, Counter
 
 Data_Point = namedtuple('Data_Point', ['label', 'data'])
 
@@ -21,9 +21,20 @@ class Tree(defaultdict):
                 self[k] = data
 
 
-#def algo():
+def start_algo(training_data : list, testing_data : list):
 
 
+
+# This uses zip and the Counter collection to count what the most common label in the
+# training data is.
+# Returns: (label, number of times it appears)
+def plurality_label(points : list) -> int, int:
+    pts_labels, pts_data = zip(*points)
+    count = Counter(pts_labels)
+    return count.most_common(1)[0]
+
+
+# Configures the argument parser
 def config_arg_parser() -> argparse.ArgumentParser():
     arg_parser = argparse.ArgumentParser()
 
@@ -32,6 +43,8 @@ def config_arg_parser() -> argparse.ArgumentParser():
 
     return arg_parser
 
+# Reusable function to open a CSV, read the values in it and put them into datapoints.
+# Setting test_set to True will return None as the label for the testing data.
 def open_csv_and_read(file_name : str, test_set : bool = False) -> list:
     ret = []
     with open(file_name, newline='') as csv_file:
