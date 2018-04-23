@@ -8,6 +8,38 @@ from math import log
 def lg(x) -> float:
     return log(x, 2)
 
+# Entropy calculator, adapted from somewhere else I lost track of
+def entropy(arr : list) -> float:
+
+    sum_tot = sum(arr)
+
+    total_entropy = 0.
+
+    for val in arr:
+        val = val / sum_tot
+        if val != 0:
+            total_entropy += val * lg(val)
+        else:
+            total_entropy += 0
+
+    total_entropy *= -1
+    return total_entropy
+
+def info_gain(label_count : list, attr_count : list) -> float:
+    # catg -> the number of things under each label
+    # attr_count -> the number of things in each label for each category of an attribute.
+
+    total_entropy = 0.
+
+    label_sum = sum(label_count)
+
+    for cat in attr_count:
+        total_entropy += sum(cat) / label_count * entropy(cat)
+
+    gain = entropy(label_count) - total_entropy
+    return gain
+
+
 # This cuts out the index from each list in a list of lists.
 def filter_lol_by_index(index : int, arr : list) -> list:
     return [ val[:index] + val[(index + 1):] for val in arr]
