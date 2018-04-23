@@ -6,7 +6,10 @@ import csv
 from collections import namedtuple, Counter
 from math import log
 
-from cs471_util import lg, remove_index
+try:
+    from cs471_util import lg, filter_lol_by_index, filter_lol_pair_by_val
+except:
+    print("Looks like the utility file (`cs471_util.py`) is missing.")
 
 DataPoint = namedtuple('DataPoint', ['label', 'data'])
 
@@ -99,32 +102,11 @@ def generate_tree(data : list):
         self.root = None
         return None
 
+def remove_index(index : int, arr : list) -> list:
+    return filter_lol_by_index(index, arr)
 
-# Selects all the things in the list that have a desired value for a certain attribute.
 def all_with_attr_value(labels : list, attrs : list, attr_index : int, val : int, inverted : bool = False) -> list, list:
-    # labels -> the list of labels to take in corresponding to the attrs
-    # attrs -> a list of lists containing the attributes
-    # attr_index -> the index of the attribute we're examining.
-    # val -> the value we want to get
-    # inverted -> If set to True, this will REMOVE labels with the given attribute instead of keeping them
-
-    new_labels = []
-    new_attrs = []
-
-    for label, attr_list in zip(labels, attrs):
-        # Zip them together again to iterate in parallel.
-        if attr_list[attr_index] == val:
-            # Has desired attribute!
-            if not inverted:
-                new_labels += [label]
-                new_attrs += [attr_list]
-        else:
-            if inverted:
-                new_labels += [label]
-                new_attrs += [attr_list]
-
-    return new_labels, new_attrs
-
+    return filter_lol_pair_by_val(labels, attrs, attr_index, val, inverted)
 
 def predict(training_data : list, testing_data : list):
     tree = DecisionTree()
