@@ -13,19 +13,6 @@ except:
 
 DataPoint = namedtuple('DataPoint', ['label', 'data'])
 
-# The __init__ part of this code was taken from [this](https://stackoverflow.com/a/43237270/1021259)
-# StackOverflow answer, but I edited it to use defaultdict instead. Then added all the other stuff.
-class Tree(defaultdict):
-
-    #cast a (nested) dict to a (nested) Tree class
-    def __init__(self, data={}):
-        self.default_factory = type(self)
-        for k, data in data.items():
-            if isinstance(data, dict):
-                self[k] = type(self)(data)
-            else:
-                self[k] = data
-
 class DecisionLeafNode():
 
     # This is the Decision Leaf Node class that
