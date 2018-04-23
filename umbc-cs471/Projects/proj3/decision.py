@@ -7,11 +7,16 @@ from collections import namedtuple, Counter
 from math import log
 
 try:
-    from cs471_util import lg, filter_lol_by_index, filter_lol_pair_by_val
+    from cs471_util import lg, filter_lol_by_index, filter_lol_pair_by_val, entropy, info_gain
 except:
     print("Looks like the utility file (`cs471_util.py`) is missing.")
 
 DataPoint = namedtuple('DataPoint', ['label', 'data'])
+
+
+########################################################
+# Decision Tree classes
+########################################################
 
 class DecisionLeafNode():
 
@@ -84,10 +89,26 @@ class DecisionTree():
     def test(self, labels : list, attrs : list):
 
 
+#########################################################
+# Functions
+#########################################################
+
+def split_attrs(arr : list) -> list:
+    return [list(vals) for vals in zip(*arr)]
+
 def generate_tree(data : list):
     if not len(self.data):
         self.root = None
         return None
+
+def get_ig_for_attr(attrs : list, index : int) -> float:
+
+
+def choose_split(labels : list, attrs : list) -> int:
+    ig_for_attr = []
+
+    return
+
 
 def remove_index(index : int, arr : list) -> list:
     return filter_lol_by_index(index, arr)
