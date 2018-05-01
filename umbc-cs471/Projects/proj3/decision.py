@@ -31,9 +31,9 @@ class DecisionLeafNode():
         return str(result)
 
 class DecisionBranch():
-    def __init__(self, attr_index : int, branches : dict = None):
-        self.parent = parent
-        self.attr_index = attr_index
+    def __init__(self, labels: list, attrs : int, branches : dict = None):
+        self.labels = labels
+        self.attrs = attrs
         self.branches = {} or branches
 
     def __call__(self, attrs : list):
@@ -47,31 +47,18 @@ class DecisionBranch():
         else:
             return None
 
-    def add(self, for_val : int, next):
-        self.branches[self.attr_index] = next
 
-
-class DecisionTree():
-
-    def __init__(self):
-        # The root can either be pointing to a branch or a leaf, depending on what the result is.
-        self.root = None
-
-    # Train is basically a wrapper around the recursive learning function.
-    def train(self, labels : list, attrs : list):
-        self.root = learn(labels, attrs)
-
-    def learn(self, labels : list, attrs : list):
+    def learn(self):
         # labels -> a list of integer categories
         # attrs -> a list of list of attrs corresponding to the list of labels.
 
         # Check to make sure there are actually labels in the given sample.
-        if not len(labels):
+        if not len(self.labels):
             return None
 
         # Now that we know there are actually things in the sample, we can do more science.
-        plurality_label, plurality_count = Counter(labels).most_common(1)[0]
-        if plurality_count == len(labels):
+        plurality_label, plurality_count = Counter(self.labels).most_common(1)[0]
+        if plurality_count == len(self.labels):
             # This means everything is one thing! Yay! Just choose whichever was the most common
             return DecisionLeafNode(plurality_label)
 
@@ -82,9 +69,41 @@ class DecisionTree():
             return DecisionLeafNode(plurality_label)
 
         else:
-            new_branch = DecisionBranch(plurality_label)
+
+            chosen_attr_index =
+            self.attr_index = chosen_attr_index
+
+            self.branches = split_by_attr(chosen_attr_index)
 
 
+    def split_by_attr(self, attr_index) -> dict:
+        set_of_attrs = set(split_attrs(attrs)[attr_index])
+
+        ret_dict = dict()
+
+        for val in set_of_attrs:
+            new_labels, new_attrs = filter_lol_pair_by_val(self.labels, self.attrs, attr_index, val)
+            new_attrs = filter_lol_by_index(attr_index, new_attrs)
+            ret_dict[val] = DecisionBranch(new_labels, new_attrs)
+
+        return ret_dict
+
+
+class DecisionTree():
+
+    def __init__(self):
+        # The root can either be pointing to a branch or a leaf, depending on what the result is.
+        self.root = None
+
+    # Train is basically a wrapper around the recursive learning function.
+    def train(self, labels : list, attrs : list):
+        plurality_label, plurality_count = Counter(labels).most_common(1)[0]
+        if plurality_count == len(labels):
+            self.root = DecisionLeafNode(plurality_label)
+        elif:
+            self.root = DecisionLeafNode(plurality_label)
+        else:
+            self.root = DecisionBranch(labels, attrs)
 
     def test(self, labels : list, attrs : list):
 

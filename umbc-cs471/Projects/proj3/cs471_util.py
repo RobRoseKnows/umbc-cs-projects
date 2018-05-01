@@ -25,7 +25,7 @@ def entropy(arr : list) -> float:
     total_entropy *= -1
     return total_entropy
 
-def info_gain(label_count : list, attr_count : list) -> float:
+def info_gain(labels : list, attrs : list) -> float:
     # catg -> the number of things under each label
     # attr_count -> the number of things in each label for each category of an attribute.
 
@@ -38,6 +38,8 @@ def info_gain(label_count : list, attr_count : list) -> float:
 
     gain = entropy(label_count) - total_entropy
     return gain
+
+def choose_split(labels : list, attrs : list) -> int:
 
 
 # This cuts out the index from each list in a list of lists.
