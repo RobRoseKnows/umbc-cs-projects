@@ -7,7 +7,7 @@ from collections import namedtuple, Counter
 from math import log
 
 try:
-    from cs471_util import lg, filter_lol_by_index, filter_lol_pair_by_val, entropy, info_gain
+    from cs471_util import filter_lol_by_index, filter_lol_pair_by_val, choose_split, split_attrs
 except:
     print("Looks like the utility file (`cs471_util.py`) is missing.")
 
@@ -35,6 +35,7 @@ class DecisionBranch():
         self.labels = labels
         self.attrs = attrs
         self.branches = {} or branches
+        learn()
 
     def __call__(self, attrs : list):
         attr_val = attrs[self.attr_index]
@@ -70,14 +71,14 @@ class DecisionBranch():
 
         else:
 
-            chosen_attr_index =
+            chosen_attr_index = choose_split(self.labels, self.attrs)
             self.attr_index = chosen_attr_index
 
             self.branches = split_by_attr(chosen_attr_index)
 
 
     def split_by_attr(self, attr_index) -> dict:
-        set_of_attrs = set(split_attrs(attrs)[attr_index])
+        set_of_attrs = set(split_attrs(self.attrs)[attr_index])
 
         ret_dict = dict()
 
@@ -111,9 +112,6 @@ class DecisionTree():
 #########################################################
 # Functions
 #########################################################
-
-def split_attrs(arr : list) -> list:
-    return [list(vals) for vals in zip(*arr)]
 
 def generate_tree(data : list):
     if not len(self.data):
