@@ -24,27 +24,37 @@ class DecisionLeafNode():
     def __init__(self, result : int):
         self.result = result
 
-    def __call__(self) -> int:
-        return result
+    def __call__(self, attrs=None) -> int:
+        return self.result
 
     def __str__(self) -> str:
-        return str(result)
+        return str(self.result)
 
 class DecisionBranch():
-    def __init__(self, labels: list, attrs : int, branches : dict = None):
-        self.labels = labels
-        self.attrs = attrs
-        self.branches = {} or branches
-        learn()
+    def __init__(self, labels: list, attrs : list):
+        self.labels = list(labels)
+        self.attrs = list(attrs)
+        self.attr_index = None
+        self.branches = self.learn()
 
     def __call__(self, attrs : list):
-        attr_val = attrs[self.attr_index]
+        # print(self.attr_index)
+        # print(self.branches)
+        # print(attrs)
+        # print(type(self.branches))
 
-        # The value for this attribute is in the tree (should be for our project)
-        if attr_val in self.branches:
-            # If it's a leaf, it'll just return the result otherwise it recurrs to the
-            # next branch.
-            return self.branches[attr_val](attrs)
+        if isinstance(self.branches, dict):
+            attr_val = attrs[self.attr_index]
+
+            # The value for this attribute is in the tree (should be for our project)
+            if attr_val in self.branches:
+                # If it's a leaf, it'll just return the result otherwise it recurrs to the
+                # next branch.
+                return self.branches[attr_val](attrs)
+            else:
+                return None
+        elif self.branches:
+            return self.branches(attrs)
         else:
             return None
 
@@ -52,6 +62,8 @@ class DecisionBranch():
     def learn(self):
         # labels -> a list of integer categories
         # attrs -> a list of list of attrs corresponding to the list of labels.
+        # print(self.labels)
+        # print(self.attrs)
 
         # Check to make sure there are actually labels in the given sample.
         if not len(self.labels):
@@ -63,7 +75,7 @@ class DecisionBranch():
             # This means everything is one thing! Yay! Just choose whichever was the most common
             return DecisionLeafNode(plurality_label)
 
-        elif not len(attrs[0]):
+        elif not len(self.attrs[0]):
             # All of them for this project should have the same attributes, so I'll
             # just check the first one. This is if we've eliminated all the relevant attributes,
             # we just choose the most common label.
@@ -71,10 +83,11 @@ class DecisionBranch():
 
         else:
 
+            # print()
             chosen_attr_index = choose_split(self.labels, self.attrs)
             self.attr_index = chosen_attr_index
 
-            self.branches = split_by_attr(chosen_attr_index)
+            return self.split_by_attr(chosen_attr_index)
 
 
     def split_by_attr(self, attr_index) -> dict:
@@ -96,54 +109,27 @@ class DecisionTree():
         # The root can either be pointing to a branch or a leaf, depending on what the result is.
         self.root = None
 
+    def __call__(self, attrs : list):
+        return self.root(attrs)
+
     # Train is basically a wrapper around the recursive learning function.
     def train(self, labels : list, attrs : list):
         plurality_label, plurality_count = Counter(labels).most_common(1)[0]
         if plurality_count == len(labels):
             self.root = DecisionLeafNode(plurality_label)
-        elif:
+        elif len(attrs[0]) == 0:
             self.root = DecisionLeafNode(plurality_label)
         else:
             self.root = DecisionBranch(labels, attrs)
-
-    def test(self, labels : list, attrs : list):
-
 
 #########################################################
 # Functions
 #########################################################
 
-def generate_tree(data : list):
-    if not len(self.data):
-        self.root = None
-        return None
-
-def get_ig_for_attr(attrs : list, index : int) -> float:
-
-
-def choose_split(labels : list, attrs : list) -> int:
-    ig_for_attr = []
-
-    return
-
-
-def remove_index(index : int, arr : list) -> list:
-    return filter_lol_by_index(index, arr)
-
-def all_with_attr_value(labels : list, attrs : list, attr_index : int, val : int, inverted : bool = False) -> list, list:
-    return filter_lol_pair_by_val(labels, attrs, attr_index, val, inverted)
-
-def predict(training_data : list, testing_data : list):
-    tree = DecisionTree()
-
-    # Originally was going to treat the data like tuples but oh well.
-    training_labels, training_attrs = zip(*training_data)
-    tree.train(training_labels, training_attrs)
-
 # This uses zip and the Counter collection to count what the most common label in the
 # training data is.
 # Returns: (label, number of times it appears)
-def find_plurality(points : list) -> int, int:
+def find_plurality(points : list) -> (int, int):
     pts_labels, pts_data = zip(*points)
     count = Counter(pts_labels)
     return count.most_common(1)[0]
@@ -179,6 +165,15 @@ def open_csv_and_read(file_name : str, test_set : bool = False) -> list:
 def run(args):
     training_data = open_csv_and_read(args.train_file)
     testing_data = open_csv_and_read(args.test_file, True)
+
+    tree = DecisionTree()
+
+    # Originally was going to treat the data like tuples but oh well.
+    training_labels, training_attrs = zip(*training_data)
+    tree.train(training_labels, training_attrs)
+
+    testing_attrs = list(zip(*testing_data))[1]
+    return tree(testing_attrs[0])
 
 arg_parser = config_arg_parser()
 args = arg_parser.parse_args()
