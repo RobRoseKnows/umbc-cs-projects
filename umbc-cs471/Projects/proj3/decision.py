@@ -82,8 +82,6 @@ class DecisionBranch():
             return DecisionLeafNode(plurality_label)
 
         else:
-
-            # print()
             chosen_attr_index = choose_split(self.labels, self.attrs)
             self.attr_index = chosen_attr_index
 
