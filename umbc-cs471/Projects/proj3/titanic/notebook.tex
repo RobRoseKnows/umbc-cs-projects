@@ -1,0 +1,1362 @@
+
+% Default to the notebook output style
+
+    
+
+
+% Inherit from the specified cell style.
+
+
+
+
+    
+\documentclass[11pt]{article}
+
+    
+    
+    \usepackage[T1]{fontenc}
+    % Nicer default font (+ math font) than Computer Modern for most use cases
+    \usepackage{mathpazo}
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % We will generate all images so they have a width \maxwidth. This means
+    % that they will get their normal width if they fit onto the page, but
+    % are scaled down if they would overflow the margins.
+    \makeatletter
+    \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth
+    \else\Gin@nat@width\fi}
+    \makeatother
+    \let\Oldincludegraphics\includegraphics
+    % Set max figure width to be 80% of text width, for now hardcoded.
+    \renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=.8\maxwidth]{#1}}
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionLabelFormat{nolabel}{}
+    \captionsetup{labelformat=nolabel}
+
+    \usepackage{adjustbox} % Used to constrain images to a maximum size 
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage[utf8x]{inputenc} % Allow utf-8 characters in the tex document
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range 
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    
+
+    
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatability definitions
+    \def\gt{>}
+    \def\lt{<}
+    % Document parameters
+    \title{titanic\_notebook}
+    
+    
+    
+
+    % Pygments definitions
+    
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@fm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sa\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@dl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % Exact colors from NB
+    \definecolor{incolor}{rgb}{0.0, 0.0, 0.5}
+    \definecolor{outcolor}{rgb}{0.545, 0.0, 0.0}
+
+
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+    \begin{document}
+    
+    
+    \maketitle
+    
+    
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}1}]:} \PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
+        \PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+        \PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+        \PY{k+kn}{from} \PY{n+nn}{IPython}\PY{n+nn}{.}\PY{n+nn}{display} \PY{k}{import} \PY{n}{display}\PY{p}{,} \PY{n}{HTML}
+\end{Verbatim}
+
+
+    \section{UMBC CS 471 Project 3: Titanic Survivors with Random
+Forests}\label{umbc-cs-471-project-3-titanic-survivors-with-random-forests}
+
+Using a Jupyter notebook like a boss. Already imported pandas and numpy,
+will import sklearn later. Also the display function for Jupyter
+notebooks.
+
+\subsection{Preprocessing}\label{preprocessing}
+
+First thing I had to do was to actually load the data into a dataframe.
+It's a good thing Pandas has a function just for this. Then just display
+the head in order to make sure it read in everything.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}2}]:} \PY{c+c1}{\PYZsh{} Data file is in the same file as the rest.}
+        \PY{n}{file\PYZus{}name} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{./train.csv}\PY{l+s+s2}{\PYZdq{}}
+        \PY{n}{df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{n}{file\PYZus{}name}\PY{p}{)}
+        
+        \PY{c+c1}{\PYZsh{} Display the head.}
+        \PY{n}{display}\PY{p}{(}\PY{n}{df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    
+    \begin{verbatim}
+   PassengerId  Survived  Pclass  \
+0            1         0       3   
+1            2         1       1   
+2            3         1       3   
+3            4         1       1   
+4            5         0       3   
+
+                                                Name     Sex   Age  SibSp  \
+0                            Braund, Mr. Owen Harris    male  22.0      1   
+1  Cumings, Mrs. John Bradley (Florence Briggs Th...  female  38.0      1   
+2                             Heikkinen, Miss. Laina  female  26.0      0   
+3       Futrelle, Mrs. Jacques Heath (Lily May Peel)  female  35.0      1   
+4                           Allen, Mr. William Henry    male  35.0      0   
+
+   Parch            Ticket     Fare Cabin Embarked  
+0      0         A/5 21171   7.2500   NaN        S  
+1      0          PC 17599  71.2833   C85        C  
+2      0  STON/O2. 3101282   7.9250   NaN        S  
+3      0            113803  53.1000  C123        S  
+4      0            373450   8.0500   NaN        S  
+    \end{verbatim}
+
+    
+    Nice so it looks like things loaded in correctly. I looked at an old
+project I did with the same data set to get what each value meant:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Survived:} Outcome of survival (0 = No; 1 = Yes)
+\item
+  \textbf{Pclass:} Socio-economic class (1 = Upper class; 2 = Middle
+  class; 3 = Lower class)
+\item
+  \textbf{Name:} Name of passenger
+\item
+  \textbf{Sex:} Sex of the passenger
+\item
+  \textbf{Age:} Age of the passenger (Some entries contain NaN)
+\item
+  \textbf{SibSp:} Number of siblings and spouses of the passenger aboard
+\item
+  \textbf{Parch:} Number of parents and children of the passenger aboard
+\item
+  \textbf{Ticket:} Ticket number of the passenger
+\item
+  \textbf{Fare:} Fare paid by the passenger
+\item
+  \textbf{Cabin:} Cabin number of the passenger (Some entries contain
+  NaN)
+\item
+  \textbf{Embarked:} Port of embarkation of the passenger (C =
+  Cherbourg; Q = Queenstown; S = Southampton)
+\end{itemize}
+
+Since the \textbf{Survived} column is a boolean, lets tell pandas to
+treat it like one and take a look at the new data frame
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}3}]:} \PY{n}{df} \PY{o}{=} \PY{n}{df}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{p}{\PYZob{}}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Survived}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{n+nb}{bool}\PY{p}{\PYZcb{}}\PY{p}{)}
+        \PY{n}{display}\PY{p}{(}\PY{n}{df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    
+    \begin{verbatim}
+   PassengerId  Survived  Pclass  \
+0            1     False       3   
+1            2      True       1   
+2            3      True       3   
+3            4      True       1   
+4            5     False       3   
+
+                                                Name     Sex   Age  SibSp  \
+0                            Braund, Mr. Owen Harris    male  22.0      1   
+1  Cumings, Mrs. John Bradley (Florence Briggs Th...  female  38.0      1   
+2                             Heikkinen, Miss. Laina  female  26.0      0   
+3       Futrelle, Mrs. Jacques Heath (Lily May Peel)  female  35.0      1   
+4                           Allen, Mr. William Henry    male  35.0      0   
+
+   Parch            Ticket     Fare Cabin Embarked  
+0      0         A/5 21171   7.2500   NaN        S  
+1      0          PC 17599  71.2833   C85        C  
+2      0  STON/O2. 3101282   7.9250   NaN        S  
+3      0            113803  53.1000  C123        S  
+4      0            373450   8.0500   NaN        S  
+    \end{verbatim}
+
+    
+    Nice! That worked exactly how I wanted it to!
+
+To get a better idea of what the data looks like, lets describe each
+column's data. That should tell us about any NaN's and whatnot. There
+are 891 datapoints, so any columns with \textless{} 891 data points have
+missing data. I'm going to both \texttt{count()} the values in each
+column and use \texttt{describe()} on all the ones not having
+\texttt{NaN} as the \textbf{Age}, since from previous looks,
+\textbf{Age} is the only continuous one with missing data.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}4}]:} \PY{n}{df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Age}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{isnull}\PY{p}{(}\PY{p}{)} \PY{o}{==} \PY{k+kc}{False}\PY{p}{]}\PY{o}{.}\PY{n}{describe}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}4}]:}        PassengerId      Pclass         Age       SibSp       Parch        Fare
+        count   714.000000  714.000000  714.000000  714.000000  714.000000  714.000000
+        mean    448.582633    2.236695   29.699118    0.512605    0.431373   34.694514
+        std     259.119524    0.838250   14.526497    0.929783    0.853289   52.918930
+        min       1.000000    1.000000    0.420000    0.000000    0.000000    0.000000
+        25\%     222.250000    1.000000   20.125000    0.000000    0.000000    8.050000
+        50\%     445.000000    2.000000   28.000000    0.000000    0.000000   15.741700
+        75\%     677.750000    3.000000   38.000000    1.000000    1.000000   33.375000
+        max     891.000000    3.000000   80.000000    5.000000    6.000000  512.329200
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}5}]:} \PY{n}{df}\PY{o}{.}\PY{n}{count}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}5}]:} PassengerId    891
+        Survived       891
+        Pclass         891
+        Name           891
+        Sex            891
+        Age            714
+        SibSp          891
+        Parch          891
+        Ticket         891
+        Fare           891
+        Cabin          204
+        Embarked       889
+        dtype: int64
+\end{Verbatim}
+            
+    Nice, so the only ones with missing data are \textbf{Age},
+\textbf{Cabin} and \textbf{Embarked}. That's pretty good. I do find it
+kind of weird that the minimum age is a float, especially one that isn't
+a divisor of 12. Kind of weird but whatever.
+
+For convenience sake, I want to create a nice little function though
+that will tell me how many are missing though, so I can use it again.
+(Got this idea from
+\href{https://www.analyticsvidhya.com/blog/2016/01/12-pandas-techniques-python-data-manipulation/}{here}).
+
+Then I'm going to use it on each column (via apply) and print the
+results, to get a baseline value. Future iterations can just call
+\texttt{print\_missing} with the frame in order to check missing values
+in each column.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}6}]:} \PY{k}{def} \PY{n+nf}{num\PYZus{}missing}\PY{p}{(}\PY{n}{x}\PY{p}{)} \PY{o}{\PYZhy{}}\PY{o}{\PYZgt{}} \PY{n+nb}{int}\PY{p}{:}
+            \PY{k}{return} \PY{n+nb}{sum}\PY{p}{(}\PY{n}{x}\PY{o}{.}\PY{n}{isnull}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+        
+        \PY{k}{def} \PY{n+nf}{print\PYZus{}missing}\PY{p}{(}\PY{n}{frame}\PY{p}{)}\PY{p}{:}
+            \PY{n+nb}{print}\PY{p}{(}\PY{n}{frame}\PY{o}{.}\PY{n}{apply}\PY{p}{(}\PY{n}{num\PYZus{}missing}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}\PY{p}{)}
+            
+        \PY{n}{print\PYZus{}missing}\PY{p}{(}\PY{n}{df}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+PassengerId      0
+Survived         0
+Pclass           0
+Name             0
+Sex              0
+Age            177
+SibSp            0
+Parch            0
+Ticket           0
+Fare             0
+Cabin          687
+Embarked         2
+dtype: int64
+
+    \end{Verbatim}
+
+    Nice, that confirms what I already thought about the missing data based
+on the earlier count.
+
+\subsubsection{Embarked}\label{embarked}
+
+But I am curious as to why only two embarked values are missing. I'm
+going to use \texttt{loc{[}{]}} to see what's special about them.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}7}]:} \PY{n}{df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Embarked}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{isnull}\PY{p}{(}\PY{p}{)}\PY{p}{]}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}7}]:}      PassengerId  Survived  Pclass                                       Name  \textbackslash{}
+        61            62      True       1                        Icard, Miss. Amelie   
+        829          830      True       1  Stone, Mrs. George Nelson (Martha Evelyn)   
+        
+                Sex   Age  SibSp  Parch  Ticket  Fare Cabin Embarked  
+        61   female  38.0      0      0  113572  80.0   B28      NaN  
+        829  female  62.0      0      0  113572  80.0   B28      NaN  
+\end{Verbatim}
+            
+    Okay that's weird. They were both in the same cabin and ticket. If we
+were making a really long decision tree, Embarked would almost certainly
+be a split, but would probably overfit.
+
+In order to prevent errors later on with \texttt{NaN}, I'm just going to
+set the point of embarktation for those two as \texttt{U} for Unknown.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}8}]:} \PY{n}{df} \PY{o}{=} \PY{n}{df}\PY{o}{.}\PY{n}{fillna}\PY{p}{(}\PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Embarked}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{U}\PY{l+s+s2}{\PYZdq{}}\PY{p}{\PYZcb{}}\PY{p}{)}
+        \PY{n}{print\PYZus{}missing}\PY{p}{(}\PY{n}{df}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+PassengerId      0
+Survived         0
+Pclass           0
+Name             0
+Sex              0
+Age            177
+SibSp            0
+Parch            0
+Ticket           0
+Fare             0
+Cabin          687
+Embarked         0
+dtype: int64
+
+    \end{Verbatim}
+
+    Nice! No more missing values in \textbf{Embarked}! I believe it's safe
+to insert dummy values for Embarked, because it's already a category as
+is. \textbf{Age} might be harder since it's a continuous variable, but
+first I want to look at \textbf{Cabin}, which are missing \emph{a lot}
+but probably have a lot of juicy info. (In fact I don't think I will do
+anything for age, as it's potentially valuable to know that someone has
+no age on record.
+
+\subsubsection{Cabin}\label{cabin}
+
+The first few \textbf{Cabin} values all start with a letter, but I don't
+want to take that for granted, others might have different values. I'm
+going to do some weird trickery here in order to analyze this. First I
+want to get a pandas Series containing only non-NaN cabin values.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}9}]:} \PY{n}{non\PYZus{}nan\PYZus{}cabins} \PY{o}{=} \PY{n}{df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cabin}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{isnull}\PY{p}{(}\PY{p}{)} \PY{o}{==} \PY{k+kc}{False}\PY{p}{]}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cabin}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+        \PY{n}{non\PYZus{}nan\PYZus{}cabins}\PY{o}{.}\PY{n}{count}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}9}]:} 204
+\end{Verbatim}
+            
+    Nice! That matches what we know should be there. Our earlier count of
+the non-null values of \textbf{Cabin} returned 204, so that's what we
+were hoping for! Now lets see what all that data looks like. Thankfully,
+pandas provides a nice vectorized function that should let me run a
+regex over each part of the series. I can then describe that data, or
+even make a nice histogram!
+
+There's a couple things I want to test from a brief look at the CSV in
+Excel: * Most Cabins seem to be in the format with a letter and then one
+or more numbers, so I'll start by counting the number of cabin numbers
+matching that format in each row. * I'll check ones that are letters
+only. * I'll check ones that are numbers only. * I also want to check
+which ones have lower case letters (if any at all).
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}10}]:} \PY{c+c1}{\PYZsh{} First lets import python\PYZsq{}s regex module.}
+         \PY{k+kn}{import} \PY{n+nn}{re}
+         
+         \PY{c+c1}{\PYZsh{} Standard regex format (letter + numbers)}
+         \PY{n}{std\PYZus{}format\PYZus{}regex} \PY{o}{=} \PY{n}{re}\PY{o}{.}\PY{n}{compile}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{([A\PYZhy{}Z]+)([0\PYZhy{}9]+)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{std\PYZus{}format\PYZus{}count} \PY{o}{=} \PY{n}{non\PYZus{}nan\PYZus{}cabins}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{count}\PY{p}{(}\PY{n}{std\PYZus{}format\PYZus{}regex}\PY{p}{)}
+         \PY{n}{display}\PY{p}{(}\PY{n}{std\PYZus{}format\PYZus{}count}\PY{o}{.}\PY{n}{describe}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} Letters but no numbers.}
+         \PY{n}{no\PYZus{}num\PYZus{}regex} \PY{o}{=} \PY{n}{re}\PY{o}{.}\PY{n}{compile}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{b([A\PYZhy{}Z]+)(?![A\PYZhy{}Z]*[0\PYZhy{}9]+)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{no\PYZus{}num\PYZus{}count} \PY{o}{=} \PY{n}{non\PYZus{}nan\PYZus{}cabins}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{count}\PY{p}{(}\PY{n}{no\PYZus{}num\PYZus{}regex}\PY{p}{)}
+         \PY{n}{display}\PY{p}{(}\PY{n}{no\PYZus{}num\PYZus{}count}\PY{o}{.}\PY{n}{describe}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+                 
+         \PY{c+c1}{\PYZsh{} Numbers but no letters}
+         \PY{n}{no\PYZus{}let\PYZus{}regex} \PY{o}{=} \PY{n}{re}\PY{o}{.}\PY{n}{compile}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{b([0\PYZhy{}9]+)(?![0\PYZhy{}9]*[A\PYZhy{}Z]+)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{no\PYZus{}let\PYZus{}count} \PY{o}{=} \PY{n}{non\PYZus{}nan\PYZus{}cabins}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{count}\PY{p}{(}\PY{n}{no\PYZus{}let\PYZus{}regex}\PY{p}{)}
+         \PY{n}{display}\PY{p}{(}\PY{n}{no\PYZus{}let\PYZus{}count}\PY{o}{.}\PY{n}{describe}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    
+    \begin{verbatim}
+count    204.000000
+mean       1.127451
+std        0.519028
+min        0.000000
+25%        1.000000
+50%        1.000000
+75%        1.000000
+max        4.000000
+Name: Cabin, dtype: float64
+    \end{verbatim}
+
+    
+    
+    \begin{verbatim}
+count    204.000000
+mean       0.039216
+std        0.194585
+min        0.000000
+25%        0.000000
+50%        0.000000
+75%        0.000000
+max        1.000000
+Name: Cabin, dtype: float64
+    \end{verbatim}
+
+    
+    
+    \begin{verbatim}
+count    204.0
+mean       0.0
+std        0.0
+min        0.0
+25%        0.0
+50%        0.0
+75%        0.0
+max        0.0
+Name: Cabin, dtype: float64
+    \end{verbatim}
+
+    
+    The \texttt{describe()} function wasn't exactly as helpful as I would've
+liked, so lets try a different thing using \texttt{count()} and
+\texttt{loc()}. I'm not particularly interested in the means and what
+not, I more so just want to make sure everything is accounted for. Which
+means removing non-zeros. Though since the third regex looks like it was
+unneccessary, we can omit that for future tests!
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}11}]:} \PY{c+c1}{\PYZsh{} Lets get a chunk of the nonzero entries.}
+         \PY{n}{std\PYZus{}non\PYZus{}zero} \PY{o}{=} \PY{n}{std\PYZus{}format\PYZus{}count}\PY{o}{.}\PY{n}{nonzero}\PY{p}{(}\PY{p}{)}
+         \PY{n}{nn\PYZus{}non\PYZus{}zero} \PY{o}{=} \PY{n}{no\PYZus{}num\PYZus{}count}\PY{o}{.}\PY{n}{nonzero}\PY{p}{(}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} Check to see how many got triggered on each}
+         \PY{n+nb}{print}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{std\PYZus{}non\PYZus{}zero}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{nn\PYZus{}non\PYZus{}zero}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+200
+8
+
+    \end{Verbatim}
+
+    That's unexpected... those shouldn't have totaled to more than 204.
+Looks like the regex isn't perfect, or the data is werider than I
+thought. Lets turn those into sets and take the union.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}12}]:} \PY{n}{snz\PYZus{}set} \PY{o}{=} \PY{n+nb}{set}\PY{p}{(}\PY{n}{std\PYZus{}non\PYZus{}zero}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+         \PY{n}{nnnz\PYZus{}set} \PY{o}{=} \PY{n+nb}{set}\PY{p}{(}\PY{n}{nn\PYZus{}non\PYZus{}zero}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+         
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Std non zero set len:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n+nb}{len}\PY{p}{(}\PY{n}{snz\PYZus{}set}\PY{p}{)}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{No number non zero set len:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n+nb}{len}\PY{p}{(}\PY{n}{nnnz\PYZus{}set}\PY{p}{)}\PY{p}{)}
+         
+         \PY{n}{common} \PY{o}{=} \PY{n}{snz\PYZus{}set} \PY{o}{\PYZam{}} \PY{n}{nnnz\PYZus{}set}
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{common}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Std non zero set len: 200
+No number non zero set len: 8
+\{25, 163, 156, 15\}
+
+    \end{Verbatim}
+
+    So the \texttt{nonzero} function would have returned the index of the
+values, so we can just look at those rows of \texttt{non\_nan\_cabins}
+indivually to see what's special about them.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}13}]:} \PY{n}{display}\PY{p}{(}\PY{n}{non\PYZus{}nan\PYZus{}cabins}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n+nb}{list}\PY{p}{(}\PY{n}{common}\PY{p}{)}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+
+
+    
+    \begin{verbatim}
+128    F E69
+715    F G73
+699    F G63
+75     F G73
+Name: Cabin, dtype: object
+    \end{verbatim}
+
+    
+    Oh. So it just had both letter only and standard format cabins. I'm not
+sure if the \texttt{F} is part of the cabin description, but that may
+not matter. I'm going to create a histogram of each of the counts, as
+well as print out all the columns with lone letters, to help give me a
+better idea of what to do with them.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}14}]:} \PY{n}{std\PYZus{}format\PYZus{}count}\PY{o}{.}\PY{n}{hist}\PY{p}{(}\PY{p}{)}
+         \PY{n}{no\PYZus{}num\PYZus{}count}\PY{o}{.}\PY{n}{hist}\PY{p}{(}\PY{p}{)}
+         
+         \PY{n}{display}\PY{p}{(}\PY{n}{non\PYZus{}nan\PYZus{}cabins}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n+nb}{list}\PY{p}{(}\PY{n}{nnnz\PYZus{}set}\PY{p}{)}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+
+
+    
+    \begin{verbatim}
+715    F G73
+327        D
+473        D
+339        T
+75     F G73
+128    F E69
+292        D
+699    F G63
+Name: Cabin, dtype: object
+    \end{verbatim}
+
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_25_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Nice, that gives me a better idea of what I'm working with. From looking
+at the sole letters, I'm not sure what to make of what those mean, but I
+do think I know how I want to categorize the data. (I'll add a few more
+columns to the table with categories of number of cabins, cabin letter
+and single letter cabins. We can do more pandas stuff after that.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}15}]:} \PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{num\PYZus{}std\PYZus{}cabins}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{std\PYZus{}format\PYZus{}count}
+         \PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{num\PYZus{}let\PYZus{}cabins}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{no\PYZus{}num\PYZus{}count}
+         
+         \PY{n}{df} \PY{o}{=} \PY{n}{df}\PY{o}{.}\PY{n}{fillna}\PY{p}{(}\PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{num\PYZus{}std\PYZus{}cabins}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{num\PYZus{}let\PYZus{}cabins}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{\PYZcb{}}\PY{p}{)}
+         
+         \PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{num\PYZus{}std\PYZus{}cabins}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{num\PYZus{}std\PYZus{}cabins}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{n+nb}{int}\PY{p}{)}
+         \PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{num\PYZus{}let\PYZus{}cabins}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{num\PYZus{}let\PYZus{}cabins}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{n+nb}{int}\PY{p}{)}
+         
+         \PY{n}{display}\PY{p}{(}\PY{n}{df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+         
+         \PY{n}{display}\PY{p}{(}\PY{n}{df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{num\PYZus{}std\PYZus{}cabins}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{\PYZgt{}} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+
+
+    
+    \begin{verbatim}
+   PassengerId  Survived  Pclass  \
+0            1     False       3   
+1            2      True       1   
+2            3      True       3   
+3            4      True       1   
+4            5     False       3   
+
+                                                Name     Sex   Age  SibSp  \
+0                            Braund, Mr. Owen Harris    male  22.0      1   
+1  Cumings, Mrs. John Bradley (Florence Briggs Th...  female  38.0      1   
+2                             Heikkinen, Miss. Laina  female  26.0      0   
+3       Futrelle, Mrs. Jacques Heath (Lily May Peel)  female  35.0      1   
+4                           Allen, Mr. William Henry    male  35.0      0   
+
+   Parch            Ticket     Fare Cabin Embarked  num_std_cabins  \
+0      0         A/5 21171   7.2500   NaN        S              -1   
+1      0          PC 17599  71.2833   C85        C               1   
+2      0  STON/O2. 3101282   7.9250   NaN        S              -1   
+3      0            113803  53.1000  C123        S               1   
+4      0            373450   8.0500   NaN        S              -1   
+
+   num_let_cabins  
+0              -1  
+1               0  
+2              -1  
+3               0  
+4              -1  
+    \end{verbatim}
+
+    
+    
+    \begin{verbatim}
+     PassengerId  Survived  Pclass  \
+27            28     False       1   
+88            89      True       1   
+97            98      True       1   
+118          119     False       1   
+297          298     False       1   
+299          300      True       1   
+305          306      True       1   
+311          312      True       1   
+341          342      True       1   
+390          391      True       1   
+435          436      True       1   
+438          439     False       1   
+498          499     False       1   
+679          680      True       1   
+700          701      True       1   
+742          743      True       1   
+763          764      True       1   
+789          790     False       1   
+802          803      True       1   
+872          873     False       1   
+
+                                                  Name     Sex    Age  SibSp  \
+27                      Fortune, Mr. Charles Alexander    male  19.00      3   
+88                          Fortune, Miss. Mabel Helen  female  23.00      3   
+97                     Greenfield, Mr. William Bertram    male  23.00      0   
+118                           Baxter, Mr. Quigg Edmond    male  24.00      0   
+297                       Allison, Miss. Helen Loraine  female   2.00      1   
+299    Baxter, Mrs. James (Helene DeLaudeniere Chaput)  female  50.00      0   
+305                     Allison, Master. Hudson Trevor    male   0.92      1   
+311                         Ryerson, Miss. Emily Borie  female  18.00      2   
+341                     Fortune, Miss. Alice Elizabeth  female  24.00      3   
+390                         Carter, Mr. William Ernest    male  36.00      1   
+435                          Carter, Miss. Lucile Polk  female  14.00      1   
+438                                  Fortune, Mr. Mark    male  64.00      1   
+498    Allison, Mrs. Hudson J C (Bessie Waldo Daniels)  female  25.00      1   
+679                 Cardeza, Mr. Thomas Drake Martinez    male  36.00      0   
+700  Astor, Mrs. John Jacob (Madeleine Talmadge Force)  female  18.00      1   
+742              Ryerson, Miss. Susan Parker "Suzette"  female  21.00      2   
+763          Carter, Mrs. William Ernest (Lucile Polk)  female  36.00      1   
+789                           Guggenheim, Mr. Benjamin    male  46.00      0   
+802                Carter, Master. William Thornton II    male  11.00      1   
+872                           Carlsson, Mr. Frans Olof    male  33.00      0   
+
+     Parch    Ticket      Fare            Cabin Embarked  num_std_cabins  \
+27       2     19950  263.0000      C23 C25 C27        S               3   
+88       2     19950  263.0000      C23 C25 C27        S               3   
+97       1  PC 17759   63.3583          D10 D12        C               2   
+118      1  PC 17558  247.5208          B58 B60        C               2   
+297      2    113781  151.5500          C22 C26        S               2   
+299      1  PC 17558  247.5208          B58 B60        C               2   
+305      2    113781  151.5500          C22 C26        S               2   
+311      2  PC 17608  262.3750  B57 B59 B63 B66        C               4   
+341      2     19950  263.0000      C23 C25 C27        S               3   
+390      2    113760  120.0000          B96 B98        S               2   
+435      2    113760  120.0000          B96 B98        S               2   
+438      4     19950  263.0000      C23 C25 C27        S               3   
+498      2    113781  151.5500          C22 C26        S               2   
+679      1  PC 17755  512.3292      B51 B53 B55        C               3   
+700      0  PC 17757  227.5250          C62 C64        C               2   
+742      2  PC 17608  262.3750  B57 B59 B63 B66        C               4   
+763      2    113760  120.0000          B96 B98        S               2   
+789      0  PC 17593   79.2000          B82 B84        C               2   
+802      2    113760  120.0000          B96 B98        S               2   
+872      0       695    5.0000      B51 B53 B55        S               3   
+
+     num_let_cabins  
+27                0  
+88                0  
+97                0  
+118               0  
+297               0  
+299               0  
+305               0  
+311               0  
+341               0  
+390               0  
+435               0  
+438               0  
+498               0  
+679               0  
+700               0  
+742               0  
+763               0  
+789               0  
+802               0  
+872               0  
+    \end{verbatim}
+
+    
+    Well here's some good news! It looks like non of the people with
+duplicate cabins have different letters. So I should be safe to just
+separate out the cabins as I planned. I'm going to create a separate
+column now, one to store what standard cabin letter they were in and one
+to store what letter only cabin they were in.
+
+I'm going to want to make this a function in order to use it again for
+testing data, and I'll use the same regex's I had before.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}16}]:} \PY{k}{def} \PY{n+nf}{get\PYZus{}std\PYZus{}cabin\PYZus{}letter}\PY{p}{(}\PY{n}{row}\PY{p}{)}\PY{p}{:}
+             \PY{n}{match} \PY{o}{=} \PY{n}{std\PYZus{}format\PYZus{}regex}\PY{o}{.}\PY{n}{match}\PY{p}{(}\PY{n+nb}{str}\PY{p}{(}\PY{n}{row}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cabin}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+             \PY{k}{if} \PY{n}{match}\PY{p}{:}
+                 \PY{k}{return} \PY{n}{match}\PY{o}{.}\PY{n}{group}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{)}
+             \PY{k}{else}\PY{p}{:}
+                 \PY{k}{return} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{NA}\PY{l+s+s2}{\PYZdq{}}
+             
+         \PY{k}{def} \PY{n+nf}{get\PYZus{}no\PYZus{}num\PYZus{}cabin\PYZus{}letter}\PY{p}{(}\PY{n}{row}\PY{p}{)}\PY{p}{:}
+             \PY{n}{match} \PY{o}{=} \PY{n}{no\PYZus{}num\PYZus{}regex}\PY{o}{.}\PY{n}{match}\PY{p}{(}\PY{n+nb}{str}\PY{p}{(}\PY{n}{row}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cabin}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+             \PY{k}{if} \PY{n}{match}\PY{p}{:}
+                 \PY{k}{return} \PY{n}{match}\PY{o}{.}\PY{n}{group}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{)}
+             \PY{k}{else}\PY{p}{:}
+                 \PY{k}{return} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{NA}\PY{l+s+s2}{\PYZdq{}}
+             
+         \PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{std\PYZus{}cabin\PYZus{}letter}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{df}\PY{o}{.}\PY{n}{apply}\PY{p}{(}\PY{k}{lambda} \PY{n}{row}\PY{p}{:} \PY{n}{get\PYZus{}std\PYZus{}cabin\PYZus{}letter}\PY{p}{(}\PY{n}{row}\PY{p}{)}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+         \PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{no\PYZus{}num\PYZus{}letter}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{df}\PY{o}{.}\PY{n}{apply}\PY{p}{(}\PY{k}{lambda} \PY{n}{row}\PY{p}{:} \PY{n}{get\PYZus{}no\PYZus{}num\PYZus{}cabin\PYZus{}letter}\PY{p}{(}\PY{n}{row}\PY{p}{)}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+         \PY{n}{display}\PY{p}{(}\PY{n}{df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    
+    \begin{verbatim}
+   PassengerId  Survived  Pclass  \
+0            1     False       3   
+1            2      True       1   
+2            3      True       3   
+3            4      True       1   
+4            5     False       3   
+
+                                                Name     Sex   Age  SibSp  \
+0                            Braund, Mr. Owen Harris    male  22.0      1   
+1  Cumings, Mrs. John Bradley (Florence Briggs Th...  female  38.0      1   
+2                             Heikkinen, Miss. Laina  female  26.0      0   
+3       Futrelle, Mrs. Jacques Heath (Lily May Peel)  female  35.0      1   
+4                           Allen, Mr. William Henry    male  35.0      0   
+
+   Parch            Ticket     Fare Cabin Embarked  num_std_cabins  \
+0      0         A/5 21171   7.2500   NaN        S              -1   
+1      0          PC 17599  71.2833   C85        C               1   
+2      0  STON/O2. 3101282   7.9250   NaN        S              -1   
+3      0            113803  53.1000  C123        S               1   
+4      0            373450   8.0500   NaN        S              -1   
+
+   num_let_cabins std_cabin_letter no_num_letter  
+0              -1               NA            NA  
+1               0                C            NA  
+2              -1               NA            NA  
+3               0                C            NA  
+4              -1               NA            NA  
+    \end{verbatim}
+
+    
+    Alright, I think I'm done with preprocessing mostly. The only thing I
+want to do is to one-hot encode the category values, to make random
+forests do their things better. I'm also going to normalize the fare
+prices using sklearn's \texttt{MinMaxScaler}. I'm not going to do that
+with the ages though because their values are in a relatively sane area
+already and they contain NaN, which doesn't work with sklearn's
+preprocessor. I'm going to one-hot encode \textbf{Pclass} as well, but I
+don't know if that will be useful or not.
+
+\textbf{\emph{fuck, you can't have NaN in it.}}
+
+fine i'll just fill it with zero and then normalize.
+
+Finally I want to split the \textbf{Survived} category into a separate
+date frame since it is going to be our desired label.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}17}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{preprocessing} \PY{k}{import} \PY{n}{MinMaxScaler}
+         
+         \PY{n}{df\PYZus{}final} \PY{o}{=} \PY{n}{df}
+         \PY{c+c1}{\PYZsh{} Initialize a scaler, then apply it to the features}
+         \PY{n}{scaler} \PY{o}{=} \PY{n}{MinMaxScaler}\PY{p}{(}\PY{p}{)} \PY{c+c1}{\PYZsh{} default=(0, 1)}
+         \PY{n}{df\PYZus{}final}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Age}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Age}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{fillna}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)}
+         \PY{n}{numerical} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Age}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Fare}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+         
+         \PY{n}{df\PYZus{}final}\PY{p}{[}\PY{n}{numerical}\PY{p}{]} \PY{o}{=} \PY{n}{scaler}\PY{o}{.}\PY{n}{fit\PYZus{}transform}\PY{p}{(}\PY{n}{df}\PY{p}{[}\PY{n}{numerical}\PY{p}{]}\PY{p}{)}
+         
+         \PY{n}{df\PYZus{}final} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{get\PYZus{}dummies}\PY{p}{(}\PY{n}{df}\PY{p}{,} \PY{n}{columns}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Pclass}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Sex}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Embarked}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{std\PYZus{}cabin\PYZus{}letter}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{no\PYZus{}num\PYZus{}letter}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+         
+         \PY{n}{outcome} \PY{o}{=} \PY{n}{df\PYZus{}final}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Survived}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+         \PY{n}{df\PYZus{}final} \PY{o}{=} \PY{n}{df\PYZus{}final}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Survived}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+         
+         
+         \PY{n}{display}\PY{p}{(}\PY{n}{df\PYZus{}final}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{df\PYZus{}final}\PY{o}{.}\PY{n}{columns}\PY{p}{)}
+\end{Verbatim}
+
+
+    
+    \begin{verbatim}
+   PassengerId                                               Name     Age  \
+0            1                            Braund, Mr. Owen Harris  0.2750   
+1            2  Cumings, Mrs. John Bradley (Florence Briggs Th...  0.4750   
+2            3                             Heikkinen, Miss. Laina  0.3250   
+3            4       Futrelle, Mrs. Jacques Heath (Lily May Peel)  0.4375   
+4            5                           Allen, Mr. William Henry  0.4375   
+
+   SibSp  Parch            Ticket      Fare Cabin  num_std_cabins  \
+0      1      0         A/5 21171  0.014151   NaN              -1   
+1      1      0          PC 17599  0.139136   C85               1   
+2      0      0  STON/O2. 3101282  0.015469   NaN              -1   
+3      1      0            113803  0.103644  C123               1   
+4      0      0            373450  0.015713   NaN              -1   
+
+   num_let_cabins       ...         std_cabin_letter_C  std_cabin_letter_D  \
+0              -1       ...                          0                   0   
+1               0       ...                          1                   0   
+2              -1       ...                          0                   0   
+3               0       ...                          1                   0   
+4              -1       ...                          0                   0   
+
+   std_cabin_letter_E  std_cabin_letter_F  std_cabin_letter_G  \
+0                   0                   0                   0   
+1                   0                   0                   0   
+2                   0                   0                   0   
+3                   0                   0                   0   
+4                   0                   0                   0   
+
+   std_cabin_letter_NA  no_num_letter_D  no_num_letter_F  no_num_letter_NA  \
+0                    1                0                0                 1   
+1                    0                0                0                 1   
+2                    1                0                0                 1   
+3                    0                0                0                 1   
+4                    1                0                0                 1   
+
+   no_num_letter_T  
+0                0  
+1                0  
+2                0  
+3                0  
+4                0  
+
+[5 rows x 31 columns]
+    \end{verbatim}
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+Index(['PassengerId', 'Name', 'Age', 'SibSp', 'Parch', 'Ticket', 'Fare',
+       'Cabin', 'num\_std\_cabins', 'num\_let\_cabins', 'Pclass\_1', 'Pclass\_2',
+       'Pclass\_3', 'Sex\_female', 'Sex\_male', 'Embarked\_C', 'Embarked\_Q',
+       'Embarked\_S', 'Embarked\_U', 'std\_cabin\_letter\_A', 'std\_cabin\_letter\_B',
+       'std\_cabin\_letter\_C', 'std\_cabin\_letter\_D', 'std\_cabin\_letter\_E',
+       'std\_cabin\_letter\_F', 'std\_cabin\_letter\_G', 'std\_cabin\_letter\_NA',
+       'no\_num\_letter\_D', 'no\_num\_letter\_F', 'no\_num\_letter\_NA',
+       'no\_num\_letter\_T'],
+      dtype='object')
+
+    \end{Verbatim}
+
+    \subsection{Parameters}\label{parameters}
+
+Alright, time for the next step of the project! I'm going to throw out
+the columns \textbf{PassengerId}, \textbf{Name} and \textbf{Ticket}
+right away because there's not really any information to be gained from
+them since they are just artificial values, or (in the case of Ticket)
+something I can't really make any sense of.
+
+I'm also going to throw out the Cabin column since I've already gotten
+everything I needed out of that.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}18}]:} \PY{n}{to\PYZus{}drop} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{PassengerId}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Name}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Ticket}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Cabin}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+         \PY{n}{df\PYZus{}final} \PY{o}{=} \PY{n}{df\PYZus{}final}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{n}{to\PYZus{}drop}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+         
+         \PY{n}{display}\PY{p}{(}\PY{n}{df\PYZus{}final}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{df\PYZus{}final}\PY{o}{.}\PY{n}{columns}\PY{p}{)}
+\end{Verbatim}
+
+
+    
+    \begin{verbatim}
+      Age  SibSp  Parch      Fare  num_std_cabins  num_let_cabins  Pclass_1  \
+0  0.2750      1      0  0.014151              -1              -1         0   
+1  0.4750      1      0  0.139136               1               0         1   
+2  0.3250      0      0  0.015469              -1              -1         0   
+3  0.4375      1      0  0.103644               1               0         1   
+4  0.4375      0      0  0.015713              -1              -1         0   
+
+   Pclass_2  Pclass_3  Sex_female       ...         std_cabin_letter_C  \
+0         0         1           0       ...                          0   
+1         0         0           1       ...                          1   
+2         0         1           1       ...                          0   
+3         0         0           1       ...                          1   
+4         0         1           0       ...                          0   
+
+   std_cabin_letter_D  std_cabin_letter_E  std_cabin_letter_F  \
+0                   0                   0                   0   
+1                   0                   0                   0   
+2                   0                   0                   0   
+3                   0                   0                   0   
+4                   0                   0                   0   
+
+   std_cabin_letter_G  std_cabin_letter_NA  no_num_letter_D  no_num_letter_F  \
+0                   0                    1                0                0   
+1                   0                    0                0                0   
+2                   0                    1                0                0   
+3                   0                    0                0                0   
+4                   0                    1                0                0   
+
+   no_num_letter_NA  no_num_letter_T  
+0                 1                0  
+1                 1                0  
+2                 1                0  
+3                 1                0  
+4                 1                0  
+
+[5 rows x 27 columns]
+    \end{verbatim}
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+Index(['Age', 'SibSp', 'Parch', 'Fare', 'num\_std\_cabins', 'num\_let\_cabins',
+       'Pclass\_1', 'Pclass\_2', 'Pclass\_3', 'Sex\_female', 'Sex\_male',
+       'Embarked\_C', 'Embarked\_Q', 'Embarked\_S', 'Embarked\_U',
+       'std\_cabin\_letter\_A', 'std\_cabin\_letter\_B', 'std\_cabin\_letter\_C',
+       'std\_cabin\_letter\_D', 'std\_cabin\_letter\_E', 'std\_cabin\_letter\_F',
+       'std\_cabin\_letter\_G', 'std\_cabin\_letter\_NA', 'no\_num\_letter\_D',
+       'no\_num\_letter\_F', 'no\_num\_letter\_NA', 'no\_num\_letter\_T'],
+      dtype='object')
+
+    \end{Verbatim}
+
+    \subsubsection{Cross Validation}\label{cross-validation}
+
+Alright, time to set up cross validation. I'm going to use ten-fold
+cross validation because there isn't much data to work with. I'm going
+to have sklearn shuffle it first though, because I don't know who
+entered the CSV originally so there may be some meaning to it. I am
+going to set a random state at the beginning though so I can be
+consistent and compare my results as I tweak parameters.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}19}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{model\PYZus{}selection} \PY{k}{import} \PY{n}{KFold}
+         \PY{k+kn}{from} \PY{n+nn}{collections} \PY{k}{import} \PY{n}{namedtuple}
+         
+         \PY{n}{K\PYZus{}Split} \PY{o}{=} \PY{n}{namedtuple}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{K\PYZus{}Split}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{X\PYZus{}test}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{X\PYZus{}train}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y\PYZus{}test}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y\PYZus{}train}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+         
+         \PY{n}{RANDOM\PYZus{}STATE} \PY{o}{=} \PY{l+m+mi}{1337}
+         
+         \PY{n}{kf} \PY{o}{=} \PY{n}{KFold}\PY{p}{(}\PY{n}{n\PYZus{}splits}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{,} \PY{n}{shuffle}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{n}{RANDOM\PYZus{}STATE}\PY{p}{)}
+         
+         \PY{n}{X} \PY{o}{=} \PY{n}{df\PYZus{}final}
+         \PY{n}{y} \PY{o}{=} \PY{n}{outcome}
+\end{Verbatim}
+
+
+    \subsubsection{Accuracy}\label{accuracy}
+
+So in order to calculate the accuracy, I'm going to use the
+\texttt{accuracy\_score} from \texttt{sklearn} because that's what I've
+used before when working with data like this. Since it doesn't really
+matter whether I correctly predict someone living or dying, the accuracy
+should be fine.
+
+In order to have a good baseline, I'm going to use the actual percentage
+of who survived the Titanic, which is easy enough. However, I can't use
+everything being categorized as correct for this, because then the
+accuracy and fbeta will just be 1! So instead I'm going to make the
+naive model kill everyone, since most people on the titanic died.
+
+The Positive will be someone surviving and the negative will be someone
+not surviving in the real life scenario, but since I can't do that with
+precision scores,
+
+Then I'm going to have to calculate the first accuracy and fbeta scores
+myself since sklearn can't do that.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}21}]:} \PY{n}{naive\PYZus{}TP} \PY{o}{=} \PY{l+m+mi}{0}
+         \PY{n}{naive\PYZus{}FP} \PY{o}{=} \PY{l+m+mi}{0}
+         
+         \PY{n}{naive\PYZus{}TN} \PY{o}{=} \PY{n}{outcome}\PY{o}{.}\PY{n}{count}\PY{p}{(}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{outcome}\PY{p}{)}
+         \PY{n}{naive\PYZus{}FN} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{outcome}\PY{p}{)}
+         
+         \PY{n}{naive\PYZus{}accuracy} \PY{o}{=} \PY{p}{(}\PY{n}{naive\PYZus{}TP} \PY{o}{+} \PY{n}{naive\PYZus{}TN}\PY{p}{)} \PY{o}{/} \PY{p}{(}\PY{n}{naive\PYZus{}TP} \PY{o}{+} \PY{n}{naive\PYZus{}FP} \PY{o}{+} \PY{n}{naive\PYZus{}TN} \PY{o}{+} \PY{n}{naive\PYZus{}FN}\PY{p}{)}
+         \PY{n}{lazy\PYZus{}max\PYZus{}accuracy} \PY{o}{=} \PY{o}{.}\PY{l+m+mi}{70}
+         
+         \PY{c+c1}{\PYZsh{} Print the results }
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Naive Predictor: [Accuracy score: }\PY{l+s+si}{\PYZob{}:.4f\PYZcb{}}\PY{l+s+s2}{]}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{naive\PYZus{}accuracy}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Naive Predictor: [Accuracy score: 0.6162]
+
+    \end{Verbatim}
+
+    That's some neat accuracy, espectally since the accuracy you put in the
+project description was just 70\%.
+
+So time to do some stuff. I want to make a generic function that I can
+use to train any model and any split. So lets make that.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}22}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{metrics} \PY{k}{import} \PY{n}{accuracy\PYZus{}score}
+         
+         \PY{c+c1}{\PYZsh{} Returns the accuracy score.}
+         \PY{k}{def} \PY{n+nf}{train\PYZus{}test\PYZus{}single\PYZus{}split}\PY{p}{(}\PY{n}{learner}\PY{p}{,} \PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{X\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}test}\PY{p}{)}\PY{p}{:}
+             \PY{n}{learner} \PY{o}{=} \PY{n}{learner}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{)}
+             \PY{n}{predictions} \PY{o}{=} \PY{n}{learner}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{X\PYZus{}test}\PY{p}{)}
+             \PY{k}{return} \PY{n}{accuracy\PYZus{}score}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{predictions}\PY{p}{)}
+         
+         \PY{k}{def} \PY{n+nf}{train\PYZus{}test\PYZus{}kfold}\PY{p}{(}\PY{n}{learner}\PY{p}{,} \PY{n}{X}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{kf}\PY{p}{)}\PY{p}{:}
+             \PY{n}{scores} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+             \PY{k}{for} \PY{n}{train\PYZus{}index}\PY{p}{,} \PY{n}{test\PYZus{}index} \PY{o+ow}{in} \PY{n}{kf}\PY{o}{.}\PY{n}{split}\PY{p}{(}\PY{n}{X}\PY{p}{)}\PY{p}{:}
+                 \PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train} \PY{o}{=} \PY{n}{X}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{train\PYZus{}index}\PY{p}{]}\PY{p}{,} \PY{n}{y}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{train\PYZus{}index}\PY{p}{]}
+                 \PY{n}{X\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}test} \PY{o}{=} \PY{n}{X}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{test\PYZus{}index}\PY{p}{]}\PY{p}{,} \PY{n}{y}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{test\PYZus{}index}\PY{p}{]}
+                 \PY{n}{single\PYZus{}score} \PY{o}{=} \PY{n}{train\PYZus{}test\PYZus{}single\PYZus{}split}\PY{p}{(}\PY{n}{learner}\PY{p}{,} \PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{X\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}test}\PY{p}{)}
+                 \PY{n}{scores} \PY{o}{+}\PY{o}{=} \PY{p}{[}\PY{n}{single\PYZus{}score}\PY{p}{]}
+             \PY{k}{return} \PY{n+nb}{sum}\PY{p}{(}\PY{n}{scores}\PY{p}{)} \PY{o}{/} \PY{n+nb}{len}\PY{p}{(}\PY{n}{scores}\PY{p}{)}
+\end{Verbatim}
+
+
+    Okay lets actually do the stuff now. I'm running out of time :(
+
+I'm going to use some of sklearn's fancy libraries to do the work for
+me.
+
+\href{https://i.imgur.com/jwBKz6t.jpg}{This} is basically me. Minus the
+google part, rip host matching. oh and minus the not sklearn thing, that
+too. but same deal.
+
+Okay I hope my laptop doesn't catch on fire here.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}27}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{ensemble} \PY{k}{import} \PY{n}{RandomForestClassifier}
+         
+         \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{model\PYZus{}selection} \PY{k}{import} \PY{n}{GridSearchCV}
+         \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{metrics} \PY{k}{import} \PY{n}{make\PYZus{}scorer}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}28}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{ensemble} \PY{k}{import} \PY{n}{RandomForestClassifier}
+         
+         \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{model\PYZus{}selection} \PY{k}{import} \PY{n}{GridSearchCV}
+         \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{metrics} \PY{k}{import} \PY{n}{make\PYZus{}scorer}
+         
+         \PY{n}{clf} \PY{o}{=} \PY{n}{RandomForestClassifier}\PY{p}{(}\PY{n}{random\PYZus{}state}\PY{o}{=}\PY{n}{RANDOM\PYZus{}STATE}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} tbh i\PYZsq{}d rather use fbeta but w/e}
+         \PY{n}{scorer} \PY{o}{=} \PY{n}{make\PYZus{}scorer}\PY{p}{(}\PY{n}{accuracy\PYZus{}score}\PY{p}{)}
+         
+         \PY{n}{parameters} \PY{o}{=} \PY{p}{\PYZob{}}
+             \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{n\PYZus{}estimators}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{p}{[}\PY{l+m+mi}{5}\PY{p}{,} \PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{15}\PY{p}{,} \PY{l+m+mi}{25}\PY{p}{]}\PY{p}{,}
+             \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{criterion}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{gini}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{entropy}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}
+             \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{max\PYZus{}features}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{auto}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{sqrt}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{log2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{k+kc}{None}\PY{p}{]}\PY{p}{,}
+             \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{max\PYZus{}depth}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{p}{[}\PY{k+kc}{None}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{4}\PY{p}{,} \PY{l+m+mi}{8}\PY{p}{]}
+         \PY{p}{\PYZcb{}}
+         
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{did the easy shit}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+         
+         
+         
+         \PY{c+c1}{\PYZsh{} yeah idk if anything else should be added, knock yourself out.}
+         
+         \PY{c+c1}{\PYZsh{} tfw you forget the random state the first time}
+         \PY{c+c1}{\PYZsh{} tfw gridsearch doesn\PYZsq{}t actually take a random state}
+         \PY{n}{grid} \PY{o}{=} \PY{n}{GridSearchCV}\PY{p}{(}\PY{n}{clf}\PY{p}{,} \PY{n}{param\PYZus{}grid}\PY{o}{=}\PY{n}{parameters}\PY{p}{,} \PY{n}{scoring}\PY{o}{=}\PY{n}{scorer}\PY{p}{,} \PY{n}{cv}\PY{o}{=}\PY{n}{kf}\PY{p}{)}
+         
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{made the intense thing}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+         
+         \PY{n}{grid}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+         
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{finished the intense thing}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} nearly named this the \PYZdq{}chad\PYZus{}clf\PYZdq{}}
+         \PY{n}{best\PYZus{}clf} \PY{o}{=} \PY{n}{grid}\PY{o}{.}\PY{n}{best\PYZus{}estimator\PYZus{}}
+         
+         \PY{c+c1}{\PYZsh{} Don\PYZsq{}t need to do this beacuse the gridsearch keeps track of the best estimator results.}
+         \PY{c+c1}{\PYZsh{}best\PYZus{}accuracy = train\PYZus{}test\PYZus{}kfold(best\PYZus{}clf, X, y, kf)}
+         
+         \PY{c+c1}{\PYZsh{}print(\PYZdq{}Best accuracy:\PYZdq{}, best\PYZus{}accuracy)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+did the easy shit
+made the intense thing
+finished the intense thing
+
+    \end{Verbatim}
+
+    yeah okay that's good enough for tonight. confusion matricies are
+overrated, idk even know how to do that for kfold.
+
+oh yeah my computer is not on fire but it is certainly not happy, i've
+been waiting like 10 minutes now or something idk.
+
+yeah i can get the best parameters too if this \textbf{ever finishes
+running}
+
+holy fuck it just finished with a FUCKING ERROR
+
+okay so apparently grid search doesn't take a random\_state that is...
+annoying.
+
+any way, i reduced the number of possible parameters so hopefully it
+will actually finish this time.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}29}]:} \PY{n}{best\PYZus{}params} \PY{o}{=} \PY{n}{grid}\PY{o}{.}\PY{n}{best\PYZus{}params\PYZus{}}
+         \PY{n}{best\PYZus{}score} \PY{o}{=} \PY{n}{grid}\PY{o}{.}\PY{n}{best\PYZus{}score\PYZus{}}
+         
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{The GridSearchCV found the best number of estimators to be: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s2}{, the best criterion to be: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s2}{, the best max\PYZus{}features to be: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s2}{ and the best max\PYZus{}depth to be: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{best\PYZus{}params}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{n\PYZus{}estimators}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{best\PYZus{}params}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{criterion}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{best\PYZus{}params}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{max\PYZus{}features}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{best\PYZus{}params}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{max\PYZus{}depth}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{The final GridSearch RandomForest accuracy was: }\PY{l+s+si}{\PYZob{}:.4f\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{best\PYZus{}score}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+The GridSearchCV found the best number of estimators to be: 25, the best criterion to be: entropy, the best max\_features to be: None and the best max\_depth to be: 8
+The final GridSearch RandomForest accuracy was: 0.8272
+
+    \end{Verbatim}
+
+    \subsection{Final Result}\label{final-result}
+
+It finally fucking finished. I had reduced a bunch of the possible
+parameters so that may have been it. The ones I found with the random
+state of 1337 decided that a Random Forest with the following parameters
+was best.
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{n\_estimators}: 25
+\item
+  wow, how surprising, it's the maximum amount /s
+\item
+  \textbf{criterion}: entropy
+\item
+  this was actually kind of surprising since sklearn's default is gini.
+  but i guess we learned this in class.
+\item
+  \textbf{max\_features}: None
+\item
+  how surprising, it wants more of my cpu /s
+\item
+  \textbf{max\_depth}: 8
+\item
+  This is actually surprising since 8 is \textbf{not} the maximum depth
+  it could choose, that would be None. But it is the max among the
+  numbers I provided.
+\end{itemize}
+
+I've tried to find a way to create a confusion matrix or some graphs for
+this, but I don't think it's feasible to do while using grid search.
+especially since I still want to run the entire notebook kernel fresh.
+Plus I think it's going to rain soon so i g2g. enjoy.
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+    \end{document}
