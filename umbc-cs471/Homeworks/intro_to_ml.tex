@@ -1,0 +1,55 @@
+\documentclass[12pt]{article}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\parindent}{0in}
+\setlength{\parskip}{\baselineskip}
+
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{booktabs,multirow}
+\usepackage{graphicx}
+
+\title{CMSC 471 - Intro To ML HW}
+
+\begin{document}
+
+CMSC 471 Spring 2018\hfill Homework Intro To ML\\
+Robert Rose
+
+\hrulefill
+
+The following table gives a data set for deciding whether to play or cancel a ball game, depending on the weather conditions:\\
+
+\begin{center}
+\begin{tabular}{l|l|l|l|l}
+      \textbf{Outlook} & \textbf{Temp (F)} & \textbf{Humidity (\%)} & \textbf{Windy?} & \textbf{Class}\\
+      \hline
+      sunny & 75 & 70 & true & Play\\
+      sunny & 80 & 90 & true & Play\\
+      sunny & 85 & 85 & false & Don't Play\\
+      sunny & 72 & 95 & false & Don't Play\\
+      sunny & 69 & 70 & false & Play\\
+      overcast & 72 & 90 & true & Play\\
+      overcast & 83 & 78 & false & Play\\
+      overcast & 64 & 65 & true & Play\\
+      overcast & 81 & 75 & false & Play\\
+      rain & 71 & 80 & true & Don't Play\\
+      rain & 65 & 70 & true & Don't Play\\
+      rain & 75 & 80 & false & Play\\
+      rain & 68 & 80 & false & Play\\
+      rain & 70 & 96 & false & Play
+\end{tabular}
+\end{center}
+
+\vspace{-2em}
+
+\begin{enumerate}
+\item \textbf{Information Gain} \\
+
+
+Earthquake is \textbf{not independent} of alarm because the probability found in the table is not the same as the probability of $P(\text{alarm} \cap \text{earthquake})$ calculated as if they were independent.
+
+\newpage
+
+\end{enumerate}
+\end{document}
