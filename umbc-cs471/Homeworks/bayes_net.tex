@@ -1,0 +1,77 @@
+\documentclass[12pt]{article}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\parindent}{0in}
+\setlength{\parskip}{\baselineskip}
+
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{booktabs,multirow}
+\usepackage{graphicx}
+
+\title{CMSC 471 - Bayes Net HW}
+
+\begin{document}
+
+CMSC 471 Spring 2018\hfill Homework Bayes Nets\\
+Robert Rose (02/14)
+
+\hrulefill
+
+\begin{enumerate}
+\item \textbf{Joint Probability Table}
+\begin{figure}[h!]
+  \includegraphics[width=\linewidth]{table.png}
+  \label{fig:table}
+\end{figure}
+
+\vspace{-2em}
+
+Is earthquake independent of alarm? Show your work.\\
+
+\vspace{-3em}
+
+\begin{align*}
+        P(\text{alarm} \cap \text{earthquake})
+        &= P(\text{alarm} \cap \text{earthquake} \cap \text{burglary}) + \\
+        &= P(\text{alarm} \cap \text{earthquake} \cap \neg\text{burglary} )\\
+        &= .001 + .01\\
+        &= .0011\\
+        P(\text{alarm}) &= .001 + .01 + .008 + .09\\
+        &= .109\\
+        P(\text{earthquake}) &= .0001 + .001 + .001 + .01\\
+        &= .0121\\
+        P(\text{alarm} \cap \text{earthquake}) &= P(\text{alarm}) \times P(\text{earthquake}) \\
+        P(\text{alarm} \cap \text{earthquake}) &= .109 \times .0121\\
+        &= .0013189\\
+        .0013189 &\neq .0011
+    \end{align*}
+
+Earthquake is \textbf{not independent} of alarm because the probability found in the table is not the same as the probability of $P(\text{alarm} \cap \text{earthquake})$ calculated as if they were independent.
+
+\newpage
+
+\item \textbf{Bayes Net}
+\begin{figure}[h!]
+  \includegraphics[width=\linewidth]{map.png}
+  \label{fig:map}
+\end{figure}
+
+\vspace{-2em}
+
+What is $P(\text{C})$?\\
+
+\vspace{-3em}
+
+\begin{align*}
+\text{let } \pi_i &= \text{set of nodes that block influence of other nodes on } i\\
+        P(\text{C}) &= \sum_{\pi_i} P(C_i|\pi_i)P(\pi_i)\\
+        &= P(\text{C}|\text{A}) \times P(\text{A}) + P(\text{C}|\neg\text{A}) \times P(\neg\text{A})\\
+        &= P(\text{C}|\text{A}) \times P(\text{A}) + P(\text{C}|\neg\text{A}) \times (1 - P(\text{A}))\\
+        &= (0.2) \times (0.001) + (0.005) \times (0.999)\\
+        &= 0.0002 + .004995\\
+        &= \boxed{.005195}
+\end{align*}
+
+\end{enumerate}
+\end{document}
