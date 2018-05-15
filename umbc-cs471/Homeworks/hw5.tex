@@ -18,13 +18,23 @@ Robert Rose
 \hrulefill
 I'm fairly sure I turned in the three progress questions when they were initially due, so this is just the book exercises.
 \begin{enumerate}
-\item Give the name of the algorithm that results from the following special cases
+\item \textbf{4.1} Give the name of the algorithm that results from the following special cases
   \begin{enumerate}
-  \item Local beam search with $k = 1$.
-  \item Local beam search with one initial state and no limit on the number of states retained.
-  \item Simulated annealing with $T = 0$ at all times (and omitting the termination test).
-  \item Simulated annealing with $T = \infty$ at all times.
-  \item Genetic algorithm with $N = 1$.
+  \item Local beam search with $k = 1$.\\
+  \vspace{-2.5em}
+  \paragraph{Hill Climbing Search} Since it doesn't retain any states other than the current one.
+  \item Local beam search with one initial state and no limit on the number of states retained.\\
+  \vspace{-2.5em}
+  \paragraph{Breadth-first Search} This is similar to saying local beam search with $k = \infty$. That makes it equivalent to BFS, because it saves all the possible states in the way breadth-first search does. Could have some differences though in which path it goes down first depending on how it generates the states. Though different BFS implementations could as well.
+  \item Simulated annealing with $T = 0$ at all times (and omitting the termination test).\\
+  \vspace{-2.5em}
+  \paragraph{Hill Climbing Search} It will always choose the higher value since $T$ represents the "chaos" added from simulated annealing. I think the textbook calls this "first-choice hill climbing search", but they're basically the same thing.
+  \item Simulated annealing with $T = \infty$ at all times.\\
+  \vspace{-2.5em}
+  \paragraph{Random Walk} I don't know if this would actually work due to it skipping the termination step, but this would be the equivalent of a random walk because either the higher or lower value would have equal probability of being selected.
+  \item Genetic algorithm with $N = 1$.\\
+  \vspace{-2.5em}
+  \paragraph{Random Walk} With a population of 1, the crossover won't result in any changes since the parents will be the same. Therefore the only chance of change is in the mutation step, making it no different from a random walk.
 
   \end{enumerate}
 \newpage
