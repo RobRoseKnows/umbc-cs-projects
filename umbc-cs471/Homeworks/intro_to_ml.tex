@@ -84,8 +84,23 @@ IG(Play, Outlook) &= .94 - .6935 = \boxed{.247}
 
 \newpage
 \item What would it be for a split at the root on the Humidity attribute? (Use a threshold of 75 for humidity (i.e., assume a binary split: $humidity \leq 75$ or $humidity > 75$.)
-Very similar to what we had last time, but this time with humidity instead.\\
-
+Very similar to what we had last time, but this time with humidity instead. $E(Play)$ is even still the same!\\
+\begin{align*}
+E(Play) &= .94\\
+E(Play, Humidity) &= P(H \leq 75)E(Play, H \leq 75) + P(H > 75)E(Play, H > 75)\\
+&= .3571 \times .7219 + .6428 \times .9911 = .2578 + .6371\\
+&= .8949\\
+P(H \leq 75) &= \frac{5}{14} = .3571\\
+P(H > 75) &= \frac{9}{14} = .6428\\
+E(Play, H \leq 75) &= - (\frac{4}{5})lg(\frac{4}{5}) - (\frac{1}{5})lg(\frac{1}{5})\\
+&= - .8 \times lg(.8) - .2 \times lg(.2)
+= .2575 + .4644 = .7219\\
+E(Play, H > 75) &= - (\frac{5}{9})lg(\frac{5}{9}) - (\frac{4}{9})lg(\frac{4}{9})\\
+&= - .5556 \times lg(.5556) - .4444 \times lg(.4444)
+= .4711 + .5199 = .9911\\
+IG(Play, Humidity) &= E(Play) - E(Play, Humidity)\\
+&= .94 - .8949 = \boxed{.0451}
+\end{align*}
 
 \end{enumerate}
 \newpage
