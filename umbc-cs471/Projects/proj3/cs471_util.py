@@ -27,7 +27,7 @@ def total_entropy_of_list(arr : list) -> float:
     total_entropy = 0.
 
     for count in count_of_vals.values():
-        # Don't need to check for zero since there shouldn't be anything in the counteer that's zero.
+        # Don't need to check for zero since there shouldn't be anything in the counter that's zero.
         total_entropy += ent_singular(count, len(arr))
 
     return total_entropy

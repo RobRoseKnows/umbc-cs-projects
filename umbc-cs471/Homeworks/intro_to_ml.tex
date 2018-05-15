@@ -25,7 +25,7 @@ The following table gives a data set for deciding whether to play or cancel a ba
       \textbf{Outlook} & \textbf{Temp (F)} & \textbf{Humidity (\%)} & \textbf{Windy?} & \textbf{Class}\\
       \hline
       sunny & 75 & 70 & true & Play\\
-      sunny & 80 & 90 & true & Play\\
+      sunny & 80 & 90 & true & Don't Play\\
       sunny & 85 & 85 & false & Don't Play\\
         sunny & 72 & 95 & false & Don't Play\\
       sunny & 69 & 70 & false & Play\\
@@ -45,9 +45,48 @@ The following table gives a data set for deciding whether to play or cancel a ba
 \item \textbf{Information Gain} See next page for part (a). Had to separate it to give room for math.
 \newpage
 \begin{enumerate}
-\item At the root node for a decision tree in this domain, what would the information gain associated with a split on the Outlook attribute?
+\item At the root node for a decision tree in this domain, what would the information gain associated with a split on the Outlook attribute?\\
+\begin{equation*}
+lg(x) = log_2(x)
+\end{equation*}
+\begin{equation*}
+E = \sum_i - p_i lg(p_i)
+\end{equation*}
+Which using two attributes where $Y = \text{Class}$ and $X = \text{Attribute}$ is:\\
+\begin{equation*}
+E(Y, X) = \sum_{c \in X} P(c) E(c)
+\end{equation*}
+The formula for finding the information gain on a split on the Outlook is as follows:
+\begin{equation*}
+IG(Play, Outlook) = E(Play) - E(Play, Outlook)\\
+\end{equation*}
+So lets find all the parts and then plug it all in!
+\begin{align*}
+E(Play) &= - P(Play) \times lg(P(Play)) - P(\neg Play) \times lg(P(\neg Play))\\
+&= - ((\frac{9}{14}) \times lg(\frac{9}{14})) - ((\frac{5}{14}) \times lg(\frac{5}{14}))\\
+&= -.6428 \times lg(.6428) - .3571 \times lg(.3571)\\
+&= .94\\
+E(Play, Outlook) &= P(Sunny)E(Play, Sunny) + P(Rain)E(Play, Rain)\\
+& + P(Overcast)E(Play, Overcast) \\
+&= (\frac{5}{14}) \times .971 + (\frac{4}{14}) \times 0 + (\frac{5}{14}) \times .971\\
+&= .3467 + 0 + .3467 = .6935\\
+E(Play, Sunny) &= (\frac{3}{5})lg(\frac{3}{5}) + (\frac{2}{5})lg(\frac{2}{5})
+= .6 \times lg(.6) + .4 \times lg(.4)
+= .971\\
+E(Play, Overcast) &= (\frac{4}{4})lg(\frac{4}{4}) + (\frac{0}{4})lg(\frac{0}{4})
+= 1 \times lg(1)
+= 0\\
+E(Play, Rain) &= (\frac{3}{5})lg(\frac{3}{5}) + (\frac{2}{5})lg(\frac{2}{5})
+= .6 \times lg(.6) + .4 \times lg(.4)
+= .971\\
+IG(Play, Outlook) &= .94 - .6935 = \boxed{.247}
+\end{align*}
+
 \newpage
 \item What would it be for a split at the root on the Humidity attribute? (Use a threshold of 75 for humidity (i.e., assume a binary split: $humidity \leq 75$ or $humidity > 75$.)
+Very similar to what we had last time, but this time with humidity instead.\\
+
+
 \end{enumerate}
 \newpage
 
