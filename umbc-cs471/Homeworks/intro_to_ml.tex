@@ -105,5 +105,24 @@ IG(Play, Humidity) &= E(Play) - E(Play, Humidity)\\
 \end{enumerate}
 \newpage
 
+\item \textbf{Decision Tree} Suppose you build a decision tree that splits on the Outlook attribute at the root node.\\
+\begin{enumerate}
+\item How many children nodes are there are at the first level of the decision tree?\\
+\vspace{-2em}
+\paragraph{} There will be three children nodes on the first level, one for each of the possible outlooks, $Sunny$, $Overcast$ and $Rain$.\\
+\item Which branches require a further split in order to create leaf nodes with instances belonging to a single class?\\
+\vspace{-2em}
+\paragraph{} The $Sunny$ and $Rain$ branches will require further splits in order to create single class leaf nodes. We do know however that all on the $Overcast$ branch will be $Play$ class however.
+\item For each of these branches, which attribute can you split on to complete the decision tree building process at the next level (i.e., so that at level 2, there are only leaf nodes)?\\
+\vspace{-2em}
+\paragraph{Sunny} By splitting on the humidity attribute next, we can divide the remaining items into single class leaf nodes. All cases where $Humidity \leq 75$ (as proposed in part 1B above) will be classified as $Play$ while all cases where $Humidity > 75$ will be classified as $Don't Play$.
+
+\paragraph{Rain} In order to divide the $Rain$ children into single class leaf nodes, we should split on $Windy?$ next. If $Windy = true$ then it should be classified as $Don't Play$, otherwise if $Windy = false$, it should be classified as $Play$.
+
+\newpage
+\item \textbf{Draw the resulting decision tree, showing the decisions (class predictions) at the leaves.} Yeah I'm going to draw this in on the printed out sheet.\\
+
+\end{enumerate}
+
 \end{enumerate}
 \end{document}
