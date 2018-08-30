@@ -2,3 +2,5 @@
 *.out
 *~
 *.gch
+
+.ipynb_checkpoints/
