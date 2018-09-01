@@ -25,22 +25,21 @@ Robert Rose
   \item The sample size $n$ is extremely large, and the number of predictors
         $p$ is small.\\
   \vspace{-2.5em}
-  \paragraph{True/False} Answer
+  \paragraph{Better/Worse} Justification
 
   \item The number of predictors $p$ is extremely large, and the number of
         observations $n$ is small.\\
   \vspace{-2.5em}
-  \paragraph{True/False} Answer
+  \paragraph{Better/Worse} Justificiation
 
   \item The relationship between the predictors and response is highly non-linear.\\
   \vspace{-2.5em}
-  \paragraph{True/False} Answer
+  \paragraph{Better/Worse} Justification
 
   \item The variance of the error terms, i.e. $\sigma^2 = Var(\epsilon)$, is extremely high.\\
   \vspace{-2.5em}
-  \paragraph{True/False} Answer
+  \paragraph{Better/Worse} Justification
   \end{enumerate}
-\newpage
 
 \item Explain whether each scenario is a classification or regression problem,
       and indicate whether we are most interested in inference or prediction.
@@ -101,10 +100,29 @@ Robert Rose
       disadvantages?
 
 \item The table below provides a training data set containing six observations,
-      three predictors, and one qualitative response variable.
+      three predictors, and one qualitative response variable. Suppose we wish
+      to use this data set to make a prediction for $Y$ when $X_1 = X_2 = X_3 = 0$
+      using $K$-nearest neighbors.
 
-      Suppose we wish to use this data set to make a prediction for $Y$ when
-      $X_1 = X_2 = X_3 = 0$ using $K$-nearest neighbors.
+      \vspace{-1em}
+
+      \begin{table}[h!]
+        \begin{center}
+          \begin{tabular}{l|cccl}
+            Obs. & $X_1$ & $X_2$ & $X_3$ & $Y$ \\
+            \hline
+            1 & 0   & 3 & 0 & Red\\
+            2 & 2   & 0 & 0 & Red\\
+            3 & 0   & 1 & 3 & Red\\
+            4 & 0   & 1 & 2 & Green\\
+            5 & -1  & 0 & 1 & Green\\
+            6 & 1   & 1 & 1 & Red
+          \end{tabular}
+        \end{center}
+      \end{table}
+
+      \vspace{-3em}
+
   \begin{enumerate}
     \item Compute the Euclidean distance between each observation and the test
           point, $X_1 = X_2 = X_3 = 0$.
@@ -114,5 +132,6 @@ Robert Rose
           then would we expect the \textit{best} value for $K$ to be large or
           small? Why?
   \end{enumerate}
+
 \end{enumerate}
 \end{document}
