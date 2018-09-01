@@ -46,29 +46,73 @@ Robert Rose
       and indicate whether we are most interested in inference or prediction.
       Finally, provide $n$ and $p$.
   \begin{enumerate}
-  \item We collect a set of data on the top 500 firms in the US. For each firm
-        we record profit, number of employees, industry and the CEO salary. We
-        are interested in understanding which factors affect CEO salary.\\
-  \vspace{-2.5em}
-  \paragraph{Regression} We're trying to model a number (CEO salary) rather than
-        assign a single label. $n = 500, p = 4$
+    \item We collect a set of data on the top 500 firms in the US. For each firm
+          we record profit, number of employees, industry and the CEO salary. We
+          are interested in understanding which factors affect CEO salary.\\
+    \vspace{-2.5em}
+    \paragraph{Regression} We're trying to model a number (CEO salary) rather than
+          assign a single label. $n = 500, p = 4$
 
-  \item We are considering launching a new product and wish to know whether it
-        will be a \textif{success} or a \textif{failure}. We collect data on 20
-        similar products that were previously launched. For each product we have
-        recorded whether it was a success or failure, price charged for the product,
-        marketing budget, competition price, and ten other variables.\\
-  \vspace{-2.5em}
-  \paragraph{Classification/Regression} Answer
+    \item We are considering launching a new product and wish to know whether it
+          will be a \textit{success} or a \textit{failure}. We collect data on 20
+          similar products that were previously launched. For each product we have
+          recorded whether it was a success or failure, price charged for the product,
+          marketing budget, competition price, and ten other variables.\\
+    \vspace{-2.5em}
+    \paragraph{Classification/Regression} Answer
 
-  \item We are interested in predicting the \% change in the USD/Euro exchange rate
-        in relation to the weekly changes in the world stock markets. Hence we collect
-        weekly data for all of 2012. For each week we record the \% change in the
-        USD/Euro, the \% change in the US market, the \% change in the British market,
-        and the \% change in the German market.\\
-  \vspace{-2.5em}
-  \paragraph{Classification/Regression} Answer
+    \item We are interested in predicting the \% change in the USD/Euro exchange rate
+          in relation to the weekly changes in the world stock markets. Hence we collect
+          weekly data for all of 2012. For each week we record the \% change in the
+          USD/Euro, the \% change in the US market, the \% change in the British market,
+          and the \% change in the German market.\\
+    \vspace{-2.5em}
+    \paragraph{Classification/Regression} Answer
   \end{enumerate}
+\item We now revisit the bias-variance decomposition.
+  \begin{enumerate}
+    \item Provide a sketch of typical (squared) bias, variance, training error,
+          test error, and Bayes (or irreducible) error curves, on a single plot,
+          as we go from less flexible statistical learning methods towards more
+          flexible approaches. The $x$-axis should represent the amount of
+          flexibility in the method, and the y-axis should represent the values
+          for each curve. There should be five curves. Make sure to label each one.
+    \item Explain why each of the five curves has the shape displayed in part (a).
+  \end{enumerate}
+\item You will now think of some real-life applications for statistical learning.
+  \begin{enumerate}
+    \item Describe three real-life applications in which \textit{classification}
+          might be useful. Describe the response, as well as the predictors. Is
+          the goal of each application inference or prediction? Explain your answer.
+    \item Describe three real-life applications in which \textit{regression} might
+          be useful. Describe the response, as well as the predictors. Is the goal
+          of each application inference or prediction? Explain your answer.
+    \item Describe three real-life applications in which cluster analysis might
+          be useful.
+  \end{enumerate}
+\item What are the advantages and disadvantages of a very flexible (versus a less
+      flexible) approach for regression or classification? Under what circumstances
+      might a more flexible approach be preferred to a less flexible approach?
+      When might a less flexible approach be preferred?
 
+\item Describe the differences between a parametric and a non-parametric statistical
+      learning approach. What are the advantages of a parametric approach to regression
+      or classification (as opposed to a nonparametric approach)? What are its
+      disadvantages?
+
+\item The table below provides a training data set containing six observations,
+      three predictors, and one qualitative response variable.
+
+      Suppose we wish to use this data set to make a prediction for $Y$ when
+      $X_1 = X_2 = X_3 = 0$ using $K$-nearest neighbors.
+  \begin{enumerate}
+    \item Compute the Euclidean distance between each observation and the test
+          point, $X_1 = X_2 = X_3 = 0$.
+    \item What is our prediction with $K = 1$? Why?
+    \item What is our prediction with $K = 3$? Why?
+    \item If the Bayes decision boundary in this problem is highly nonlinear,
+          then would we expect the \textit{best} value for $K$ to be large or
+          small? Why?
+  \end{enumerate}
 \end{enumerate}
 \end{document}
