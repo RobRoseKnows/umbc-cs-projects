@@ -1,0 +1,85 @@
+---
+title: "boston_housing"
+author: "Rob Rose"
+date: "September 5, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Homework \#1
+
+This is the CMSC 478 HW number one. I was asigned Problem 10 fg&h.
+
+## Problem 10
+
+### Part (a)
+
+```{r part_10a}
+library(MASS)
+?Boston
+```
+
+### Part (b)
+
+
+```{r part_10b, echo=FALSE}
+attach(Boston)
+pairs(~crim + zn + indus + nox + rm + age + dis + rad + tax + ptratio + black + lstat + medv)
+```
+
+Some of them look to be highly correlated, such as zn and medv. Some are highly
+negatively correlated like lstat and medv, which makes sense knowing what those 
+values are.
+
+### Part (c)
+
+```{r part_10c}
+cor(Boston)
+```
+
+Most of the factors (except for the `chas` variable) are pretty correlated, 
+the highest correlations are `rad` and `tax`.
+
+### Part (d)
+
+```{r part_10d}
+summary(Boston)
+```
+
+### Part (e)
+
+```{r part_10e}
+sum(Boston$chas)
+```
+
+### Part (f)
+
+```{r part_10f}
+summary(ptratio)
+```
+
+Answer: `19.05`
+
+### Part (g)
+
+```{r part_10g}
+Boston[Boston$medv == min(Boston$medv), ]
+```
+
+There are two that have the minimum value, and they both have very high crime per
+capita. You can also see the effects of segregationist housing policies here as
+the `ptratio` and `nox` are both in the third quartile.
+
+### Part (h)
+
+```{r part_10h}
+sum(Boston[,"rm"]>7)
+sum(Boston[,"rm"]>8)
+```
+
+Greater than 7: 64
+
+Greater than 8: 13
