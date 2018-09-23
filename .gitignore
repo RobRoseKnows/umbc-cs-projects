@@ -4,3 +4,4 @@
 *.gch
 
 .ipynb_checkpoints/
+.Rproj.user
