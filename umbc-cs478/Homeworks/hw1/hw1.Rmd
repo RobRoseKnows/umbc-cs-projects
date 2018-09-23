@@ -78,8 +78,15 @@ the `ptratio` and `nox` are both in the third quartile.
 ```{r part_10h}
 sum(Boston[,"rm"]>7)
 sum(Boston[,"rm"]>8)
+summary(Boston[Boston$rm > 8, ])
 ```
 
 Greater than 7: 64
 
 Greater than 8: 13
+
+There's a pretty big spread of statistics among those with greater than 8 rooms.
+One example was `age` being pretty spread out. The `crim` rates were overall
+pretty low among all of the neighborhoods though. Surprising was how more
+than half of the neighborhoods had `zone` as 0 but the highest had `zone` as 95!
+I'm curious as to what the cause of that disparity is.
