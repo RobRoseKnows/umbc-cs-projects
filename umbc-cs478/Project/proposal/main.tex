@@ -1,0 +1,113 @@
+\documentclass[11pt]{article}
+
+\usepackage[top=0.5in, bottom=0.5in, left=0.5in, right=0.5in]{geometry}
+\usepackage{authblk}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{siunitx}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage[nottoc,numbib]{tocbibind}
+\usepackage{biblatex}
+
+\bibliography{references.bib}
+
+\newcommand{\email}[1]{\texttt{\href{mailto:#1}{#1}}}
+
+\title{CMSC 478 Project Proposal}
+\author{Robert Rose}
+
+\makeatletter
+\let\inserttitle\@title
+\let\insertauthor\@author
+\makeatother
+
+\begin{document}
+
+\begin{center}
+  \LARGE{\inserttitle}
+
+  \Large{\insertauthor}
+\end{center}
+
+\section{Research Problem}
+
+I am choosing to model my project on the currently running Kaggle competition for PUBG finish place
+prediction.\cite{competition} The competition challenges Kagglers to use tabular data scraped via
+API from the video game PlayerUnknown's BattleGrounds (PUBG) to predict a player's final placement
+percentage. 
+
+\section{Background}
+
+The study of regression in statistical learning is rather dense with literature and a good deal of
+it has been gone over in class. For the purpose of this project, most, if not all, the tools
+necessary to work on this project can be found within the sklearn Python library.\cite{scikit-learn}
+Since non-R languages are allowed for the project, I plan on using Python since I am more familiar 
+with it.
+
+PlayerUnknown's BattleGrounds (PUBG) is a video game that pits 100 players against each other, on
+teams of up to 4, to fight until only one is left standing. The first-person shooter takes place on
+a several kilometer large map that rapidly shrinks as the match progresses. By the end players are
+forced into a small area until one player, or team of players, is left standing.
+
+Because I am basing my research problem on an existing Kaggle competition, I have the benefit of
+being able to look at many other user's techniques in order to refine my own. This also provides
+some insight into how the data can be prepared and pre-processed to remove outliers such as
+zombie-mode matches and cheaters.\cite{rejasupotaro} There are also existing kernels that provide
+some basic feature engineering to use with building a model.\cite{lepelaars} There are also some
+tips for post-processing the results in order to account for the team-based play of
+PUBG.\cite{post-process}
+
+\section{Data}
+
+The data I plan to use for this competition was scraped by the Kaggle team from the PUBG developer
+API and covers an unspecified timeline of play. Originally the competition had numbered match and
+player IDs, but those have since been hashed and the data was rescraped due to a leakage in the
+original dataset.\cite{competition_relaunch} The dataset has one notable anomaly: a NaN value in the
+target variable in one of the training dataset matches with only one player.\cite{nan_in_training}
+
+I won't describe every variable in the training set as there are too many to go over on a single
+page, but most are numeric values for certain in-game statistics such as distance walked or number
+of kills. The target variable is the player's final ranking as a percentage of total players. This
+is because while matches can fit 100 players, they typically only have somewhere in the 90's. So a
+player ranked first in a match with 90 players will have a higher `winPlacePerc` than a player
+ranked first in a match with 100 players.
+
+Additionally, there are hashed strings of match, player and group id's. Unfortunately, player id's
+are not consistent across play sessions, so there's not a terrible amount of information that can be
+gained there. They were hashed in order to prevent another leakage in the dataset, as the player
+id's were mostly sorted in previous versions.\cite{competition_relaunch}
+
+\section{Methods}
+
+From past Kaggle Competitions, I've found that tree-based gradient boosting models are the way to 
+go, with a heavy amount of feature engineering as well. I plan to spend a good amount of time 
+feature engineering, that is: generating useful features to add to the data set that machine 
+learning models will never find on their own. An example of this is calculating something like the 
+total distance traveled by adding together the distance walked with the distance driven or 
+swam.\cite{lepelaars}
+
+Another way I hope to engineer features is using clustering on the dataset to engineer features. I 
+don't know how useful this will be with certain models, but from a preliminary analysis, I have 
+found two rather distinct clusters in the data after applying principle component 
+analysis.\cite{clustering} I hope to use some sort of clustering method such as DBSCAN, hierarchal 
+clustering or $K$-nearest neighbor to find the clusters and then create features by calculating the
+distance from cluster centroids for data in the testing set.
+
+Although I've avoided using it in the past because gradient boosting models like LightGBM or
+XGBoost work better when you have lots of data, I may also attempt to use random forest regressors 
+for this dataset, as they seem to work rather well.\cite{lepelaars} Additionally, if I have time
+I'll try using some simple neural nets to see if they work better on the data. That depends on how
+long training will take however.
+
+A final technique I would like to experiment with is also to use multiple models together in an
+ensemble to better predict the final result. I plan to use $K$-fold cross validation as a sampling
+method to prevent over-fitting because leave one-out cross validation takes far too long to train.
+
+\printbibliography
+
+\end{document}
