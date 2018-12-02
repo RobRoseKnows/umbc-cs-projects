@@ -1,0 +1,3 @@
+[submodule "cs411-proj-ext"]
+    path = umbc-cs411/projs/proj-ext
+    url = https://github.com/RobRoseKnows/cs411-f18-proj.git
