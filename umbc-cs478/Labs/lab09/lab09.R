@@ -48,4 +48,6 @@ boost.close = gbm(close ~ ., data=boost.train, distribution = "bernoulli", n.tre
 summary(boost.close)
 yhat.boost = predict(boost.close, newdata=boost.test, type = "response", n.trees = 50)
 yhat.boost
+one = (yhat.boost > .05)
+table(one, boost.test$close)
 mean((yhat.boost - boost.test$close)^2)
