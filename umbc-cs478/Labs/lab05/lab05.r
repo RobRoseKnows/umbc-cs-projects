@@ -11,3 +11,6 @@ glm.probs=predict(glm.fit, newdata=test, type='response')
 mean(glm.probs)
 glm.pred=ifelse(glm.probs>.45, "Yes", "No")
 table(glm.pred, test.data$default)
+
+glm.fit = glm(default~income+balance, data=Default, family=binomial)
+cv.glm(Default, glm.fit,K=5)$delta[1]
