@@ -56,6 +56,10 @@ keep the number of micro-weather measurements manageable, I plan on writing a
 transaction to delete all but the last 10 measurements of a given station but also
 keep the ones referenced by activity logs.
 
+An additional requirement I plan on adding is to include barcodes for each plant,
+pot, tray and weather station. This is so that the shop could eventually label
+their items with barcodes to ease data entry later on.
+
 ## Phase B - Conceptual Design
 
 ### Entity-Relationship Diagram
@@ -73,7 +77,7 @@ composite primary key. Derived attributes are in *itallics*.
   - CommonName
   - IsPerannual
   - DaysToGerminate
-  - UPC
+  - Barcode
   - Req_Temperature
   - Req_Light
   - Req_AirMoisture
@@ -81,18 +85,18 @@ composite primary key. Derived attributes are in *itallics*.
   - Req_Watering
 - Pot
   - **ID**
-  - UPC
+  - Barcode
   - Height
   - Volume
   - Holding_Species
   - Holding_Cultivar
-  - Holding_Germination_Date
-  - Holding_Planting_Date
+  - Holding_GerminationDate
+  - Holding_PlantingDate
   - *Holding_Age*
   - OnTray
 - Tray
   - **ID**
-  - UPC
+  - Barcode
   - Location
   - *LastAction*
 - ActivityLog
@@ -117,9 +121,57 @@ composite primary key. Derived attributes are in *itallics*.
   - **ID**
   - Location
   - Name
+  - Barcode
 
 ### Constraints
 
-
+- Plant
+  - `Unique(Barcode)` since barcodes should be unique for each plant
+  - `Check(DaysToGerminate > 0)` since all plants should take some time to germinate
+  - `Check(Req_Feeding >= 0)` since it can't require negative feeding
+  - `Check(Req_Watering >= 0)` since it can't require negative watering
+  - I'm unsure whether the other requirement values can be negative or positive so
+    I'll leave them without check constraints.
+- Pot
+  - `Unique(Barcode)` since barcodes should be unique for each pot
+  - `Check(Height IS IN (3, 4, 5, 6, 6.5, 7, 8, 12, 14))` since those are the only
+    valid height values.
+  - `Check(Volume IS IN (1, 2, 3, 4, 5, 7, 10, 15, 25))` since those are the only valid
+    volume values.
+  - `Check(Holding_PlantingDate < Holding_GerminationDate)` because the plant can't
+    have germinated before it's planted.
+  - `ForeignKey(Holding_Species, Holding_Cultivar) -> Plant(Species, Cultivar)` as
+    they are the foreign key references that determine which plant is in the pot.
+  - `ForeignKey(OnTray) -> Tray(ID)` as it is the foreign key reference that determines
+    which tray a pot is on.
+- Tray
+  - `Unique(Barcode)` since barcodes should be unique for each tray
+- ActivityLog
+  - `Check(Food >= 0)` because you can't feed negative food.
+  - `Check(Water >= 0)` because you can't water negative water.
+  - `ForeignKey(PotID) -> Pot(ID)` the primary keys are Timestamp and PotID, but
+    PotID is also a foreign key to the Pot table.
+  - `ForeignKey(WeatherEventID) -> WeatherEvent(ID)` this is to preserve needed
+    WeatherEvents when they are periodically culled to the last ten.
+- WeatherEvent
+  - `ForeignKey(StationID) -> WeatherStation(ID)` this is so we can delete older
+    records.
+- WeatherStation
+  - `Unique(Name)` As I metioned earlier in Phase A, I plan to give the weather
+    stations human names so that they can be referred to by staff.
+  - `Unique(Barcode)` since bacodes should be unique for each weather station.
+  - `Unique(Location)` There shouldn't be a need for more than one weather station 
+    at the same location so I feel we can also put a Unique constraint on this point.
 
 ### Justification
+
+I am presuming that all `CHECK` constraints will be used on a modern version of 
+MySQL 8, which does parse and enforce `CHECK` constraints as opposed to earlier 
+versions which parsed and ignored them.
+
+Justifications for constraints can be found in line with their descriptions in
+the constraints section above.
+
+The reason I decided to design WeatherEvents stored separately instead of with
+the activity log is to reduce data duplication and to leave a clear chain of record
+of where the measurements came from.
