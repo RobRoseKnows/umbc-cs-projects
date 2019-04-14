@@ -47,6 +47,42 @@ can be used by employees to refer to them in conversation (e.g. "Move Achilles t
 section 1,1") I plan to use the names of Greek mythological figures for my sample
 scripts, but the final database could use any name they might want.
 
+Another requirement which I'm confused about is that the Pots descritpion says it
+records the "the average... of the measurement events maintained by the nearest 
+micro-weather station at the activity’s timestamp." I'm confused as to what it's
+averaging. Instead, I plan to simply have the measurement reference the most recent
+measurement event of the nearest micro-weather station. Additionally, in order to 
+keep the number of micro-weather measurements manageable, I plan on writing a
+transaction to delete all but the last 10 measurements of a given station but also
+keep the ones referenced by activity logs.
+
 ## Phase B - Conceptual Design
 
-Here is an entity relationship model for the 
+### Entity-Relationship Diagram
+
+![Entity-relationship diagram](./erd.png)
+
+### Attributes
+
+Primary key(s) are in bold. When more than one attribute is bolded, there is a
+composite primary key.
+
+- Plant
+  - Species
+  - Cultivar
+  - Name
+  - IsPerannual
+  - TimeToGerminate
+  - UPC
+  - Daily_Temperature
+  - Daily_Light
+  - Daily_AirMoisture
+  - Daily_Feeding
+  - Daily_Watering
+
+
+### Constraints
+
+
+
+### Justification
