@@ -64,22 +64,59 @@ keep the ones referenced by activity logs.
 
 ### Attributes
 
-Primary key(s) are in bold. When more than one attribute is bolded, there is a
-composite primary key.
+Primary key(s) are in **bold**. When more than one attribute is bolded, there is a
+composite primary key. Derived attributes are in *itallics*.
 
 - Plant
-  - Species
-  - Cultivar
-  - Name
+  - **Species**
+  - **Cultivar**
+  - CommonName
   - IsPerannual
-  - TimeToGerminate
+  - DaysToGerminate
   - UPC
-  - Daily_Temperature
-  - Daily_Light
-  - Daily_AirMoisture
-  - Daily_Feeding
-  - Daily_Watering
-
+  - Req_Temperature
+  - Req_Light
+  - Req_AirMoisture
+  - Req_Feeding
+  - Req_Watering
+- Pot
+  - **ID**
+  - UPC
+  - Height
+  - Volume
+  - Holding_Species
+  - Holding_Cultivar
+  - Holding_Germination_Date
+  - Holding_Planting_Date
+  - *Holding_Age*
+  - OnTray
+- Tray
+  - **ID**
+  - UPC
+  - Location
+  - *LastAction*
+- ActivityLog
+  - **Timestamp**
+  - **PotID**
+  - Food
+  - Water
+  - StartingLoc
+  - EndingLoc
+  - *AmbientLight*
+  - *AirMoisture*
+  - *Temperature*
+  - WeatherEventID
+- WeatherEvent
+  - **ID**
+  - AmbientLight
+  - AirMoisture
+  - CurrentLocation
+  - Temperature
+  - StationID
+- WeatherStation
+  - **ID**
+  - Location
+  - Name
 
 ### Constraints
 
