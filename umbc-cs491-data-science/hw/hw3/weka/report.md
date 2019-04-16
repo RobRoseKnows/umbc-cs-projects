@@ -328,3 +328,194 @@ Weighted Avg.    0.858    0.142    0.859      0.858    0.858      0.714    0.874
  264  43 |   a = +
   55 328 |   b = -
 ```
+
+### Regression
+
+For regression experimentation, I chose the [Forest Fires][forest-fires] dataset.
+This dataset consisted of 13 attributes consisting of data related to an area
+burned by a forest fire and the area burned in hectaacres. In the description of
+the dataset, the poster said the output variable is very skewed towards 0.0, and
+suggested using a logarithmic transform on the area. I thought that would be prudent
+so I did so using the transform below:
+
+`weka.filters.unsupervised.attribute.NumericTransform -R first-last -C java.lang.Math -M log`
+
+Unfortunately that transform also wiped out half the data that was just zeros, so I
+undid it.
+
+[forest-fires]: http://archive.ics.uci.edu/ml/datasets/Forest+Fires
+
+#### Linear Regression
+
+The first method I used was simple linear regression which turned out rather poorly,
+as I expected it would. The result was a root relative squared error of around 100%,
+pretty poor if you ask me. The result of the run is below.
+
+```
+=== Run information ===
+
+Scheme:       weka.classifiers.functions.LinearRegression -S 0 -R 1.0E-8 -num-decimal-places 4
+Relation:     regression
+Instances:    517
+Attributes:   13
+              X
+              Y
+              month
+              day
+              FFMC
+              DMC
+              DC
+              ISI
+              temp
+              RH
+              wind
+              rain
+              area
+Test mode:    10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+
+Linear Regression Model
+
+area =
+
+      2.0897 * X +
+     51.1801 * month=oct,apr,aug,dec,jul,sep,may +
+    -48.6144 * month=apr,aug,dec,jul,sep,may +
+     31.6394 * month=aug,dec,jul,sep,may +
+    -14.2996 * month=jul,sep,may +
+     35.6828 * month=sep,may +
+     13.67   * day=sat +
+      0.1548 * DMC +
+     -0.0987 * DC +
+      1.237  * temp +
+    -19.8389
+
+Time taken to build model: 0.11 seconds
+
+=== Cross-validation ===
+=== Summary ===
+
+Correlation coefficient                  0.0763
+Mean absolute error                     20.0857
+Root mean squared error                 63.8429
+Relative absolute error                108.035  %
+Root relative squared error            100.2281 %
+Total Number of Instances              517     
+```
+
+#### Random Forest
+
+I expected Random Forests to do better than plain old linear regression but that
+was actually not the case. Random Forests ended up with a smaller correlation
+coefficient and a higher root relative squared error. The output of that run can
+be seen below.
+
+```
+=== Run information ===
+
+Scheme:       weka.classifiers.trees.RandomForest -P 100 -I 100 -num-slots 1 -K 0 -M 1.0 -V 0.001 -S 1
+Relation:     regression
+Instances:    517
+Attributes:   13
+              X
+              Y
+              month
+              day
+              FFMC
+              DMC
+              DC
+              ISI
+              temp
+              RH
+              wind
+              rain
+              area
+Test mode:    10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+RandomForest
+
+Bagging with 100 iterations and base learner
+
+weka.classifiers.trees.RandomTree -K 0 -M 1.0 -V 0.001 -S 1 -do-not-check-capabilities
+
+Time taken to build model: 0.07 seconds
+
+=== Cross-validation ===
+=== Summary ===
+
+Correlation coefficient                  0.0685
+Mean absolute error                     21.6386
+Root mean squared error                 67.0068
+Relative absolute error                116.3877 %
+Root relative squared error            105.1951 %
+Total Number of Instances              517     
+```
+
+#### Gaussian Processes with Normalized Poly Kernel
+
+For the final test, I wanted to try something a little more complicated so I
+chose the GaussianProcesses classifier with a Normalized Polynomial Kernel. It
+performed the best out of all of the attempts but not by much, with a Root Relative
+Squared Error of only slightly less than the others.
+
+```
+=== Run information ===
+
+Scheme:       weka.classifiers.functions.GaussianProcesses -L 1.0 -N 0 -K "weka.classifiers.functions.supportVector.NormalizedPolyKernel -E 2.0 -C 250007" -S 1
+Relation:     regression
+Instances:    517
+Attributes:   13
+              X
+              Y
+              month
+              day
+              FFMC
+              DMC
+              DC
+              ISI
+              temp
+              RH
+              wind
+              rain
+              area
+Test mode:    10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+Gaussian Processes
+
+Kernel used:
+  Normalized Poly Kernel: K(x,y) = <x,y>^2.0/(<x,x>^2.0*<y,y>^2.0)^(1/2)
+
+All values shown based on: Normalize training data
+
+Average Target Value : 0.011777430301082182
+Inverted Covariance Matrix:
+    Lowest Value = -0.21663787790189823
+    Highest Value = 0.9694849098401233
+Inverted Covariance Matrix * Target-value Vector:
+    Lowest Value = -0.060538519454774654
+    Highest Value = 0.9409126995790923
+ 
+
+
+Time taken to build model: 0.16 seconds
+
+=== Cross-validation ===
+=== Summary ===
+
+Correlation coefficient                  0.051 
+Mean absolute error                     19.7883
+Root mean squared error                 64.2566
+Relative absolute error                106.4352 %
+Root relative squared error            100.8775 %
+Total Number of Instances              517     
+```
+
+### Clustering
+
+For the clustering 
