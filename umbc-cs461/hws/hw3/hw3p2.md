@@ -14,6 +14,14 @@ of each student, based on the query in Exercise 3.2; recallthat we used a relati
 Make sure your view definition correctly handles the case of `null` values for the grade
 attribute of the `takes` relation.
 
+```sql
+CREATE VIEW `student_grades` AS 
+SELECT ID, sum(course.credits * grade_points.points) / sum(course.credits) AS GPA 
+FROM (takes NATURAL JOIN course)
+NATURAL JOIN grade_points
+GROUP BY takes.ID; 
+```
+
 ### Exercise 4.13
 
 Under what circumstances would the query
