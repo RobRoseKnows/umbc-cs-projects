@@ -175,3 +175,21 @@ the constraints section above.
 The reason I decided to design WeatherEvents stored separately instead of with
 the activity log is to reduce data duplication and to leave a clear chain of record
 of where the measurements came from.
+
+
+## Phase C - Logical Design
+
+In this phase of the design I will take the entities and relations I detailed in
+Phase B and map them on to the relationship model. Most of that is straightforward,
+though I did decide to add some enhancements from Phase B.
+
+### Enhancements From Phase B
+
+When creating the database tables, I chose to create a separate table for barcodes,
+so that every barcode created in the flower shop will be unique, meaning they can
+be scanned without duplication. In the final version instead of using the Unique
+constraints on barcodes as detailed in Phase B, they will be foreign key constraints
+that point to a table with only a single key: the barcode.
+
+### Mapping Entities Onto Tables
+
