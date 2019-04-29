@@ -122,11 +122,15 @@ composite primary key. Derived attributes are in *itallics*.
   - Location
   - Name
   - Barcode
+- Barcodes
+  - **Barcode**
 
 ### Constraints
 
 - Plant
-  - `Unique(Barcode)` since barcodes should be unique for each plant
+  - `Unique(Barcode)` since barcodes should be unique accross all plants
+  - `ForeignKey(Barcode) -> Barcodes(Barcodes)` since barcodes should be unique accross
+    all tables.
   - `Check(DaysToGerminate > 0)` since all plants should take some time to germinate
   - `Check(Req_Feeding >= 0)` since it can't require negative feeding
   - `Check(Req_Watering >= 0)` since it can't require negative watering
@@ -144,8 +148,12 @@ composite primary key. Derived attributes are in *itallics*.
     they are the foreign key references that determine which plant is in the pot.
   - `ForeignKey(OnTray) -> Tray(ID)` as it is the foreign key reference that determines
     which tray a pot is on.
+  - `ForeignKey(Barcode) -> Barcodes(Barcodes)` since barcodes should be unique accross
+    all tables.
 - Tray
   - `Unique(Barcode)` since barcodes should be unique for each tray
+  - `ForeignKey(Barcode) -> Barcodes(Barcodes)` since barcodes should be unique accross
+    all tables.
 - ActivityLog
   - `Check(Food >= 0)` because you can't feed negative food.
   - `Check(Water >= 0)` because you can't water negative water.
@@ -162,6 +170,10 @@ composite primary key. Derived attributes are in *itallics*.
   - `Unique(Barcode)` since bacodes should be unique for each weather station.
   - `Unique(Location)` There shouldn't be a need for more than one weather station 
     at the same location so I feel we can also put a Unique constraint on this point.
+  - `ForeignKey(Barcode) -> Barcodes(Barcodes)` since barcodes should be unique accross
+    all tables.
+- Barcodes
+  - The primary key on `Barcode` means it will be unique.
 
 ### Justification
 
