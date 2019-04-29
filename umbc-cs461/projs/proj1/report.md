@@ -205,3 +205,43 @@ that point to a table with only a single key: the barcode.
 
 ### Mapping Entities Onto Tables
 
+Tables:
+- plants
+- pots
+- trays
+- activity_log
+- weather_event
+- weather_station
+- barcodes
+Views:
+- tray_view
+- activities
+
+No additional tables other than the ones for each entity are necessary, as I don't
+have any many-to-many relationships. There will be one table with a generated column:
+pots. It will calculate the age of a plant if it has a germination date.
+
+I do however need to create two views that allow me to get the derived values of 
+last action on a tray and the weather statistics for an activity log. I chose to
+design the database this way because generated columns can't use data from another
+table and I wanted to minimize data duplication. 
+
+### Column Types
+
+Much of the data is in a text form, which means varchar columns will be common.
+Barcodes will be the most common varchar column type, and I will cap them at 13
+characters, because that's the length of a traditional UPC.
+
+For all names and such, I will use `varchar(255)` as I expect most names will be
+rather short, and they will likely not exceed (or even get close to) 255 characters.
+
+For dates such as germination and planting date on the pot, I will use the `DATE` type
+to store the date. For the timestamps, I will use `DATETIME` because I don't expect to
+need to calculate anything across timezones, which is what `TIMESTAMP` is mostly
+useful for.
+
+### Justification
+
+I have been thinking about how I would map these to a database from the very beginning
+so there's not that many changes I need to make. Most of the logical design will be
+constructed during Phase D when I create scripts for creating the tables.
