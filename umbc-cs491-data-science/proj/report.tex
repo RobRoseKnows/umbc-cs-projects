@@ -11,8 +11,11 @@
 \usepackage{amsfonts}       % blackboard math symbols
 \usepackage{nicefrac}       % compact symbols for 1/2, etc.
 \usepackage{microtype}      % microtypography
+\usepackage{biblatex}
 \usepackage{lipsum}
 \usepackage{graphicx}
+
+\bibliography{references.bib}
 
 \title{Analysis of FAFSA completion rates and income in Maryland}
 
@@ -66,19 +69,89 @@ Education Statistics.\cite{nces2019} These datasets were joined on the school
 name and the county name. We had to do some preprocessing on the school names
 and city names in order to get them to join however. We chose to limit our 
 analysis to Maryland in order to not have a overbearing amount of data from the 
-entire country. \\
+entire country. Additionally, we had to use some linear regression to model the 
+incomes for 2017, 2018 and 2019, as our source data only went up to 2016.\\
 
+To conclude, we attempted to predict our target variables (FAFSA completion and
+submission rates) using the LightGBM machine learning library.\cite{lightgbm2019}
+We did sixteen different predictions. This was necessary as there were many ways
+to prepare the target variables, such as by percentage vs. by raw numbers, by FAFSA
+submissions vs. FAFSA completions and by 2018 data and 2019 data. Additionally,
+we repeated the predictions again using only the most important predictor variables,
+which showed some nominal improvements.
 
-\section{Exploration of Data}
-There were numerous predictor variables that we picked and thought were significant 
-enough to use for our analysis. These predictor variables included whether a 
-school was a magnet school, charter school, Title I school, Title I Wide school, 
-and the locale of each school. Charter schools receive government funding but 
-operate independently of the established state school system in which it is located. 
-Magnet schools are public schools with specialized courses or curricula. Title I
-schools have a student base that are lower-income and are provided with Title I 
-funding in order to help those who are behind or at risk of falling behind, aiming 
-to bridge the gap between low-income students and other students. Locale describes 
+\section{Exploration of School Data}
+There were numerous predictor variables that arose from the dataset. In our
+exploration of the data, we printed descriptive statistics for each variable,
+plotted correlations between each variable and also graphed the distributions 
+of the categorical variables. \\
+
+The most self explanatory variables are \texttt{Charter} and \texttt{Magnet}, 
+which labeled if each school was a charter or magnet school, respectively. 
+Charter schools receive government funding but operate independently of 
+the established state school system in which it is located. Magnet schools 
+are public schools with specialized courses or curricula. The distribution of
+these variables can be seen in Figure \ref{fig:charter} and Figure \ref{fig:magnet}, 
+respectively. \\
+
+One interesting fact that we stumbled upon accidentally was 
+that the majority of charter schools in Maryland are in Baltimore City. 
+We discovered this when we realized that Baltimore City wasn't being properly 
+merged in our pipeline, as one data source listed it as "Baltimore city" and another
+listed it as "Baltimore City". As a result, it was necessary to add additional 
+steps to our pipeline in order to normalize those values. \\
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=90mm]{charter_graph.png}
+  \caption{Distribution of Charter Schools}
+  \label{fig:charter}
+\end{figure}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=90mm]{magnet_graph.png}
+  \caption{Distribution of Magnet Schools}
+  \label{fig:magnet}
+\end{figure}
+
+Some of the other predictor variables were not as straightforward however. The
+predictors \texttt{Title\_1\_School\_Wide} and \texttt{Title\_I\_School},
+for example confused us quite a bit as we were unable to determine what the 
+difference between them was supposed to be. While Title I schools have a student
+base schools have a student population that is lower-income and they are provided 
+with Title I  funding in order to help those who are, or at risk of, falling behind, 
+aiming to bridge the gap between low-income students and other students, we
+were unable to determine what Title I School-wide meant in our research. They 
+were both found in the NCES dataset as separate columns, so they weren't just a 
+merging error, and they both contained separate data.\cite{nces2019} The school-wide 
+column contained some missing data, which was denoted by a cross symbol in the 
+NCES dataset, which further compounded the confusion surrounding it. The
+other column only contained "Yes" and "No" however, and was fairly easily understood.
+You can see the distribution of the two columns in Figure \ref{fig:title_1_wide}
+and Figure \ref{fig:title_i} respectively.\\
+
+Another interesting fact we discovered as a result of our pipeline problems with
+Baltimore City is that a majority of Baltimore City schools are Title I Schools
+and the majority of schools in Maryland outside of Baltimore City are not Title
+I schools. This was not terribly surprising giving the poverty found in Baltimore
+City, but it was a notable discovery that resulted from an accident.\\
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=100mm]{title_1_wide_graph.png}
+  \caption{Distribution of Title 1 School Wide.}
+  \label{fig:title_1_wide}
+\end{figure}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=100mm]{title_i_graph.png}
+  \caption{Distribution of Title I Schools.}
+  \label{fig:title_i}
+\end{figure}
+
+Locale describes 
 whether a schools is small, medium, large sized and what kind of area it is located 
 in i.e. city, suburbs, etc. Count graphs for each of these variables were able to 
 portray the spread of these categories. We found that the overwhelming amount of 
@@ -88,126 +161,61 @@ be classified as suburban and large.
 
 \begin{figure}[!htb]
   \centering
-  \includegraphics[scale=0.6]{title_1_wide_graph.png}
-  \caption{Distribution of Title 1 School Wide.\footnote{Cross represents missing data in the source.}}
-  \label{fig:title_1_wide}
-\end{figure}
-
-\begin{figure}[!htb]
-  \centering
-  \includegraphics[scale=0.6]{title_i_graph.png}
-  \caption{Distribution of Title I Schools.}
-  \label{fig:title_i}
-\end{figure}
-
-\begin{figure}[!htb]
-  \centering
-  \includegraphics[scale=0.6]{charter_graph.png}
-  \caption{Distribution of Charter Schools}
-  \label{fig:charter}
-\end{figure}
-
-\begin{figure}[!htb]
-  \centering
-  \includegraphics[scale=0.6]{magnet_graph.png}
-  \caption{Distribution of Magnet Schools}
-  \label{fig:magnet}
-\end{figure}
-
-\begin{figure}[!htb]
-  \centering
-  \includegraphics[scale=1]{county_graph.png}
-  \caption{Distribution of School Counties}
-  \label{fig:county}
-\end{figure}
-
-\begin{figure}[!htb]
-  \centering
-  \includegraphics[scale=1]{locale_graph.png}
+  \includegraphics[width=120mm]{locale_graph.png}
   \caption{Distribution of Locales}
   \label{fig:locale}
 \end{figure}
 
 \begin{figure}[!htb]
   \centering
-  \includegraphics[scale=1]{locale_code_graph.png}
+  \includegraphics[width=100mm]{locale_code_graph.png}
   \caption{Distribution of Locale Code}
-  \label{fig:charter}
+  \label{fig:locale_code}
 \end{figure}
 
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width=160mm, scale=1]{cool_density_plot_perc.png}
+  \includegraphics[width=120mm]{county_graph.png}
+  \caption{Distribution of School Counties}
+  \label{fig:county}
+\end{figure}
+
+
+\section{Exploration of FAFSA Data}
+In order to gain a better sense of the FAFSA data, a few plots were created in order to visualize the distributions. Density plots were created to view the distribution of data for each year... A histogram of FAFSA applications completed/submitted shows a heavy skew to the right for both the 18-19 and 19-20 school years.
+
+\section{Exploration of FAFSA and Income Data Combined}
+A model that we decided to apply out dataset was the Light GBM model. This a gradient boosting framework that uses tree based learning algorithm. We wanted to isolate the attributes in addition to income that were the most important in determining FAFSA completions/submissions percentages and then remove the ones we did not need based on the results of the model. After training the model several times, a graph showing the importance of each attribute was compiled. The most important attributes ended up being Title-I-School, Income-2017, Income-2018, Income-2019, Students,Student-Teacher-Ratio, Teachers,Locale-Code-21, Title-1-School-Wide-, Title-1-School-Wide-Yes, and Magnet. The RMSE is quite low which indicated a good level of accuracy. The average RMSE was 3.56 percent which was within one standard deviation of the mean for all the statistics we described above for percentage.
+
+We then repeated the above process, but this time with the only important features we derived from above. 
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=100mm, scale=1]{AllFeaturesImportance.PNG}
+  \caption{Feature Importance}
+  \label{fig:target_perc}
+\end{figure}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=125mm, scale=1]{cool_density_plot_perc.png}
   \caption{Distribution of Percentage Target Variables}
   \label{fig:target_perc}
 \end{figure}
 
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width=160mm, scale=1]{cool_density_plot_raw.png}
+  \includegraphics[width=125mm, scale=1]{cool_density_plot_raw.png}
   \caption{Distribution of Raw Target Variables}
   \label{fig:target_raw}
 \end{figure}
 
-\section{Examples of citations, figures, tables, references}
-\label{sec:others}
-\lipsum[8] \cite{kour2014real,kour2014fast} and see \cite{hadash2018estimate}.
-
-The documentation for \verb+natbib+ may be found at
-\begin{center}
-  \url{http://mirrors.ctan.org/macros/latex/contrib/natbib/natnotes.pdf}
-\end{center}
-Of note is the command \verb+\citet+, which produces citations
-appropriate for use in inline text.  For example,
-\begin{verbatim}
-   \citet{hasselmo} investigated\dots
-\end{verbatim}
-produces
-\begin{quote}
-  Hasselmo, et al.\ (1995) investigated\dots
-\end{quote}
-
-\begin{center}
-  \url{https://www.ctan.org/pkg/booktabs}
-\end{center}
 
 
-\subsection{Figures}
-\lipsum[10] 
-See Figure \ref{fig:title_1_wide}. Here is how you add footnotes. \footnote{Sample of the first footnote.}
-\lipsum[11] 
 
-\subsection{Tables}
-\lipsum[12]
-See awesome Table~\ref{tab:table}.
-
-\begin{table}
- \caption{Sample table title}
-  \centering
-  \begin{tabular}{lll}
-    \toprule
-    \multicolumn{2}{c}{Part}                   \\
-    \cmidrule(r){1-2}
-    Name     & Description     & Size ($\mu$m) \\
-    \midrule
-    Dendrite & Input terminal  & $\sim$100     \\
-    Axon     & Output terminal & $\sim$10      \\
-    Soma     & Cell body       & up to $10^6$  \\
-    \bottomrule
-  \end{tabular}
-  \label{tab:table}
-\end{table}
-
-\subsection{Lists}
-\begin{itemize}
-\item Lorem ipsum dolor sit amet
-\item consectetur adipiscing elit. 
-\item Aliquam dignissim blandit est, in dictum tortor gravida eget. In ac rutrum magna.
-\end{itemize}
-
-
-\bibliographystyle{unsrt}  
-\bibliography{references}  %%% Remove comment to use the external .bib file (using bibtex).
+\printbibliography
+% \bibliographystyle{unsrt}  
+% \bibliography{references}  %%% Remove comment to use the external .bib file (using bibtex).
 %%% and comment out the ``thebibliography'' section.
 
 
