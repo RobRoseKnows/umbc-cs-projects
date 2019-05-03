@@ -59,14 +59,14 @@ accidents was taken at the scene of the accident, and didn't provide long term
 outcomes. As a result, any correlation we could find in the data would likely be
 simply coincidence or the result of some interference variable. \\
 
-We first chose data on FAFSA completion and submission rates. For our second 
-dataset, we selected a dataset containing Maryland median income by county data.
-This data contained the median income for all twenty four counties in Maryland 
-from 2007 through 2016. We chose to limit our analysis to Maryland in order to 
-not have a overbearing amount of data from the entire country. Finally, we also 
-extracted information from a dataset containing information about every school 
-in Maryland in order gain a better sense about the student body population that 
-attended each school. \\
+We eventually chose data on FAFSA completion and submission rates, located from
+Data.gov.\cite{fafsa2019} We choose to mix this data with Maryland county-level
+median income  data and data about each school from the National Center for 
+Education Statistics.\cite{nces2019} These datasets were joined on the school 
+name and the county name. We had to do some preprocessing on the school names
+and city names in order to get them to join however. We chose to limit our 
+analysis to Maryland in order to not have a overbearing amount of data from the 
+entire country. \\
 
 
 \section{Exploration of Data}
@@ -88,9 +88,65 @@ be classified as suburban and large.
 
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width=150mm,scale=1.5]{title_1_wide_graph.png}
-  \caption{Number of Title 1 School Wide. Cross represents missing data in the source.}
+  \includegraphics[scale=0.6]{title_1_wide_graph.png}
+  \caption{Distribution of Title 1 School Wide.\footnote{Cross represents missing data in the source.}}
   \label{fig:title_1_wide}
+\end{figure}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[scale=0.6]{title_i_graph.png}
+  \caption{Distribution of Title I Schools.}
+  \label{fig:title_i}
+\end{figure}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[scale=0.6]{charter_graph.png}
+  \caption{Distribution of Charter Schools}
+  \label{fig:charter}
+\end{figure}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[scale=0.6]{magnet_graph.png}
+  \caption{Distribution of Magnet Schools}
+  \label{fig:magnet}
+\end{figure}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[scale=1]{county_graph.png}
+  \caption{Distribution of School Counties}
+  \label{fig:county}
+\end{figure}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[scale=1]{locale_graph.png}
+  \caption{Distribution of Locales}
+  \label{fig:locale}
+\end{figure}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[scale=1]{locale_code_graph.png}
+  \caption{Distribution of Locale Code}
+  \label{fig:charter}
+\end{figure}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=160mm, scale=1]{cool_density_plot_perc.png}
+  \caption{Distribution of Percentage Target Variables}
+  \label{fig:target_perc}
+\end{figure}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=160mm, scale=1]{cool_density_plot_raw.png}
+  \caption{Distribution of Raw Target Variables}
+  \label{fig:target_raw}
 \end{figure}
 
 \section{Examples of citations, figures, tables, references}
@@ -120,13 +176,6 @@ produces
 \lipsum[10] 
 See Figure \ref{fig:title_1_wide}. Here is how you add footnotes. \footnote{Sample of the first footnote.}
 \lipsum[11] 
-
-\begin{figure}[!htb]
-  \centering
-  \includegraphics[width=150mm,scale=1.5]{Capture.PNG}
-  \caption{Sample figure caption.}
-  \label{fig:fig1}
-\end{figure}
 
 \subsection{Tables}
 \lipsum[12]
