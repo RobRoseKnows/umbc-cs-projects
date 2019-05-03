@@ -65,12 +65,14 @@ simply coincidence or the result of some interference variable. \\
 We eventually chose data on FAFSA completion and submission rates, located from
 Data.gov.\cite{fafsa2019} We choose to mix this data with Maryland county-level
 median income  data and data about each school from the National Center for 
-Education Statistics.\cite{nces2019} These datasets were joined on the school 
-name and the county name. We had to do some preprocessing on the school names
-and city names in order to get them to join however. We chose to limit our 
-analysis to Maryland in order to not have a overbearing amount of data from the 
-entire country. Additionally, we had to use some linear regression to model the 
-incomes for 2017, 2018 and 2019, as our source data only went up to 2016.\\
+Education Statistics.\cite{nces2019} We limited the data from NCES to schools with
+12th grades only, as lower grades typically don't complete FAFSAs. These datasets 
+were joined on the school name and the county name. We had to do some 
+preprocessing on the school names and city names in order to get them to join 
+however. We chose to limit our analysis to Maryland in order to not have a 
+overbearing amount of data from the entire country. Additionally, we had to use 
+some linear regression to model the incomes for 2017, 2018 and 2019, as our source 
+data only went up to 2016.\\
 
 To conclude, we attempted to predict our target variables (FAFSA completion and
 submission rates) using the LightGBM machine learning library.\cite{lightgbm2019}
@@ -151,13 +153,21 @@ City, but it was a notable discovery that resulted from an accident.\\
   \label{fig:title_i}
 \end{figure}
 
-Locale describes 
-whether a schools is small, medium, large sized and what kind of area it is located 
-in i.e. city, suburbs, etc. Count graphs for each of these variables were able to 
-portray the spread of these categories. We found that the overwhelming amount of 
-Maryland schools are not charter or magnet schools. There are a considerable amount 
-of Title I and Title I wide schools in Maryland. The majority of schools tended to 
-be classified as suburban and large.
+The final two predictor variables from the school data we explored were \texttt{Locale}
+and \texttt{Locale\_Code}. At first we thought these data points were conveying the
+same information considering how similar their distributions were, as you can see in
+Figure \ref{fig:locale} and Figure \ref{fig:locale_code}, respectively. However when
+we attempted to get the correlation between the two variables to confirm that, we found
+that the variables were not all that correlated. This surprised us, as we expected data
+points with such similar distributions to be correlated.//
+
+Locale describes what kind of environment the school is in, whether it's in a Large Suburb,
+a Small City, a Distant Town, etc. The most common locales were "Suburb: Large", by a long shot
+and "City: Large" and "Rural: Fringe" neck and neck for second. There were over twice as many
+schools in Large Suburbs as there were in Large Cities, which says a lot about Maryland's land
+use. We're not quite sure what Locale Code means however, as the data source was not well
+documented. We did conclude that it was a categorical variable however, and not a continuous 
+one.\\
 
 \begin{figure}[!htb]
   \centering
@@ -173,34 +183,65 @@ be classified as suburban and large.
   \label{fig:locale_code}
 \end{figure}
 
+Finally, there was some data on school districts and school counties. We needed the
+school counties in order to merge the FAFSA dataframe with the income dataframe, as
+we were only able to find median income data on a per county basis. Additionally,
+school districts and school counties were highly correlated, so we ended up dropping
+the school districts. While in other states the school districts aren't necessarily
+the same as the counties the schools are in, in Maryland that is almost always the
+case, save for some private schools and charter schools.\\
+
+The distribution of counties can be seen in Figure \ref{fig:county}. Notably, this is
+also when we realized Baltimore City hadn't been merged into the dataframe properly,
+as it was notably missing from our graph. This was when we went back to rework part
+of our pipeline to fix this error. Notably, the counties with the most number of 
+schools are also Maryland's most populous counties. As a reminder, this does only
+include schools which include 12th grade, as we wouldn't expect lower grades to
+be completing FAFSAs.\\
+
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width=120mm]{county_graph.png}
+  \includegraphics[width=130mm]{county_graph.png}
   \caption{Distribution of School Counties}
   \label{fig:county}
 \end{figure}
 
 
 \section{Exploration of FAFSA Data}
-In order to gain a better sense of the FAFSA data, a few plots were created in order to visualize the distributions. Density plots were created to view the distribution of data for each year... A histogram of FAFSA applications completed/submitted shows a heavy skew to the right for both the 18-19 and 19-20 school years.
 
-\section{Exploration of FAFSA and Income Data Combined}
-A model that we decided to apply out dataset was the Light GBM model. This a gradient boosting framework that uses tree based learning algorithm. We wanted to isolate the attributes in addition to income that were the most important in determining FAFSA completions/submissions percentages and then remove the ones we did not need based on the results of the model. After training the model several times, a graph showing the importance of each attribute was compiled. The most important attributes ended up being Title-I-School, Income-2017, Income-2018, Income-2019, Students,Student-Teacher-Ratio, Teachers,Locale-Code-21, Title-1-School-Wide-, Title-1-School-Wide-Yes, and Magnet. The RMSE is quite low which indicated a good level of accuracy. The average RMSE was 3.56 percent which was within one standard deviation of the mean for all the statistics we described above for percentage.
+The FAFSA Data contained several target columns for us to look at. While it 
+provided year-end data for the 2018-2019 year, since we wanted to compare
+apples to apples, we chose only to look at the data for April 19, 2018 for the
+2018-2019 cycle and April 19, 2019 for the 2019-2020 cycle. The data also provided
+statistics on "submissions" and "completions". From the descriptive statistics we
+produced on the dataframe, on average submissions and completions were fairly close
+to one another.\\
 
-We then repeated the above process, but this time with the only important features we derived from above. 
+In order to gain a better sense of the FAFSA data, a few plots were created in 
+order to visualize the distributions. Density plots were created to view the 
+distribution of data for each year... A histogram of FAFSA applications 
+completed/submitted shows a heavy skew to the right for both the 18-19 and 19-20
+school years, as visible in Figure \ref{fig:target_perc}. We assume that this is 
+because most people who start a FAFSA complete it.
+
 
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width=100mm, scale=1]{AllFeaturesImportance.PNG}
-  \caption{Feature Importance}
+  \includegraphics[width=130mm, scale=1]{cool_density_plot_perc.png}
+  \caption{Distribution of Percentage Target Variables}
   \label{fig:target_perc}
 \end{figure}
 
+\section{Exploration of FAFSA and Income Data Combined}
+A model that we decided to apply out dataset was the Light GBM model. This a gradient boosting framework that uses tree based learning algorithm. We wanted to isolate the attributes, in addition to income, that were the most important in determining FAFSA completions/submissions percentages and then remove the ones we did not need based on the results of the model. After training the model several times, a graph showing the importance of each attribute was compiled. The most important attributes ended up being Title-I-School, Income-2017, Income-2018, Income-2019, Students,Student-Teacher-Ratio, Teachers,Locale-Code-21, Title-1-School-Wide-, Title-1-School-Wide-Yes, and Magnet. The RMSE is quite low which indicated a good level of accuracy. The average RMSE was 3.56 percent which was within one standard deviation of the mean for all the statistics we described above for percentage.
+
+We then repeated the above process, but this time with the only important features we derived from above. For the model dealing with 2019 completed applications, there was not much improvement. Income levels had the highest degree of importance along with number of teachers and students. Interestingly, Locale code 21 also had some importance, but we are still unsure of it actually represents. The 2018 completed applications model showed similar results to the previous one.
+
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width=125mm, scale=1]{cool_density_plot_perc.png}
-  \caption{Distribution of Percentage Target Variables}
-  \label{fig:target_perc}
+  \includegraphics[width=100mm, scale=1]{2018CompletedFeatures.PNG}
+  \caption{Feature Importance for Completed 2018 Applications}
+  \label{fig:feature_importance}
 \end{figure}
 
 \begin{figure}[!htb]
