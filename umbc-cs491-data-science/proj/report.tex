@@ -47,7 +47,19 @@ varied machine and statistical learning methods. \\
 
 \section{Introduction}
 For our data science project, we chose to explore data outside the Open Baltimore
-data library, as we found that it did not have the most interesting datasets. We thought of looking at crime-rates analysis initially, which is a rather obvious and overdone subject, so we went in a different direction instead. The data.gov had a wider range of datasets, thus we utilized it.  We first chose data on FAFSA completion and submission rates. For our second dataset, we selected a dataset containing Maryland median income by county data. This data contained the median income for all twenty four counties in Maryland from 2007 through 2016. We chose to limit our analysis to Maryland in order to not have a overbearing amount of data from the entire country. Finally, we also extracted information from a dataset containing information about every school in Maryland in order gain a better sense about the student body population that attended each school.
+data library, as we found that it did not have the most interesting datasets. It
+seemed that most of the analysis we could do with Open Baltimore was just crime
+statistics analysis, which is a saturated field and full of misleading and 
+loaded analysis.\cite{weatherburn2011} \\
+
+Our first proposal was to use hospital location data and traffic accident records
+to analyze if proximity to a trauma center increases someone's chance of survival.
+Unfortunately it seemed that the information on Data.gov surrounding traffic
+accidents was taken at the scene of the accident, and didn't provide long term
+outcomes. As a result, any correlation we could find in the data would likely be
+simply coincidence or the result of some interference variable. \\
+
+We first chose data on FAFSA completion and submission rates. For our second dataset, we selected a dataset containing Maryland median income by county data. This data contained the median income for all twenty four counties in Maryland from 2007 through 2016. We chose to limit our analysis to Maryland in order to not have a overbearing amount of data from the entire country. Finally, we also extracted information from a dataset containing information about every school in Maryland in order gain a better sense about the student body population that attended each school.
 
 
 \section{Exploration of Data}
@@ -55,9 +67,9 @@ There were numerous predictor variables that we picked and thought were signific
 
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width=150mm,scale=1.5]{Capture.PNG}
-  \caption{Number of Title 1 Schools}
-  \label{fig:fig1}
+  \includegraphics[width=150mm,scale=1.5]{title_1_wide_graph.png}
+  \caption{Number of Title 1 School Wide. Cross represents missing data in the source.}
+  \label{fig:title_1_wide}
 \end{figure}
 
 \section{Examples of citations, figures, tables, references}
@@ -85,7 +97,7 @@ produces
 
 \subsection{Figures}
 \lipsum[10] 
-See Figure \ref{fig:fig1}. Here is how you add footnotes. \footnote{Sample of the first footnote.}
+See Figure \ref{fig:title_1_wide}. Here is how you add footnotes. \footnote{Sample of the first footnote.}
 \lipsum[11] 
 
 \begin{figure}[!htb]
@@ -125,33 +137,10 @@ See awesome Table~\ref{tab:table}.
 
 
 \bibliographystyle{unsrt}  
-%\bibliography{references}  %%% Remove comment to use the external .bib file (using bibtex).
+\bibliography{references}  %%% Remove comment to use the external .bib file (using bibtex).
 %%% and comment out the ``thebibliography'' section.
 
 
 %%% Comment out this section when you \bibliography{references} is enabled.
-\begin{thebibliography}{1}
-
-\bibitem{kour2014real}
-George Kour and Raid Saabne.
-\newblock Real-time segmentation of on-line handwritten arabic script.
-\newblock In {\em Frontiers in Handwriting Recognition (ICFHR), 2014 14th
-  International Conference on}, pages 417--422. IEEE, 2014.
-
-\bibitem{kour2014fast}
-George Kour and Raid Saabne.
-\newblock Fast classification of handwritten on-line arabic characters.
-\newblock In {\em Soft Computing and Pattern Recognition (SoCPaR), 2014 6th
-  International Conference of}, pages 312--318. IEEE, 2014.
-
-\bibitem{hadash2018estimate}
-Guy Hadash, Einat Kermany, Boaz Carmeli, Ofer Lavi, George Kour, and Alon
-  Jacovi.
-\newblock Estimate and replace: A novel approach to integrating deep neural
-  networks with existing applications.
-\newblock {\em arXiv preprint arXiv:1804.09028}, 2018.
-
-\end{thebibliography}
-
 
 \end{document}
