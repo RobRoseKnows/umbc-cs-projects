@@ -159,7 +159,7 @@ same information considering how similar their distributions were, as you can se
 Figure \ref{fig:locale} and Figure \ref{fig:locale_code}, respectively. However when
 we attempted to get the correlation between the two variables to confirm that, we found
 that the variables were not all that correlated. This surprised us, as we expected data
-points with such similar distributions to be correlated.//
+points with such similar distributions to be correlated.\\
 
 Locale describes what kind of environment the school is in, whether it's in a Large Suburb,
 a Small City, a Distant Town, etc. The most common locales were "Suburb: Large", by a long shot
@@ -213,45 +213,144 @@ The FAFSA Data contained several target columns for us to look at. While it
 provided year-end data for the 2018-2019 year, since we wanted to compare
 apples to apples, we chose only to look at the data for April 19, 2018 for the
 2018-2019 cycle and April 19, 2019 for the 2019-2020 cycle. The data also provided
-statistics on "submissions" and "completions". From the descriptive statistics we
-produced on the dataframe, on average submissions and completions were fairly close
-to one another.\\
+statistics on "submissions" and "completions". We assume these signify those who
+started a FAFSA application online and those who ended up submitting their FAFSA.
+From the descriptive statistics we produced on the dataframe, on average 
+submissions and completions were fairly close to one another.\\
 
-In order to gain a better sense of the FAFSA data, a few plots were created in 
-order to visualize the distributions. Density plots were created to view the 
-distribution of data for each year... A histogram of FAFSA applications 
-completed/submitted shows a heavy skew to the right for both the 18-19 and 19-20
-school years, as visible in Figure \ref{fig:target_perc}. We assume that this is 
-because most people who start a FAFSA complete it.
+Additionally, we needed to do some preprocessing to make sure all the data was
+in a numerical format. In order to protect student's privacy, if fewer than five
+people would be represented in any column, the column simply listed "<5". We chose
+to fill all the "<5" columns with zero, which seemed to be an appropriate placeholder
+for the columns. Thankfully there were no cases of dividing by zero when processing
+the data, so we didn't need to consider that in our pipeline.\\
 
+At this point in the exploration, we weren't sure if the predictions would be better
+with raw student numbers or with a percentage of the total student population.
+So we chose to explore both possibilities. We generated percentages submitted out of
+total number of students, percentages completed out of the total number of students
+and percentages completed out of the amount submitted. We then used the seaborn
+plotting library to produce ridge plots comparing the various percentages across the 
+2018-2019 cycle and the 2019-2020 cycle, which can be seen in Figure 
+\ref{fig:target_perc}. \cite{snsridgeplot2019} \\
 
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width=130mm, scale=1]{cool_density_plot_perc.png}
+  \includegraphics[width=130mm]{cool_density_plot_perc.png}
   \caption{Distribution of Percentage Target Variables}
   \label{fig:target_perc}
+\end{figure}
+
+As visible in Figure \ref{fig:target_perc}, the percentage of people submitting a 
+FAFSA they completed is heavily skewed towards 100\%. We assume that this is 
+because most people who start completing a FAFSA end up submitting it. The distribution
+of the percentage of total students who submitted or completed a FAFSA was roughly
+equal for each year however. We conclude that this is because most schools have similar
+class sizes every year and most of the schools we analyized were four-year schools, 
+as seen in Figure \ref{fig:grades} so roughly 25\% of their total student population would be 
+completing or submitting a FAFSA every year. Additionally, it is notable that the percentages 
+were normally distributed. This is somewhat expected with a sample of this size, and the 
+kernel density plots do exacerbate the apparent distribution but it is notable nonetheless.\\
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=100mm]{grades_graph.png}
+  \caption{Distribution of Number of Grades in School}
+  \label{fig:grades}
+\end{figure}
+
+The second series of ridge plots we produced were for the raw number of students
+who completed or submitted a FAFSA for the 2018-2019 or 2019-2020 cycles. For this
+graph however, we chose to also include the June 2018 and December 2018 statistics
+in order to get a better idea of the structure of the data. Unfortunately, the ridge
+plots don't tell us much. There wasn't a familiar normal distribution like there was
+for the percentages, as schools in Maryland vary in size quite a bit, though schools
+are more likely to have fewer students than more students. However the spread was
+fairly uniform along a certain interval so they didn't produce terribly interesting
+plots, as you can see in Figure \ref{fig:target_raw}.
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=130mm]{cool_density_plot_raw.png}
+  \caption{Distribution of Raw Target Variables}
+  \label{fig:target_raw}
 \end{figure}
 
 \section{Exploration of FAFSA and Income Data Combined}
 A model that we decided to apply out dataset was the Light GBM model. This a gradient boosting framework that uses tree based learning algorithm. We wanted to isolate the attributes, in addition to income, that were the most important in determining FAFSA completions/submissions percentages and then remove the ones we did not need based on the results of the model. After training the model several times, a graph showing the importance of each attribute was compiled. The most important attributes ended up being Title-I-School, Income-2017, Income-2018, Income-2019, Students,Student-Teacher-Ratio, Teachers,Locale-Code-21, Title-1-School-Wide-, Title-1-School-Wide-Yes, and Magnet. The RMSE is quite low which indicated a good level of accuracy. The average RMSE was 3.56 percent which was within one standard deviation of the mean for all the statistics we described above for percentage.
 
-We then repeated the above process, but this time with the only important features we derived from above. For the model dealing with 2019 completed applications, there was not much improvement. Income levels had the highest degree of importance along with number of teachers and students. Interestingly, Locale code 21 also had some importance, but we are still unsure of it actually represents. The 2018 completed applications model showed similar results to the previous one.
+We then repeated the above process, but this time with the only important features we derived from above. For the model dealing with 2019 completed applications, there was not much improvement. Income levels had the highest degree of importance along with number of teachers and students. Interestingly, Locale code 21 had a considerable amount of importance, but we are still unsure of what it actually represents. The 2018 completed applications model showed similar results to the previous one. When looking at the 18/19 submitted applications models, there was a slight improvement on average RMSE, but the important features remained the same as in all of the previous models.\\
+
+
+Insert images here
+
+The next set of models we created utilized raw numbers from the data rather than percentages. We predicted that the number of students will likely be the most exploited for every run, as the algorithm not only has to predict how many students will interact with FAFSA but also how many students the school has as a whole. It's also possible the model will heavily use the Grades feature, which was engineered by subtracting Low-Grade from High-Grade. After running the model, students was indeed the top predictor for FAFSA applications as hypothesized earlier.
 
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width=100mm, scale=1]{2018CompletedFeatures.PNG}
-  \caption{Feature Importance for Completed 2018 Applications}
+  \includegraphics[width=100mm, scale=1]{RawSubmitted19.PNG}
+  \caption{All Features for Submitted 2019 Applications(Raw)}
   \label{fig:feature_importance}
 \end{figure}
 
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width=125mm, scale=1]{cool_density_plot_raw.png}
-  \caption{Distribution of Raw Target Variables}
-  \label{fig:target_raw}
+  \includegraphics[width=100mm, scale=1]{RawCompleted19.PNG}
+  \caption{All Features for Completed 2019 Applications(Raw)}
+  \label{fig:feature_importance}
+\end{figure}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=100mm, scale=1]{RawSubmitted18.PNG}
+  \caption{All Features for Submitted 2018 Application(Raw)}
+  \label{fig:feature_importance}
+\end{figure}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=100mm, scale=1]{RawCompleted18.PNG}
+  \caption{All Features for Completed 2018 Applications(Raw)}
+  \label{fig:feature_importance}
 \end{figure}
 
 
+As we did previously we repeated the the process, but this time with the top important features that the previous model determined. The top features for the raw data were Title-I-School, Income-2017, Income-2018, Students, Student-Teacher-Ratio, Teachers, Locale-Suburb: Large,Locale-Code-21, Title-1-School-Wide-,Title-1-School-Wide-Yes, Magnet, and City-Baltimore.\\
+
+Surprisingly City-Baltimore completely dropped off the map when we only used the top features, while Locale-Suburb: Large gained a couple of spots. This actually did slightly worse that the all features, though is still within the same ballpark.
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=100mm, scale=1]{RawTopSubmitted19.PNG}
+  \caption{Top Features for Submitted 2019 Applications(Raw)}
+  \label{fig:feature_importance}
+\end{figure}
+
+Not unexpected to see the Locale-Code-41 drop off the top features list when we limit the number of features. Though it is quite weird to see Locale-Code-21, which was rather high previously drop all the way down.
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=100mm, scale=1]{RawTopCompleted19.PNG}
+  \caption{Top Features for Completed 2019 Applications(Raw)}
+  \label{fig:feature_importance}
+\end{figure}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=100mm, scale=1]{RawTopSubmitted18.PNG}
+  \caption{Top Features for Submitted 2018 Application(Raw)}
+  \label{fig:feature_importance}
+\end{figure}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=100mm, scale=1]{RawTopCompleted18.PNG}
+  \caption{Top Features for Completed 2018 Applications(Raw)}
+  \label{fig:feature_importance}
+\end{figure}
+
+
+\section{Conclusion}
 
 
 \printbibliography
