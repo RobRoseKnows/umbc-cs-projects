@@ -311,14 +311,39 @@ plots, as you can see in Figure \ref{fig:target_raw}.
 \end{figure}
 
 \section{Exploration of FAFSA and Income Data Combined}
-A model that we decided to apply out dataset was the Light GBM model. This a gradient boosting framework that uses tree based learning algorithm. We wanted to isolate the attributes, in addition to income, that were the most important in determining FAFSA completions/submissions percentages and then remove the ones we did not need based on the results of the model. After training the model several times, a graph showing the importance of each attribute was compiled. The most important attributes ended up being Title-I-School, Income-2017, Income-2018, Income-2019, Students,Student-Teacher-Ratio, Teachers,Locale-Code-21, Title-1-School-Wide-, Title-1-School-Wide-Yes, and Magnet. The RMSE is quite low which indicated a good level of accuracy. The average RMSE was 3.56 percent which was within one standard deviation of the mean for all the statistics we described above for percentage.
+A model that we decided to apply out dataset was the Light GBM model. This a 
+gradient boosting framework that uses tree based learning algorithm. We wanted 
+to isolate the attributes, in addition to income, that were the most important 
+in determining FAFSA completions/submissions percentages and then remove the ones 
+we did not need based on the results of the model. After training the model several 
+times, a graph showing the importance of each attribute was compiled. The most 
+important attributes ended up being \texttt{Title\_I\_School}, \texttt{Income\_2017},
+\texttt{Income\_2018}, \texttt{Income\_2019}, \texttt{Students},
+\texttt{Student\_Teacher\_Ratio}, \texttt{Teachers}, \texttt{Locale\_Code\_21},
+\texttt{Title\_1\_School\_Wide\_Cross}, \texttt{Title\_1\_School\_Wide\_Yes}, 
+and \texttt{Magnet}. The RMSE is quite low which indicated a good level of 
+accuracy. The average RMSE was 3.56 percent which was within one standard 
+deviation of the mean for all the statistics we described above for 
+percentage.\\
 
-We then repeated the above process, but this time with the only important features we derived from above. For the model dealing with 2019 completed applications, there was not much improvement. Income levels had the highest degree of importance along with number of teachers and students. Interestingly, Locale code 21 had a considerable amount of importance, but we are still unsure of what it actually represents. The 2018 completed applications model showed similar results to the previous one. When looking at the 18/19 submitted applications models, there was a slight improvement on average RMSE, but the important features remained the same as in all of the previous models.\\
+We then repeated the above process, but this time with the only important 
+features we derived from above. For the model dealing with 2019 completed 
+applications, there was not much improvement. Income levels had the highest 
+degree of importance along with number of teachers and students. Interestingly, 
+Locale Code 21 had a considerable amount of importance, but we are still unsure 
+of what it actually represents. The 2018 completed applications model showed 
+similar results to the previous one. When looking at the 18/19 submitted 
+applications models, there was a slight improvement on average RMSE, but the 
+important features remained the same as in all of the previous models.\\
 
-
-Insert images here
-
-The next set of models we created utilized raw numbers from the data rather than percentages. We predicted that the number of students will likely be the most exploited for every run, as the algorithm not only has to predict how many students will interact with FAFSA but also how many students the school has as a whole. It's also possible the model will heavily use the Grades feature, which was engineered by subtracting Low-Grade from High-Grade. After running the model, students was indeed the top predictor for FAFSA applications as hypothesized earlier.
+The next set of models we created utilized raw numbers from the data rather 
+than percentages. We predicted that the number of students will likely be 
+the most exploited for every run, as the algorithm not only has to predict 
+how many students will interact with FAFSA but also how many students the 
+school has as a whole. It's also possible the model will heavily use the 
+Grades feature, which was engineered by subtracting \texttt{Low\_Grade}
+from \texttt{High\_Grade}. After running the model, \texttt{Students} 
+was indeed the top predictor for FAFSA applications as we hypothesized earlier.
 
 \begin{figure}[!htb]
   \centering
@@ -348,10 +373,18 @@ The next set of models we created utilized raw numbers from the data rather than
   \label{fig:feature_importance}
 \end{figure}
 
+As we did previously we repeated the the process, but this time with the top 
+important features that the previous model determined. The top features for 
+the raw data were \texttt{Title\_I\_School}, \texttt{Income\_2017}, 
+\texttt{Income\_2018}, \texttt{Students}, \texttt{Student\_Teacher\_Ratio}, 
+\texttt{Teachers}, \texttt{Locale\_Suburb: Large}, \texttt{Locale\_Code\_21},
+\texttt{Title\_1\_School\_Wide\_Cross}, \texttt{Title\_1\_School\_Wide\_Yes}, 
+\texttt{Magnet}, and \texttt{City\_Baltimore}.\\
 
-As we did previously we repeated the the process, but this time with the top important features that the previous model determined. The top features for the raw data were Title-I-School, Income-2017, Income-2018, Students, Student-Teacher-Ratio, Teachers, Locale-Suburb: Large,Locale-Code-21, Title-1-School-Wide-,Title-1-School-Wide-Yes, Magnet, and City-Baltimore.\\
-
-Surprisingly City-Baltimore completely dropped off the map when we only used the top features, while Locale-Suburb: Large gained a couple of spots. This actually did slightly worse that the all features, though is still within the same ballpark.
+Surprisingly \texttt{City\_Baltimore} completely dropped off the map when we 
+only used the top features, while \texttt{Locale\_Suburb: Large} gained a 
+couple of spots. This actually did slightly worse that the all features, 
+though is still within the same ballpark.
 
 \begin{figure}[!htb]
   \centering
@@ -360,11 +393,14 @@ Surprisingly City-Baltimore completely dropped off the map when we only used the
   \label{fig:feature_importance}
 \end{figure}
 
-Not unexpected to see the Locale-Code-41 drop off the top features list when we limit the number of features. Though it is quite weird to see Locale-Code-21, which was rather high previously drop all the way down.
+We expected to see the \texttt{Locale\_Code\_41} drop off the top features list when 
+we limited the number of features. However it is unusual to see \texttt{Locale\_Code\_21}, 
+which was rather high previously drop all the way down. \texttt{Title\_1\_School\_Wide\_Cross}
+drops significantly lower from where it was above.
 
-Weird seeing Title-1-School-Wide-Cross drop so low from where it was above.
-
-Very surprising to see that the average root mean squared error went up in the better features. That's atypical of most boosting models
+Surpsingly, the average root mean squared error went up in the better features which is 
+atypical of most boosting models, as we'd expect it to get even better when we limit
+the number of features.
 
 \begin{figure}[!htb]
   \centering
@@ -389,7 +425,30 @@ Very surprising to see that the average root mean squared error went up in the b
 
 
 \section{Conclusion}
-In conclusion, we learned that while income level is significant in predicting FAFSA completions and submissions, there are other attributes that are a better indicator of such.
+In conclusion, we learned that while income level is significant in predicting 
+FAFSA completions and submissions, there are other attributes that are a better 
+indicator of such. We are also able to conclude that LightGBM is a suitable
+framework for modeling this dataset, and that linear regression is a suitable
+way to predict future median income of a county.
+
+\section{Future Developments}
+If we had additional time, one thing we could do would be to expand our analysis
+from just Maryland to the entire country. The data necessary to do so is easy
+enough to obtain, much of it can be found in the same location we found our current
+data, but more data would likely require more processing power and memory to analyze.\\
+
+Additionally, we could try to include schools that didn't have any FAFSA completion, 
+such as middle schools and elementary schools, in our model training to see if it would
+still properly train with lots of zeroes. We could also attempt to train different models
+like XGBoost or CatBoost, or simply attempt to tune the hyperparameters of LightGBM,
+which we chose to keep as default for simplicity's sake.\\
+
+Another potential future development could be taking the backlog of FAFSA data
+available and converting it to time-series data. We chose not to do that for this
+report because it would be too time consuming to properly format all the data, but
+the data is available to do so.\cite{fafsa2019} This could potentially result in a
+more useful report, as being able to predict how many students will complete the FAFSA
+over time would potentially be useful for educator interventions.
 
 \printbibliography
 % \bibliographystyle{unsrt}  
