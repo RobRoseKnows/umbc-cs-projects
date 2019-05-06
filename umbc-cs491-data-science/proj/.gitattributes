@@ -1,0 +1,13 @@
+grades_graph.png filter=lfs diff=lfs merge=lfs -text
+locale_code_graph.png filter=lfs diff=lfs merge=lfs -text
+students_graph.png filter=lfs diff=lfs merge=lfs -text
+student_teacher_ratio_graph.png filter=lfs diff=lfs merge=lfs -text
+teachers_graph.png filter=lfs diff=lfs merge=lfs -text
+charter_graph.png filter=lfs diff=lfs merge=lfs -text
+cool_density_plot_raw.png filter=lfs diff=lfs merge=lfs -text
+county_graph.png filter=lfs diff=lfs merge=lfs -text
+title_1_wide_graph.png filter=lfs diff=lfs merge=lfs -text
+title_i_graph.png filter=lfs diff=lfs merge=lfs -text
+cool_density_plot_perc.png filter=lfs diff=lfs merge=lfs -text
+locale_graph.png filter=lfs diff=lfs merge=lfs -text
+magnet_graph.png filter=lfs diff=lfs merge=lfs -text
