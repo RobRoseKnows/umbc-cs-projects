@@ -2,6 +2,11 @@
 -- Robert Rose
 -- robrose2
 
+CREATE TABLE barcodes (
+    barcode             VARCHAR(13),
+    PRIMARY KEY(barcode)
+);
+
 CREATE TABLE plants (
     species             VARCHAR(255) NOT NULL,
     cultivar            VARCHAR(255) NOT NULL,
@@ -22,6 +27,15 @@ CREATE TABLE plants (
     CONSTRAINT check_plants_req_watering_non_nevative CHECK(req_watering >= 0)
 );
 
+CREATE TABLE trays (
+    id                  INT AUTO_INCREMENT,
+    barcode             VARCHAR(13),
+    position            POINT NOT NULL,
+    PRIMARY KEY(id),
+    UNIQUE(barcode),
+    FOREIGN KEY(barcode) REFERENCES barcodes(barcode)
+);
+
 CREATE TABLE pots (
     id                          INT AUTO_INCREMENT,
     barcode                     VARCHAR(13),
@@ -31,12 +45,6 @@ CREATE TABLE pots (
     holding_cultivar            VARCHAR(255) NOT NULL,
     holding_germination_date    DATE,
     holding_planting_date       DATE,
-    holding_age                 INT GENERATED ALWAYS AS (
-        IF holding_germination_date IS NOT NULL 
-        THEN DATEDIFF(NOW(), holding_germination_date)
-            ELSE NULL
-        END IF
-    ) VIRTUAL,
     on_tray             INT, -- Can be null when a pot initially enters service.
     PRIMARY KEY(id),
     UNIQUE(barcode),
@@ -50,20 +58,30 @@ CREATE TABLE pots (
         holding_germination_date IS NULL OR 
         (holding_planting_date <= holding_germination_date)),
     CONSTRAINT check_planting_non_null_when_germination_non_null CHECK(
-        IF holding_germination_date IS NOT NULL 
-        THEN holding_planting_date IS NULL
-            ELSE 1=1
-        END IF
+        IF(holding_germination_date IS NOT NULL, holding_planting_date IS NULL, 1=1)
     )
 );
 
-CREATE TABLE trays (
+CREATE TABLE weather_station (
     id                  INT AUTO_INCREMENT,
-    barcode             VARCHAR(13),
     position            POINT NOT NULL,
+    station_name        VARCHAR(32) NOT NULL,
+    barcode             VARCHAR(13),
     PRIMARY KEY(id),
+    UNIQUE(station_name),
     UNIQUE(barcode),
     FOREIGN KEY(barcode) REFERENCES barcodes(barcode)
+);
+
+CREATE TABLE weather_event (
+    id                  INT AUTO_INCREMENT,
+    ambient_light       FLOAT NOT NULL,
+    air_moisture        FLOAT NOT NULL,
+    current_pos         POINT NOT NULL,
+    temperature         DECIMAL(4,1) NOT NULL,
+    station_id          INT NOT NULL,
+    PRIMARY KEY(id),
+    FOREIGN KEY(station_id) REFERENCES weather_station(id)
 );
 
 CREATE TABLE activity_log (
@@ -85,36 +103,13 @@ CREATE TABLE activity_log (
     CONSTRAINT check_log_water_positive_or_zero CHECK(water >= 0)
 );
 
-CREATE TABLE weather_event (
-    id                  INT AUTO_INCREMENT,
-    ambient_light       FLOAT NOT NULL,
-    air_moisture        FLOAT NOT NULL,
-    current_pos         POINT NOT NULL,
-    temperature         DECIMAL(4,1) NOT NULL,
-    station_id          INT NOT NULL,
-    PRIMARY KEY(id),
-    FOREIGN KEY(station_id) REFERENCES weather_station(id)
-);
+-- CREATE VIEW tray_view AS (
+--     SELECT id, barcode, position FROM trays
+-- );
 
-CREATE TABLE weather_station (
-    id                  INT AUTO_INCREMENT,
-    position            POINT NOT NULL,
-    station_name        VARCHAR(32) NOT NULL,
-    barcode             VARCHAR(13),
-    PRIMARY KEY(id),
-    UNIQUE(station_name),
-    UNIQUE(barcode),
-    UNIQUE(position),
-    FOREIGN KEY(barcode) REFERENCES barcodes(barcode)
-);
+CREATE VIEW pots_view AS (
+    SELECT *, IF(holding_germination_date IS NOT NULL, 
+    DATEDIFF(NOW(), holding_germination_date), NULL)) AS holding_age
+    FROM pots; 
 
-CREATE TABLE barcodes (
-    barcode             VARCHAR(13),
-    PRIMARY KEY(barcode)
-);
-
-CREATE VIEW tray_view AS (
-    SELECT id, barcode, position FROM trays
-);
-
-CREATE VIEW activities_view AS SELECT * FROM activity_log;
+-- CREATE VIEW activities_view AS SELECT * FROM activity_log;

@@ -178,8 +178,6 @@ composite primary key. Derived attributes are in *itallics*.
   - `Unique(Name)` As I metioned earlier in Phase A, I plan to give the weather
     stations human names so that they can be referred to by staff.
   - `Unique(Barcode)` since bacodes should be unique for each weather station.
-  - `Unique(Location)` There shouldn't be a need for more than one weather station 
-    at the same location so I feel we can also put a Unique constraint on this point.
   - `ForeignKey(Barcode) -> Barcodes(Barcodes)` since barcodes should be unique accross
     all tables.
 - Barcodes
@@ -228,11 +226,14 @@ Tables:
 - barcodes
 Views:
 - tray_view
+- pots_view
 - activities_view
 
 No additional tables other than the ones for each entity are necessary, as I don't
-have any many-to-many relationships. There will be one table with a generated column:
-pots. It will calculate the age of a plant if it has a germination date.
+have any many-to-many relationships. I was originally planning to use a generated
+column in pots to calculate the age of the plant, but that's not possible because
+`NOW()` (and similar functions) can't be used in generated columns. So instead
+I created pots_view, that calculates the holdings_age on query.
 
 I do however need to create two views that allow me to get the derived values of 
 last action on a tray and the weather statistics for an activity log. I chose to
