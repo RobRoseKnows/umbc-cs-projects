@@ -133,25 +133,28 @@ composite primary key. Derived attributes are in *itallics*.
   - `Unique(Barcode)` since barcodes should be unique accross all plants
   - `ForeignKey(Barcode) -> Barcodes(Barcodes)` since barcodes should be unique accross
     all tables.
-  - `Check(DaysToGerminate > 0)` since all plants should take some time to germinate
+  - `Check(DaysToGerminate >= 0)` since all plants should take some time to germinate
   - `Check(Req_Feeding >= 0)` since it can't require negative feeding
   - `Check(Req_Watering >= 0)` since it can't require negative watering
   - I'm unsure whether the other requirement values can be negative or positive so
     I'll leave them without check constraints.
 - Pot
   - `Unique(Barcode)` since barcodes should be unique for each pot
+  - `ForeignKey(Holding_Species, Holding_Cultivar) -> Plant(Species, Cultivar)` as
+    they are the foreign key references that determine which plant is in the pot.
+  - `ForeignKey(OnTray) -> Tray(ID)` as it is the foreign key reference that determines
+    which tray a pot is on.
+  - `ForeignKey(Barcode) -> Barcodes(Barcodes)` since barcodes should be unique accross
+    all tables.  
   - `Check(Height IS IN (3, 4, 5, 6, 6.5, 7, 8, 12, 14))` since those are the only
     valid height values.
   - `Check(Volume IS IN (1, 2, 3, 4, 5, 7, 10, 15, 25))` since those are the only valid
     volume values.
   - `Check(Holding_PlantingDate < Holding_GerminationDate)` because the plant can't
     have germinated before it's planted.
-  - `ForeignKey(Holding_Species, Holding_Cultivar) -> Plant(Species, Cultivar)` as
-    they are the foreign key references that determine which plant is in the pot.
-  - `ForeignKey(OnTray) -> Tray(ID)` as it is the foreign key reference that determines
-    which tray a pot is on.
-  - `ForeignKey(Barcode) -> Barcodes(Barcodes)` since barcodes should be unique accross
-    all tables.
+  - `Check(Holding_PlantingDate non null when Germination Date is non null)` because 
+    if the germination date is non null, the planting date must have happened, so must
+    be non-null.
 - Tray
   - `Unique(Barcode)` since barcodes should be unique for each tray
   - `ForeignKey(Barcode) -> Barcodes(Barcodes)` since barcodes should be unique accross
@@ -163,6 +166,11 @@ composite primary key. Derived attributes are in *itallics*.
     PotID is also a foreign key to the Pot table.
   - `ForeignKey(WeatherEventID) -> WeatherEvent(ID)` this is to preserve needed
     WeatherEvents when they are periodically culled to the last ten.
+  - `ForeignKey(StartingTray) -> Trays(ID)` make sure we started on a valid tray or null.
+  - `ForeignKey(EndingTray) -> Trays(ID)` make sure we ended on a valid tray or null.
+  - I considered writing `Check` constraints to make sure the trays and locations corresponded,
+    but decided not to as that would mean the trays couldn't ever move or the constraint
+    would fail.
 - WeatherEvent
   - `ForeignKey(StationID) -> WeatherStation(ID)` this is so we can delete older
     records.
@@ -244,6 +252,20 @@ For dates such as germination and planting date on the pot, I will use the `DATE
 to store the date. For the timestamps, I will use `DATETIME` because I don't expect to
 need to calculate anything across timezones, which is what `TIMESTAMP` is mostly
 useful for.
+
+### Nullability
+
+Most of the nullability questions were fairly self explanatory, and don't require much
+in the way of justification. The ones that I thought weren't straight-forward however,
+I wanted to go into detail here.
+
+For the activity_log table, I originally intended for stating position and tray to
+be not null and for the ending positions to be nullable, in case an activity didn't involve
+moving the pot, it would be `NULL`. I realized however that when a pot initially comes into 
+service, it will have no starting position or tray. So I reveresed the nullability,
+making the starting position nullable, for when a pot initially enters service, and the
+ending position not null, since I can simply check if an activity didn't involve moving
+the pot by SQL statements.
 
 ### Justification
 
