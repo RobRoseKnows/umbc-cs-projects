@@ -97,15 +97,17 @@ composite primary key. Derived attributes are in *itallics*.
 - Tray
   - **ID**
   - Barcode
-  - Location
+  - Position
   - *LastAction*
 - ActivityLog
   - **Timestamp**
   - **PotID**
   - Food
   - Water
-  - StartingLoc
-  - EndingLoc
+  - StartingPos
+  - EndingPos
+  - StartingTray
+  - EndingTray
   - *AmbientLight*
   - *AirMoisture*
   - *Temperature*
@@ -114,12 +116,12 @@ composite primary key. Derived attributes are in *itallics*.
   - **ID**
   - AmbientLight
   - AirMoisture
-  - CurrentLocation
+  - CurrentPosition
   - Temperature
   - StationID
 - WeatherStation
   - **ID**
-  - Location
+  - Position
   - Name
   - Barcode
 - Barcodes
@@ -201,7 +203,10 @@ When creating the database tables, I chose to create a separate table for barcod
 so that every barcode created in the flower shop will be unique, meaning they can
 be scanned without duplication. In the final version instead of using the Unique
 constraints on barcodes as detailed in Phase B, they will be foreign key constraints
-that point to a table with only a single key: the barcode.
+that point to a table with only a single key: the barcode. Also renamed `Location`
+column to `Position` since it looks like "location" might be a reserved word. Finally,
+added starting and ending trays to the activity log as that might be a better way to 
+track movements than just position.
 
 ### Mapping Entities Onto Tables
 
@@ -215,7 +220,7 @@ Tables:
 - barcodes
 Views:
 - tray_view
-- activities
+- activities_view
 
 No additional tables other than the ones for each entity are necessary, as I don't
 have any many-to-many relationships. There will be one table with a generated column:
