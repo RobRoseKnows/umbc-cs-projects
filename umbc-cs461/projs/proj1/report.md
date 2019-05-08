@@ -228,6 +228,7 @@ Views:
 - tray_view
 - pots_view
 - activities_view
+- barcode_lookup_view
 
 No additional tables other than the ones for each entity are necessary, as I don't
 have any many-to-many relationships. I was originally planning to use a generated
@@ -239,6 +240,10 @@ I do however need to create two views that allow me to get the derived values of
 last action on a tray and the weather statistics for an activity log. I chose to
 design the database this way because generated columns can't use data from another
 table and I wanted to minimize data duplication. 
+
+I also created a barcode_lookup_view that makes it easy for someone to lookup what a
+barcode corresponds to. This is because the alternative is needing to join together
+multiple tables in every query using the barcode.
 
 ### Column Types
 
