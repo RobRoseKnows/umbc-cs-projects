@@ -109,7 +109,7 @@ CREATE TABLE activity_log (
 
 CREATE VIEW pots_view AS (
     SELECT *, IF(holding_germination_date IS NOT NULL, 
-    DATEDIFF(NOW(), holding_germination_date), NULL)) AS holding_age
-    FROM pots; 
+    DATEDIFF(NOW(), holding_germination_date), NULL) AS holding_age
+    FROM pots); 
 
 -- CREATE VIEW activities_view AS SELECT * FROM activity_log;
