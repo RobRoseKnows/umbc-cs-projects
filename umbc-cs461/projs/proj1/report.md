@@ -75,6 +75,7 @@ composite primary key. Derived attributes are in *itallics*.
   - **Species**
   - **Cultivar**
   - CommonName
+  - Type
   - IsPerannual
   - DaysToGerminate
   - Barcode
@@ -133,6 +134,8 @@ composite primary key. Derived attributes are in *itallics*.
   - `Unique(Barcode)` since barcodes should be unique accross all plants
   - `ForeignKey(Barcode) -> Barcodes(Barcodes)` since barcodes should be unique accross
     all tables.
+  - `Check(Type IN ('herbs', 'vegetables', 'flowers'))` because those are the only
+  types of plants allowed.
   - `Check(DaysToGerminate >= 0)` since all plants should take some time to germinate
   - `Check(Req_Feeding >= 0)` since it can't require negative feeding
   - `Check(Req_Watering >= 0)` since it can't require negative watering

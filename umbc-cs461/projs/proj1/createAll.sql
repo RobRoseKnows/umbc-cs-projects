@@ -11,6 +11,7 @@ CREATE TABLE plants (
     species             VARCHAR(255) NOT NULL,
     cultivar            VARCHAR(255) NOT NULL,
     common_name         VARCHAR(255) NOT NULL,
+    plant_type          VARCHAR(10) NOT NULL,
     is_perannual        BOOLEAN NOT NULL,
     days_to_germinate   INT NOT NULL,
     barcode             VARCHAR(13),
@@ -24,7 +25,8 @@ CREATE TABLE plants (
     FOREIGN KEY(barcode) REFERENCES barcodes(barcode),
     CONSTRAINT check_days_to_germinate_non_negative CHECK(days_to_germinate >= 0),
     CONSTRAINT check_plants_req_feeding_non_negative CHECK(req_feeding >= 0),
-    CONSTRAINT check_plants_req_watering_non_nevative CHECK(req_watering >= 0)
+    CONSTRAINT check_plants_req_watering_non_nevative CHECK(req_watering >= 0),
+    CONSTRAINT check_plants_valid_type CHECK(plant_type IN ('herbs', 'vegetables', 'flowers'))
 );
 
 CREATE TABLE trays (
@@ -113,3 +115,21 @@ CREATE VIEW pots_view AS (
     FROM pots); 
 
 -- CREATE VIEW activities_view AS SELECT * FROM activity_log;
+
+CREATE VIEW barcode_lookup_view AS (
+    SELECT  barcodes.barcode, 
+            plants.species AS species, 
+            plants.cultivar AS cultivar,
+            trays.id AS tray_id,
+            pots.id AS pots_id,
+            weather_station.id AS station_id
+    FROM    barcodes
+        JOIN plants
+            ON plants.barcode = barcodes.barcode
+        JOIN trays
+            ON trays.barcode = barcodes.barcode
+        JOIN pots
+            ON pots.barcode = barcodes.barcode
+        JOIN weather_station
+            ON weather_station.barcode = barcodes.barcode
+)
