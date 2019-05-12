@@ -286,3 +286,15 @@ VALUES
         'flowers', FALSE, 21, 'PLFXXX0018002', 
         20.0, 7.0, 1.1, 2.5, 1.3
     );
+
+INSERT INTO trays
+    (id, barcode, position)
+VALUES
+    (1, 'TRXXXX0000001', POINT( 0,  0)),
+    (2, 'TRXXXX0000002', POINT(-1, -1)),
+    (3, 'TRXXXX0000003', POINT(-1,  1)),
+    (4, 'TRXXXX0000004', POINT(-2, -1)),
+    (5, 'TRXXXX0000005', POINT(-2,  1)),
+    (6, 'TRXXXX0000006', POINT( 1, -1)),
+    (7, 'TRXXXX0000007', POINT( 1,  1));
+
