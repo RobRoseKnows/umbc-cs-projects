@@ -298,3 +298,165 @@ VALUES
     (6, 'TRXXXX0000006', POINT( 1, -1)),
     (7, 'TRXXXX0000007', POINT( 1,  1));
 
+INSERT INTO pots
+    (
+        id, barcode, height, volume, on_tray,
+        holding_species, holding_cultivar, holding_germination_date, holding_planting_date,
+    )
+VALUES
+    (   --- Height 3"
+        01, 'PT03010000001', 03, 01, 1,
+        'Calendula officinalis', 'alpha', DATE('2019-04-03'), DATE('2019-03-20')
+    ), 
+    (
+        02, 'PT03010000002', 03, 01, 1,
+        'Calendula officinalis', 'alpha', DATE('2019-04-03'), DATE('2019-03-20')
+    ),
+    (
+        03, 'PT03010000003', 03, 01, 1,
+        'Calendula officinalis', 'alpha', DATE('2019-04-04'), DATE('2019-03-20')
+    ),
+    (
+        04, 'PT03050000004', 03, 05, 1,
+        'Calendula officinalis', 'lemon', DATE('2019-04-03'), DATE('2019-03-20')
+    ),
+    (
+        05, 'PT03050000005', 03, 05, 1,
+        'Calendula officinalis', 'lemon', DATE('2019-04-03'), DATE('2019-03-20')
+    ),
+    (
+        06, 'PT03050000006', 03, 05, 1,
+        'Calendula officinalis', 'lemon', DATE('2019-04-04'), DATE('2019-03-20')
+    ),
+    (
+        07, 'PT03150000007', 03, 15, 2,
+        'Ismelia carinata', 'white', DATE('2019-04-10'), DATE('2019-03-20')
+    ),
+    (
+        08, 'PT03150000008', 03, 15, 2,
+        'Ismelia carinata', 'red', DATE('2019-04-10'), DATE('2019-03-20')
+    ),
+    (
+        09, 'PT03150000009', 03, 15, 2,
+        'Ismelia carinata', 'red', DATE('2019-04-11'), DATE('2019-03-20')
+    ),
+    (   --- Height 6.5"
+        10, 'PT65010000010', 6.5, 01, 3,
+        'Nepeta cataria', 'spotted' DATE('2019-04-20'), DATE('2019-04-06')
+    ), 
+    (
+        11, 'PT65010000011', 6.5, 01, 3,
+        'Nepeta cataria', 'spotted' DATE('2019-04-20'), DATE('2019-04-06')
+    ),
+    (
+        12, 'PT65010000012', 6.5, 01, 3,
+       'Nepeta cataria', 'pink' DATE('2019-04-20'), DATE('2019-04-06')
+    ),
+    (
+        13, 'PT65050000013', 6.5, 05, 2,
+        'Ismelia carinata', 'red', DATE('2019-04-16'), DATE('2019-04-02')
+    ),
+    (
+        14, 'PT65050000014', 6.5, 05, 2,
+        'Ismelia carinata', 'red', DATE('2019-04-16'), DATE('2019-04-02')
+    ),
+    (
+        15, 'PT65050000015', 6.5, 05, 2,
+         'Ismelia carinata', 'red', DATE('2019-04-16'), DATE('2019-04-02')
+    ),
+    (
+        16, 'PT65150000016', 6.5, 15, 2,
+         'Ismelia carinata', 'white', DATE('2019-04-17'), DATE('2019-04-02')
+    ),
+    (
+        17, 'PT65150000017', 6.5, 15, 3,
+        'Nepeta cataria', 'pink', DATE('2019-04-20'), DATE('2019-04-05')
+    ),
+    (
+        18, 'PT65150000018', 6.5, 15, 3,
+        'Nepeta cataria', 'pink', DATE('2019-04-20'), DATE('2019-04-07')
+    ),
+    (   --- Height 7"
+        19, 'PT07010000019', 07, 01, NULL,
+        NULL, NULL, NULL, NULL
+    ), 
+    (
+        20, 'PT07010000020', 07, 01, NULL,
+        NULL, NULL, NULL, NULL  
+    ),
+    (
+        21, 'PT07010000021', 07, 01, NULL,
+        NULL, NULL, NULL, NULL
+    ),
+    (
+        22, 'PT07050000022', 07, 05, ,
+        '', '', DATE(), DATE()
+    ),
+    (
+        23, 'PT07050000023', 07, 05, ,
+        '', '', DATE(), DATE()
+    ),
+    (
+        24, 'PT07050000024', 07, 05, ,
+        '', '', DATE(), DATE()
+    ),
+    (
+        25, 'PT07150000025', 07, 15, ,
+        '', '', DATE(), DATE()
+    ),
+    (
+        26, 'PT07150000026', 07, 15, ,
+        '', '', DATE(), DATE()
+    ),
+    (
+        27, 'PT07150000027', 07, 15, ,
+        '', '', DATE(), DATE()
+    ),
+    (   --- Height 12"
+        28, 'PT12040000028', 12, 04, ,
+        '', '', DATE(), DATE()
+    ), 
+    (
+        29, 'PT12040000029', 12, 04, ,
+        '', '', DATE(), DATE()
+    ),
+    (
+        30, 'PT12040000030', 12, 04, ,
+        '', '', DATE(), DATE()
+    ),
+    (
+        31, 'PT12050000031', 12, 05, ,
+        '', '', DATE(), DATE()
+    ),
+    (
+        32, 'PT12050000032', 12, 05, ,
+        '', '', DATE(), DATE()
+    ),
+    (
+        33, 'PT12050000033', 12, 05, ,
+        '', '', DATE(), DATE()
+    ),
+    (
+        34, 'PT12150000034', 12, 15, ,
+        '', '', DATE(), DATE()
+    ),
+    (
+        35, 'PT12150000035', 12, 15, ,
+        '', '', DATE(), DATE()
+    ),
+    (
+        36, 'PT12150000036', 12, 15, ,
+        '', '', DATE(), DATE()
+    ),
+    (
+        37, 'PT12250000037', 12, 25, ,
+        '', '', DATE(), DATE()
+    ),
+    (
+        38, 'PT12250000038', 12, 25, ,
+        '', '', DATE(), DATE()
+    ),
+    (
+        39, 'PT12250000039', 12, 25, ,
+        '', '', DATE(), DATE()
+    );
