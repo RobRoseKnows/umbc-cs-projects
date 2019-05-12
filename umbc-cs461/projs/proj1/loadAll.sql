@@ -225,3 +225,64 @@ VALUES
         'herbs', FALSE, 30, 'PLHXXX0012002', 
         23.0, 6.0, 2.5, 3.0, 3.0
     ),
+    --- Flowers
+    (
+        'Tulipa × gesneriana', 'yonina', 'Yonina tulip',
+        'flowers', TRUE, 14, 'PLFXXX0013001', 
+        26.0, 6.0, 1.5, 2.5, 1.5
+    ),
+    (
+        'Tulipa × gesneriana', 'texas flame', 'Texas flame tulip',
+        'flowers', TRUE, 14, 'PLFXXX0013002', 
+        26.0, 6.0, 1.5, 2.5, 1.5
+    ),   
+    (
+        'Calendula officinalis', 'lemon', 'Lemon marigold',
+        'flowers', TRUE, 14, 'PLFXXX0014001', 
+        25.0, 6.2, 1.2, 2.5, 1.4
+    ),
+    (
+        'Calendula officinalis', 'alpha', 'Alpha marigold',
+        'flowers', TRUE, 14, 'PLFXXX0014002', 
+        25.0, 6.2, 1.2, 2.5, 1.4
+    ),
+    (
+        'Ismelia carinata', 'red', 'Red tricolor daisy',
+        'flowers', FALSE, 21, 'PLFXXX0015001', 
+        30.0, 6.1, 1.2, 2.5, 1.4
+    ),
+    (
+        'Ismelia carinata', 'white', 'White tricolor daisy',
+        'flowers', FALSE, 21, 'PLFXXX0015002', 
+        30.0, 6.1, 1.2, 2.5, 1.4
+    ),
+    (
+        'Chrysanthemum morifolium', 'yellow', "Yellow florist's daisy",
+        'flowers', TRUE, 21, 'PLFXXX0016001', 
+        20.0, 6.0, 1.2, 2.5, 1.3
+    ),
+    (
+        'Chrysanthemum morifolium', 'white', "White florist's daisy",
+        'flowers', TRUE, 21, 'PLFXXX0016002', 
+        20.0, 6.0, 1.2, 2.5, 1.3
+    ),
+    (
+        'Helianthus annuus', 'american giant', 'American Giant sunflower',
+        'flowers', FALSE, 28, 'PLFXXX0017001', 
+        20.0, 6.0, 1.5, 2.5, 2.0
+    ),
+    (
+        'Helianthus annuus', 'titan', 'Titan sunflower',
+        'flowers', FALSE, 28, 'PLFXXX0017002', 
+        20.0, 6.0, 1.5, 2.5, 2.0
+    ),
+    (
+        'Hemerocallis lilioasphodelus', 'wayside king royale', "Wauside King Royale daylily",
+        'flowers', FALSE, 21, 'PLFXXX0018001', 
+        20.0, 7.0, 1.1, 2.5, 1.3
+    ),
+    (
+        'Hemerocallis lilioasphodelus', 'red magic', "Red Magic daylily",
+        'flowers', FALSE, 21, 'PLFXXX0018002', 
+        20.0, 7.0, 1.1, 2.5, 1.3
+    );
