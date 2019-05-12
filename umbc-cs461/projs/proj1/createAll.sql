@@ -14,7 +14,7 @@ CREATE TABLE plants (
     plant_type          VARCHAR(10) NOT NULL,
     is_perannual        BOOLEAN NOT NULL,
     days_to_germinate   INT NOT NULL,
-    barcode             VARCHAR(13),
+    barcode             VARCHAR(13) NOT NULL,
     req_temperature     DECIMAL(4,1) NOT NULL,
     req_light           FLOAT NOT NULL,
     req_air_moisture    FLOAT NOT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE plants (
 
 CREATE TABLE trays (
     id                  INT AUTO_INCREMENT,
-    barcode             VARCHAR(13),
+    barcode             VARCHAR(13) NOT NULL,
     position            POINT NOT NULL,
     PRIMARY KEY(id),
     UNIQUE(barcode),
@@ -40,11 +40,11 @@ CREATE TABLE trays (
 
 CREATE TABLE pots (
     id                          INT AUTO_INCREMENT,
-    barcode                     VARCHAR(13),
+    barcode                     VARCHAR(13) NOT NULL,
     height                      DECIMAL(3,1) NOT NULL,
     volume                      DECIMAL(3,1) NOT NULL,
-    holding_species             VARCHAR(255) NOT NULL,
-    holding_cultivar            VARCHAR(255) NOT NULL,
+    holding_species             VARCHAR(255),
+    holding_cultivar            VARCHAR(255),
     holding_germination_date    DATE,
     holding_planting_date       DATE,
     on_tray             INT, -- Can be null when a pot initially enters service.
@@ -68,7 +68,7 @@ CREATE TABLE weather_station (
     id                  INT AUTO_INCREMENT,
     position            POINT NOT NULL,
     station_name        VARCHAR(32) NOT NULL,
-    barcode             VARCHAR(13),
+    barcode             VARCHAR(13) NOT NULL,
     PRIMARY KEY(id),
     UNIQUE(station_name),
     UNIQUE(barcode),
