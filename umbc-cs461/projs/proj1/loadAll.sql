@@ -390,73 +390,82 @@ VALUES
     ),
     (
         22, 'PT07050000022', 07, 05, 4,
-        'Mentha × piperita', 'Candymint', DATE(), DATE()
+        'Mentha × piperita', 'Candymint', DATE('2019-02-20'), DATE('2019-02-01')
     ),
     (
         23, 'PT07050000023', 07, 05, 4,
-        'Mentha × piperita', 'Candymint', DATE(), DATE()
+        'Mentha × piperita', 'Candymint', DATE('2019-02-20'), DATE('2019-02-01')
     ),
     (
         24, 'PT07050000024', 07, 05, 4,
-        'Mentha × piperita', 'Citrata', DATE(), DATE()
+        'Mentha × piperita', 'Citrata', DATE('2019-02-20'), DATE('2019-02-01')
     ),
     (
         25, 'PT07150000025', 07, 15, 5,
-        'Cucurbita pepo', 'cylindrica', DATE('2019-04-01'), NULL
+        'Cucurbita pepo', 'cylindrica', NULL, DATE('2019-04-01')
     ),
     (
         26, 'PT07150000026', 07, 15, 5,
-        'Cucurbita pepo', 'cylindrica', DATE('2019-04-01'), NULL
+        'Cucurbita pepo', 'cylindrica', NULL, DATE('2019-04-01')
     ),
     (
         27, 'PT07150000027', 07, 15, 5,
-        'Cucurbita pepo', 'cylindrica', DATE('2019-04-01'), NULL
+        'Cucurbita pepo', 'cylindrica', NULL, DATE('2019-04-01')
     ),
     (   --- Height 12"
         28, 'PT12040000028', 12, 04, 7,
-        'Brassica rapa', 'chinensis', DATE('2019-04-01'), DATE('2019-05-01')
+        'Brassica rapa', 'chinensis', DATE('2019-05-01'), DATE('2019-04-01')
     ), 
     (
         29, 'PT12040000029', 12, 04, 7,
-        'Brassica rapa', 'chinensis', DATE('2019-04-01'), DATE('2019-05-01')
+        'Brassica rapa', 'chinensis', DATE('2019-05-01'), DATE('2019-04-01')
     ),
     (
         30, 'PT12040000030', 12, 04, 7,
-        'Brassica rapa', 'chinensis', DATE('2019-04-01'), DATE('2019-05-01')
+        'Brassica rapa', 'chinensis', DATE('2019-05-01'), DATE('2019-04-01')
     ),
     (
         31, 'PT12050000031', 12, 05, 6,
-        'Cucurbita pepo', 'pepo', DATE('2019-04-01'), NULL
+        'Cucurbita pepo', 'pepo', NULL, DATE('2019-04-01')
     ),
     (
         32, 'PT12050000032', 12, 05, 6,
-        'Cucurbita pepo', 'pepo', DATE('2019-04-01'), NULL
+        'Cucurbita pepo', 'pepo', NULL, DATE('2019-04-01')
     ),
     (
         33, 'PT12050000033', 12, 05, 6,
-        'Cucurbita pepo', 'pepo', DATE('2019-04-01'), NULL
+        'Cucurbita pepo', 'pepo', NULL, DATE('2019-04-01')
     ),
     (
         34, 'PT12150000034', 12, 15, 7,
-        'Brassica rapa', 'rapa', DATE('2019-05-01'), NULL
+        'Brassica rapa', 'rapa', NULL, DATE('2019-05-01')
     ),
     (
         35, 'PT12150000035', 12, 15, 7,
-        'Brassica rapa', 'rapa', DATE('2019-05-01'), NULL
+        'Brassica rapa', 'rapa', NULL, DATE('2019-05-01')
     ),
     (
         36, 'PT12150000036', 12, 15, 7,
-        'Brassica rapa', 'rapa', DATE('2019-05-01'), NULL
+        'Brassica rapa', 'rapa', NULL, DATE('2019-05-01')
     ),
     (
         37, 'PT12250000037', 12, 25, 6,
-        'Cucurbita pepo', 'pepo', DATE('2019-04-01'), NULL
+        'Cucurbita pepo', 'pepo', NULL, DATE('2019-04-01')
     ),
     (
         38, 'PT12250000038', 12, 25, 6,
-        'Cucurbita pepo', 'pepo', DATE('2019-04-01'), NULL
+        'Cucurbita pepo', 'pepo', NULL, DATE('2019-04-01')
     ),
     (
         39, 'PT12250000039', 12, 25, 6,
-        'Cucurbita pepo', 'pepo', DATE('2019-04-01'), NULL
+        'Cucurbita pepo', 'pepo', NULL, DATE('2019-04-01')
     );
+
+INSERT INTO weather_station
+    (id, position, station_name, barcode)
+VALUES
+    (1, POINT(0, 0),    'Artemis',  'WSXARTX000001'),
+    (2, POINT(1, 1),    'Hades',    'WSXHADX000002'),
+    (3, POINT(-1, -1),  'Achiles',  'WSXACHX000003'),
+    (4, POINT(-2, -2),  'Ganymede', 'WSXGANX000004');
+
