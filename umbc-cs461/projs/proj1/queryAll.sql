@@ -35,10 +35,17 @@ GROUP BY pots.holding_species
 ORDER BY NUM DESC
 LIMIT 1;
 
-
 -- 6. Find the oldest (in terms of current age) vegetable plant(s) among those 
 -- that germinated during the previous month.
-
+SELECT 
+    pots_view.id, 
+    pots_view.holding_species, 
+    pots_view.holding_cultivar, 
+    pots_view.holding_age
+FROM pots_view
+WHERE pots_view.holding_age IS NOT NULL AND pots_view.holding_age <= 31
+ORDER BY pots_view.holding_age DESC
+LIMIT 1;
 
 -- 7. Find the germinated plant(s) that received the most daily water (averaged 
 -- over their age). 
