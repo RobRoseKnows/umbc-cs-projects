@@ -2,7 +2,7 @@
 -- Robert Rose
 -- robrose2
 
---- Drop the views first because they depend on a lot of stuff
+-- Drop the views first because they depend on a lot of stuff
 DROP VIEW IF EXISTS barcode_lookup_view;
 
 DROP VIEW IF EXISTS activities_view;
@@ -11,7 +11,7 @@ DROP VIEW IF EXISTS pots_view;
 
 DROP VIEW IF EXISTS tray_view;
 
---- Drop the tables that we created in reverse order
+-- Drop the tables that we created in reverse order
 DROP TABLE IF EXISTS activity_log;
 
 DROP TABLE IF EXISTS weather_event;

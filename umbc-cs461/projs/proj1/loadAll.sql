@@ -5,44 +5,44 @@
 INSERT INTO barcodes 
     (barcode) 
 VALUES
-    --- Format for plant barcodes: PL{type}XXX{4:species#}{3:cultivar#}
-    ('PLVXXX0001001'), --- Plants Vegetables Species 1
+    -- Format for plant barcodes: PL{type}XXX{4:species#}{3:cultivar#}
+    ('PLVXXX0001001'), -- Plants Vegetables Species 1
     ('PLVXXX0001002'),
-    ('PLVXXX0002001'), --- Species 2
+    ('PLVXXX0002001'), -- Species 2
     ('PLVXXX0002002'),
-    ('PLVXXX0003001'), --- Species 3
+    ('PLVXXX0003001'), -- Species 3
     ('PLVXXX0003002'),
-    ('PLVXXX0004001'), --- Species 4
+    ('PLVXXX0004001'), -- Species 4
     ('PLVXXX0004002'),
-    ('PLVXXX0005001'), --- Species 5
+    ('PLVXXX0005001'), -- Species 5
     ('PLVXXX0005002'),
-    ('PLVXXX0006001'), --- Species 6
+    ('PLVXXX0006001'), -- Species 6
     ('PLVXXX0006002'),    
-    ('PLHXXX0007001'), --- Plants Herbs Species 1
+    ('PLHXXX0007001'), -- Plants Herbs Species 1
     ('PLHXXX0007002'),
-    ('PLHXXX0008001'), --- Species 2
+    ('PLHXXX0008001'), -- Species 2
     ('PLHXXX0008002'),
-    ('PLHXXX0009001'), --- Species 3
+    ('PLHXXX0009001'), -- Species 3
     ('PLHXXX0009002'),
-    ('PLHXXX0010001'), --- Species 4
+    ('PLHXXX0010001'), -- Species 4
     ('PLHXXX0010002'),
-    ('PLHXXX0011001'), --- Species 5
+    ('PLHXXX0011001'), -- Species 5
     ('PLHXXX0011002'),
-    ('PLHXXX0012001'), --- Species 6
+    ('PLHXXX0012001'), -- Species 6
     ('PLHXXX0012002'),
-    ('PLFXXX0013001'), --- Plants Flowers Species 1
+    ('PLFXXX0013001'), -- Plants Flowers Species 1
     ('PLFXXX0013002'),
-    ('PLFXXX0014001'), --- Species 2
+    ('PLFXXX0014001'), -- Species 2
     ('PLFXXX0014002'),
-    ('PLFXXX0015001'), --- Species 3
+    ('PLFXXX0015001'), -- Species 3
     ('PLFXXX0015002'),
-    ('PLFXXX0016001'), --- Species 4
+    ('PLFXXX0016001'), -- Species 4
     ('PLFXXX0016002'),
-    ('PLFXXX0017001'), --- Species 5
+    ('PLFXXX0017001'), -- Species 5
     ('PLFXXX0017002'),
-    ('PLFXXX0018001'), --- Species 6
+    ('PLFXXX0018001'), -- Species 6
     ('PLFXXX0018002'),
-    --- Format for tray barcodes: TRXXXX{7:id#}
+    -- Format for tray barcodes: TRXXXX{7:id#}
     ('TRXXXX0000001'),
     ('TRXXXX0000002'),
     ('TRXXXX0000003'),
@@ -50,8 +50,8 @@ VALUES
     ('TRXXXX0000005'),
     ('TRXXXX0000006'),
     ('TRXXXX0000007'),
-    --- Format for pots barcodes: PT{2:height}{2:volume}{7:id#}
-    ('PT03010000001'), --- Height 3"
+    -- Format for pots barcodes: PT{2:height}{2:volume}{7:id#}
+    ('PT03010000001'), -- Height 3"
     ('PT03010000002'),
     ('PT03010000003'),
     ('PT03050000004'),
@@ -60,7 +60,7 @@ VALUES
     ('PT03150000007'),
     ('PT03150000008'),
     ('PT03150000009'),
-    ('PT65010000010'), --- Height 6.5"
+    ('PT65010000010'), -- Height 6.5"
     ('PT65010000011'),
     ('PT65010000012'),
     ('PT65050000013'),
@@ -69,7 +69,7 @@ VALUES
     ('PT65150000016'),
     ('PT65150000017'),
     ('PT65150000018'),
-    ('PT07010000019'), --- Height 7"
+    ('PT07010000019'), -- Height 7"
     ('PT07010000020'),
     ('PT07010000021'),
     ('PT07050000022'),
@@ -78,7 +78,7 @@ VALUES
     ('PT07150000025'),
     ('PT07150000026'),
     ('PT07150000027'),
-    ('PT12040000028'), --- Height 12"
+    ('PT12040000028'), -- Height 12"
     ('PT12040000029'),
     ('PT12040000030'),
     ('PT12050000031'),
@@ -90,11 +90,11 @@ VALUES
     ('PT12250000037'),
     ('PT12250000038'),
     ('PT12250000039'),
-    --- Format for weather station barcodes: WSX{3:start of name}X{6:id#}
-    ('WSXARTX000001'), --- Artemis
-    ('WSXHADX000002'), --- Hades
-    ('WSXACHX000003'), --- Achiles
-    ('WSXGANX000004'); --- Ganymede 
+    -- Format for weather station barcodes: WSX{3:start of name}X{6:id#}
+    ('WSXARTX000001'), -- Artemis
+    ('WSXHADX000002'), -- Hades
+    ('WSXACHX000003'), -- Achiles
+    ('WSXGANX000004'); -- Ganymede 
 
 INSERT INTO plants
     (
@@ -103,7 +103,7 @@ INSERT INTO plants
         req_temperature, req_light, req_air_moisture, req_feeding, req_watering
     )
 VALUES
-    --- Vegetables
+    -- Vegetables
     (
         'Capsicum annuum', 'green', 'Green bell pepper',
         'vegetables', FALSE, 10, 'PLVXXX0001001', 
@@ -164,7 +164,7 @@ VALUES
         'vegetables', FALSE, 30, 'PLVXXX0006002', 
         23.0, 7.6, 2.5, 3.0, 3.0
     ),
-    --- Herbs
+    -- Herbs
     (
         'Trientalis latifolia', 'white', 'White starflower',
         'herbs', TRUE, 21, 'PLHXXX0007001', 
@@ -225,7 +225,7 @@ VALUES
         'herbs', FALSE, 30, 'PLHXXX0012002', 
         23.0, 6.0, 2.5, 3.0, 3.0
     ),
-    --- Flowers
+    -- Flowers
     (
         'Tulipa × gesneriana', 'yonina', 'Yonina tulip',
         'flowers', TRUE, 14, 'PLFXXX0013001', 
@@ -304,7 +304,7 @@ INSERT INTO pots
         holding_species, holding_cultivar, holding_planting_date, holding_germination_date
     )
 VALUES
-    (   --- Height 3"
+    (   -- Height 3"
         01, 'PT03010000001', 03, 01, 1,
         'Calendula officinalis', 'alpha', DATE('2019-03-20'), DATE('2019-04-03') 
     ), 
@@ -340,7 +340,7 @@ VALUES
         09, 'PT03150000009', 03, 15, 2,
         'Ismelia carinata', 'red', DATE('2019-03-20'), DATE('2019-04-11') 
     ),
-    (   --- Height 6.5"
+    (   -- Height 6.5"
         10, 'PT65010000010', 6.5, 01, 3,
         'Nepeta cataria', 'spotted', DATE('2019-04-06'), DATE('2019-04-20') 
     ), 
@@ -376,7 +376,7 @@ VALUES
         18, 'PT65150000018', 6.5, 15, 3,
         'Nepeta cataria', 'pink', DATE('2019-04-07'), DATE('2019-04-20') 
     ),
-    (   --- Height 7"
+    (   -- Height 7"
         19, 'PT07010000019', 07, 01, NULL,
         NULL, NULL, NULL, NULL
     ), 
@@ -412,7 +412,7 @@ VALUES
         27, 'PT07150000027', 07, 15, 5,
         'Cucurbita pepo', 'cylindrica', DATE('2019-04-01'), NULL
     ),
-    (   --- Height 12"
+    (   -- Height 12"
         28, 'PT12040000028', 12, 04, 7,
         'Brassica rapa', 'chinensis', DATE('2019-04-01'), DATE('2019-05-01')
     ), 
@@ -469,7 +469,7 @@ VALUES
     (3, POINT(-1, -1),  'Achiles',  'WSXACHX000003'),
     (4, POINT(-2, -2),  'Ganymede', 'WSXGANX000004');
 
---- The last 10 weather events for each station.
+-- The last 10 weather events for each station.
 INSERT INTO weather_event
     (id, ambient_light, air_moisture, curr_pos, curr_time, temperature, station_id)
 VALUES
@@ -514,10 +514,65 @@ VALUES
     (39, 2.0, 2.1, POINT(-2, -2), DATETIME('2019-04-24 12:00:00'), 69.0, 4),
     (40, 2.0, 2.1, POINT(-2, -2), DATETIME('2019-04-24 12:00:00'), 69.0, 4);
 
+-- The weather events for the activity log.
+INSERT INTO weather_event
+    (id, ambient_light, air_moisture, curr_pos, curr_time, temperature, station_id)
+VALUES
+    (41, 2.0, 2.0, POINT(0, 0), DATETIME('2019-03-20 12:00:00'), 66.0, 1),
+    (42, 2.0, 2.0, POINT(0, 0), DATETIME('2019-03-27 12:00:00'), 67.0, 1),
+
 
 INSERT INTO activity_log
-    (ts, pot_id, food, water, weather_event_id,
-    starting_pos, ending_pos, starting_tray, ending_tray)
+    (
+        ts, pot_id, food, water, weather_event_id,
+        starting_pos, ending_pos, starting_tray, ending_tray
+    )
 VALUES
-    (),
-    ();
+    (
+        DATE('2019-03-20 12:29:00'), 01, 7.0, 7.0, 41,
+        NULL,           POINT( 0,  0),  NULL,   1
+    ),
+    (
+        DATE('2019-03-20 12:31:00'), 02, 7.0, 7.0, 41,
+        NULL,           POINT( 0,  0),  NULL,   1
+    ),
+    (
+        DATE('2019-03-20 12:33:00'), 03, 7.0, 7.0, 41,
+        NULL,           POINT( 0,  0),  NULL,   1
+    ),
+    (
+        DATE('2019-03-20 12:37:00'), 04, 7.0, 7.0, 41,
+        NULL,           POINT( 0,  0),  NULL,   1
+    ),
+    (
+        DATE('2019-03-20 12:40:00'), 05, 7.0, 7.0, 41,
+        NULL,           POINT( 0,  0),  NULL,   1
+    ),
+    (
+        DATE('2019-03-20 12:45:00'), 06, 7.0, 7.0, 41,
+        NULL,           POINT( 0,  0),  NULL,   1
+    ),
+    (
+        DATE('2019-03-27 12:31:00'), 01, 7.0, 7.0, 42,
+        POINT( 0,  0),  POINT( 0,  0),  1,      1
+    ),
+    (
+        DATE('2019-03-27 12:32:00'), 02, 7.0, 7.0, 42,
+        POINT( 0,  0),  POINT( 0,  0),  1,      1
+    ),
+    (
+        DATE('2019-03-27 12:33:00'), 03, 7.0, 7.0, 42,
+        POINT( 0,  0),  POINT( 0,  0),  1,      1
+    ),
+    (
+        DATE('2019-03-27 12:37:00'), 04, 7.0, 7.0, 42,
+        POINT( 0,  0),  POINT( 0,  0),  1,      1
+    ),
+    (
+        DATE('2019-03-27 12:40:00'), 05, 7.0, 7.0, 42,
+        POINT( 0,  0),  POINT( 0,  0),  1,      1
+    ),
+    (
+        DATE('2019-03-27 12:45:00'), 06, 7.0, 7.0, 42,
+        POINT( 0,  0),  POINT( 0,  0),  1,      1
+    ),
