@@ -439,13 +439,13 @@ CREATE OR REPLACE VIEW barcode_lookup_view AS (
             pots.id AS pots_id,
             weather_station.id AS station_id
     FROM    barcodes
-        JOIN plants
+        LEFT JOIN plants
             ON plants.barcode = barcodes.barcode
-        JOIN trays
+        LEFT JOIN trays
             ON trays.barcode = barcodes.barcode
-        JOIN pots
+        LEFT JOIN pots
             ON pots.barcode = barcodes.barcode
-        JOIN weather_station
+        LEFT JOIN weather_station
             ON weather_station.barcode = barcodes.barcode
 );
 ```
@@ -459,7 +459,7 @@ The `dropAll.sql` script is much simipler than the `createAll,sql` script, as it
 only has to drop the tables in reverse order.
 
 ```sql
---- Drop the views first because they depend on a lot of stuff
+-- Drop the views first because they depend on a lot of stuff
 DROP VIEW IF EXISTS barcode_lookup_view;
 
 DROP VIEW IF EXISTS activities_view;
@@ -468,7 +468,7 @@ DROP VIEW IF EXISTS pots_view;
 
 DROP VIEW IF EXISTS tray_view;
 
---- Drop the tables that we created in reverse order
+-- Drop the tables that we created in reverse order
 DROP TABLE IF EXISTS activity_log;
 
 DROP TABLE IF EXISTS weather_event;

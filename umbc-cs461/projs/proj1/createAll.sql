@@ -144,12 +144,12 @@ CREATE OR REPLACE VIEW barcode_lookup_view AS (
             pots.id AS pots_id,
             weather_station.id AS station_id
     FROM    barcodes
-        JOIN plants
+        LEFT JOIN plants
             ON plants.barcode = barcodes.barcode
-        JOIN trays
+        LEFT JOIN trays
             ON trays.barcode = barcodes.barcode
-        JOIN pots
+        LEFT JOIN pots
             ON pots.barcode = barcodes.barcode
-        JOIN weather_station
+        LEFT JOIN weather_station
             ON weather_station.barcode = barcodes.barcode
 );
