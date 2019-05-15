@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS weather_event (
 );
 
 CREATE TABLE IF NOT EXISTS activity_log (
-    time_stamp          DATETIME NOT NULL,
+    ts                  DATETIME NOT NULL,
     pot_id              INT NOT NULL,
     food                FLOAT NOT NULL,
     water               FLOAT NOT NULL,
@@ -97,7 +97,7 @@ CREATE TABLE IF NOT EXISTS activity_log (
     starting_tray       INT,
     ending_tray         INT NOT NULL,
     weather_event_id    INT NOT NULL,
-    PRIMARY KEY(time_stamp, pot_id),
+    PRIMARY KEY(ts, pot_id),
     FOREIGN KEY(pot_id) REFERENCES pots(id),
     FOREIGN KEY(weather_event_id) REFERENCES weather_event(id),
     FOREIGN KEY(starting_tray) REFERENCES trays(id),
@@ -109,7 +109,7 @@ CREATE TABLE IF NOT EXISTS activity_log (
 -- This view will be very messy, so I'll come back and make it only if I have time.
 -- CREATE VIEW IF NOT EXISTS tray_view AS (
 --     SELECT id, barcode, position, (
---         SELECT time_stamp FROM 
+--         SELECT ts FROM 
 --     ) AS last_activity 
 --     FROM trays
 -- );
@@ -120,7 +120,7 @@ CREATE VIEW IF NOT EXISTS pots_view AS (
     FROM pots); 
 
 CREATE VIEW IF NOT EXISTS activities_view AS (
-    SELECT  activity_log.time_stamp AS time_stamp,
+    SELECT  activity_log.ts AS ts,
             activity_log.pot_id AS pot_id,
             activity_log.food AS food,
             activity_log.water AS water,

@@ -301,80 +301,80 @@ VALUES
 INSERT INTO pots
     (
         id, barcode, height, volume, on_tray,
-        holding_species, holding_cultivar, holding_germination_date, holding_planting_date,
+        holding_species, holding_cultivar, holding_planting_date, holding_germination_date
     )
 VALUES
     (   --- Height 3"
         01, 'PT03010000001', 03, 01, 1,
-        'Calendula officinalis', 'alpha', DATE('2019-04-03'), DATE('2019-03-20')
+        'Calendula officinalis', 'alpha', DATE('2019-03-20'), DATE('2019-04-03') 
     ), 
     (
         02, 'PT03010000002', 03, 01, 1,
-        'Calendula officinalis', 'alpha', DATE('2019-04-03'), DATE('2019-03-20')
+        'Calendula officinalis', 'alpha', DATE('2019-03-20'), DATE('2019-04-03') 
     ),
     (
         03, 'PT03010000003', 03, 01, 1,
-        'Calendula officinalis', 'alpha', DATE('2019-04-04'), DATE('2019-03-20')
+        'Calendula officinalis', 'alpha', DATE('2019-03-20'), DATE('2019-04-04') 
     ),
     (
         04, 'PT03050000004', 03, 05, 1,
-        'Calendula officinalis', 'lemon', DATE('2019-04-03'), DATE('2019-03-20')
+        'Calendula officinalis', 'lemon', DATE('2019-03-20'), DATE('2019-04-03') 
     ),
     (
         05, 'PT03050000005', 03, 05, 1,
-        'Calendula officinalis', 'lemon', DATE('2019-04-03'), DATE('2019-03-20')
+        'Calendula officinalis', 'lemon', DATE('2019-03-20'), DATE('2019-04-03') 
     ),
     (
         06, 'PT03050000006', 03, 05, 1,
-        'Calendula officinalis', 'lemon', DATE('2019-04-04'), DATE('2019-03-20')
+        'Calendula officinalis', 'lemon', DATE('2019-03-20'), DATE('2019-04-04') 
     ),
     (
         07, 'PT03150000007', 03, 15, 2,
-        'Ismelia carinata', 'white', DATE('2019-04-10'), DATE('2019-03-20')
+        'Ismelia carinata', 'white', DATE('2019-03-20'), DATE('2019-04-10')
     ),
     (
         08, 'PT03150000008', 03, 15, 2,
-        'Ismelia carinata', 'red', DATE('2019-04-10'), DATE('2019-03-20')
+        'Ismelia carinata', 'red', DATE('2019-03-20'), DATE('2019-04-10') 
     ),
     (
         09, 'PT03150000009', 03, 15, 2,
-        'Ismelia carinata', 'red', DATE('2019-04-11'), DATE('2019-03-20')
+        'Ismelia carinata', 'red', DATE('2019-03-20'), DATE('2019-04-11') 
     ),
     (   --- Height 6.5"
         10, 'PT65010000010', 6.5, 01, 3,
-        'Nepeta cataria', 'spotted' DATE('2019-04-20'), DATE('2019-04-06')
+        'Nepeta cataria', 'spotted', DATE('2019-04-06'), DATE('2019-04-20') 
     ), 
     (
         11, 'PT65010000011', 6.5, 01, 3,
-        'Nepeta cataria', 'spotted' DATE('2019-04-20'), DATE('2019-04-06')
+        'Nepeta cataria', 'spotted', DATE('2019-04-06'), DATE('2019-04-20') 
     ),
     (
         12, 'PT65010000012', 6.5, 01, 3,
-       'Nepeta cataria', 'pink' DATE('2019-04-20'), DATE('2019-04-06')
+       'Nepeta cataria', 'pink', DATE('2019-04-06'), DATE('2019-04-20') 
     ),
     (
         13, 'PT65050000013', 6.5, 05, 2,
-        'Ismelia carinata', 'red', DATE('2019-04-16'), DATE('2019-04-02')
+        'Ismelia carinata', 'red', DATE('2019-04-02'), DATE('2019-04-16') 
     ),
     (
         14, 'PT65050000014', 6.5, 05, 2,
-        'Ismelia carinata', 'red', DATE('2019-04-16'), DATE('2019-04-02')
+        'Ismelia carinata', 'red', DATE('2019-04-02'), DATE('2019-04-16') 
     ),
     (
         15, 'PT65050000015', 6.5, 05, 2,
-         'Ismelia carinata', 'red', DATE('2019-04-16'), DATE('2019-04-02')
+         'Ismelia carinata', 'red', DATE('2019-04-02'), DATE('2019-04-16') 
     ),
     (
         16, 'PT65150000016', 6.5, 15, 2,
-         'Ismelia carinata', 'white', DATE('2019-04-17'), DATE('2019-04-02')
+         'Ismelia carinata', 'white', DATE('2019-04-02'), DATE('2019-04-17') 
     ),
     (
         17, 'PT65150000017', 6.5, 15, 3,
-        'Nepeta cataria', 'pink', DATE('2019-04-20'), DATE('2019-04-05')
+        'Nepeta cataria', 'pink', DATE('2019-04-05'), DATE('2019-04-20') 
     ),
     (
         18, 'PT65150000018', 6.5, 15, 3,
-        'Nepeta cataria', 'pink', DATE('2019-04-20'), DATE('2019-04-07')
+        'Nepeta cataria', 'pink', DATE('2019-04-07'), DATE('2019-04-20') 
     ),
     (   --- Height 7"
         19, 'PT07010000019', 07, 01, NULL,
@@ -390,75 +390,75 @@ VALUES
     ),
     (
         22, 'PT07050000022', 07, 05, 4,
-        'Mentha × piperita', 'Candymint', DATE('2019-02-20'), DATE('2019-02-01')
+        'Mentha × piperita', 'Candymint', DATE('2019-02-01'), DATE('2019-02-20')
     ),
     (
         23, 'PT07050000023', 07, 05, 4,
-        'Mentha × piperita', 'Candymint', DATE('2019-02-20'), DATE('2019-02-01')
+        'Mentha × piperita', 'Candymint', DATE('2019-02-01'), DATE('2019-02-20')
     ),
     (
         24, 'PT07050000024', 07, 05, 4,
-        'Mentha × piperita', 'Citrata', DATE('2019-02-20'), DATE('2019-02-01')
+        'Mentha × piperita', 'Citrata', DATE('2019-02-01'), DATE('2019-02-20') 
     ),
     (
         25, 'PT07150000025', 07, 15, 5,
-        'Cucurbita pepo', 'cylindrica', NULL, DATE('2019-04-01')
+        'Cucurbita pepo', 'cylindrica', DATE('2019-04-01'), NULL
     ),
     (
         26, 'PT07150000026', 07, 15, 5,
-        'Cucurbita pepo', 'cylindrica', NULL, DATE('2019-04-01')
+        'Cucurbita pepo', 'cylindrica', DATE('2019-04-01'), NULL
     ),
     (
         27, 'PT07150000027', 07, 15, 5,
-        'Cucurbita pepo', 'cylindrica', NULL, DATE('2019-04-01')
+        'Cucurbita pepo', 'cylindrica', DATE('2019-04-01'), NULL
     ),
     (   --- Height 12"
         28, 'PT12040000028', 12, 04, 7,
-        'Brassica rapa', 'chinensis', DATE('2019-05-01'), DATE('2019-04-01')
+        'Brassica rapa', 'chinensis', DATE('2019-04-01'), DATE('2019-05-01')
     ), 
     (
         29, 'PT12040000029', 12, 04, 7,
-        'Brassica rapa', 'chinensis', DATE('2019-05-01'), DATE('2019-04-01')
+        'Brassica rapa', 'chinensis', DATE('2019-04-01'), DATE('2019-05-01')
     ),
     (
         30, 'PT12040000030', 12, 04, 7,
-        'Brassica rapa', 'chinensis', DATE('2019-05-01'), DATE('2019-04-01')
+        'Brassica rapa', 'chinensis', DATE('2019-04-01'), DATE('2019-05-01')
     ),
     (
         31, 'PT12050000031', 12, 05, 6,
-        'Cucurbita pepo', 'pepo', NULL, DATE('2019-04-01')
+        'Cucurbita pepo', 'pepo', DATE('2019-04-01'), NULL
     ),
     (
         32, 'PT12050000032', 12, 05, 6,
-        'Cucurbita pepo', 'pepo', NULL, DATE('2019-04-01')
+        'Cucurbita pepo', 'pepo', DATE('2019-04-01'), NULL
     ),
     (
         33, 'PT12050000033', 12, 05, 6,
-        'Cucurbita pepo', 'pepo', NULL, DATE('2019-04-01')
+        'Cucurbita pepo', 'pepo', DATE('2019-04-01'), NULL
     ),
     (
         34, 'PT12150000034', 12, 15, 7,
-        'Brassica rapa', 'rapa', NULL, DATE('2019-05-01')
+        'Brassica rapa', 'rapa', DATE('2019-05-01'), NULL
     ),
     (
         35, 'PT12150000035', 12, 15, 7,
-        'Brassica rapa', 'rapa', NULL, DATE('2019-05-01')
+        'Brassica rapa', 'rapa', DATE('2019-05-01'), NULL
     ),
     (
         36, 'PT12150000036', 12, 15, 7,
-        'Brassica rapa', 'rapa', NULL, DATE('2019-05-01')
+        'Brassica rapa', 'rapa', DATE('2019-05-01'), NULL
     ),
     (
         37, 'PT12250000037', 12, 25, 6,
-        'Cucurbita pepo', 'pepo', NULL, DATE('2019-04-01')
+        'Cucurbita pepo', 'pepo', DATE('2019-04-01'), NULL
     ),
     (
         38, 'PT12250000038', 12, 25, 6,
-        'Cucurbita pepo', 'pepo', NULL, DATE('2019-04-01')
+        'Cucurbita pepo', 'pepo', DATE('2019-04-01'), NULL
     ),
     (
         39, 'PT12250000039', 12, 25, 6,
-        'Cucurbita pepo', 'pepo', NULL, DATE('2019-04-01')
+        'Cucurbita pepo', 'pepo', DATE('2019-04-01'), NULL
     );
 
 INSERT INTO weather_station
@@ -469,3 +469,55 @@ VALUES
     (3, POINT(-1, -1),  'Achiles',  'WSXACHX000003'),
     (4, POINT(-2, -2),  'Ganymede', 'WSXGANX000004');
 
+--- The last 10 weather events for each station.
+INSERT INTO weather_event
+    (id, ambient_light, air_moisture, curr_pos, curr_time, temperature, station_id)
+VALUES
+    (01, 2.0, 2.0, POINT(0, 0), DATETIME('2019-05-01 12:00:00'), 69.0, 1),
+    (02, 2.0, 2.0, POINT(0, 0), DATETIME('2019-04-30 12:00:00'), 69.0, 1),
+    (03, 2.0, 2.0, POINT(0, 0), DATETIME('2019-04-29 12:00:00'), 69.0, 1),
+    (04, 2.0, 2.0, POINT(0, 0), DATETIME('2019-04-28 12:00:00'), 69.0, 1),
+    (05, 2.0, 2.0, POINT(0, 0), DATETIME('2019-04-27 12:00:00'), 69.0, 1),
+    (06, 2.0, 2.0, POINT(0, 0), DATETIME('2019-04-26 12:00:00'), 69.0, 1),
+    (07, 2.0, 2.0, POINT(0, 0), DATETIME('2019-04-25 12:00:00'), 69.0, 1),
+    (08, 2.0, 2.0, POINT(0, 0), DATETIME('2019-04-24 12:00:00'), 69.0, 1),
+    (09, 2.0, 2.0, POINT(0, 0), DATETIME('2019-04-24 12:00:00'), 69.0, 1),
+    (10, 2.0, 2.0, POINT(0, 0), DATETIME('2019-04-24 12:00:00'), 69.0, 1),
+    (11, 2.5, 2.1, POINT(1, 1), DATETIME('2019-05-01 12:00:00'), 68.5, 2),
+    (12, 2.5, 2.1, POINT(1, 1), DATETIME('2019-04-30 12:00:00'), 68.5, 2),
+    (13, 2.5, 2.1, POINT(1, 1), DATETIME('2019-04-29 12:00:00'), 68.5, 2),
+    (14, 2.5, 2.1, POINT(1, 1), DATETIME('2019-04-28 12:00:00'), 68.5, 2),
+    (15, 2.5, 2.1, POINT(1, 1), DATETIME('2019-04-27 12:00:00'), 68.5, 2),
+    (16, 2.5, 2.1, POINT(1, 1), DATETIME('2019-04-26 12:00:00'), 68.5, 2),
+    (17, 2.5, 2.1, POINT(1, 1), DATETIME('2019-04-25 12:00:00'), 68.5, 2),
+    (18, 2.5, 2.1, POINT(1, 1), DATETIME('2019-04-24 12:00:00'), 68.5, 2),
+    (19, 2.5, 2.1, POINT(1, 1), DATETIME('2019-04-24 12:00:00'), 68.5, 2),
+    (20, 2.5, 2.1, POINT(1, 1), DATETIME('2019-04-24 12:00:00'), 68.5, 2),
+    (21, 2.1, 2.0, POINT(-1, -1), DATETIME('2019-05-01 12:00:00'), 69.0, 3),
+    (22, 2.1, 2.0, POINT(-1, -1), DATETIME('2019-04-30 12:00:00'), 69.0, 3),
+    (23, 2.1, 2.0, POINT(-1, -1), DATETIME('2019-04-29 12:00:00'), 69.0, 3),
+    (24, 2.1, 2.0, POINT(-1, -1), DATETIME('2019-04-28 12:00:00'), 69.0, 3),
+    (25, 2.1, 2.0, POINT(-1, -1), DATETIME('2019-04-27 12:00:00'), 69.0, 3),
+    (26, 2.1, 2.0, POINT(-1, -1), DATETIME('2019-04-26 12:00:00'), 69.0, 3),
+    (27, 2.1, 2.0, POINT(-1, -1), DATETIME('2019-04-25 12:00:00'), 69.0, 3),
+    (28, 2.1, 2.0, POINT(-1, -1), DATETIME('2019-04-24 12:00:00'), 69.0, 3),
+    (29, 2.1, 2.0, POINT(-1, -1), DATETIME('2019-04-24 12:00:00'), 69.0, 3),
+    (30, 2.1, 2.0, POINT(-1, -1), DATETIME('2019-04-24 12:00:00'), 69.0, 3),
+    (31, 2.0, 2.1, POINT(-2, -2), DATETIME('2019-05-01 12:00:00'), 69.0, 4),
+    (32, 2.0, 2.1, POINT(-2, -2), DATETIME('2019-04-30 12:00:00'), 69.0, 4),
+    (33, 2.0, 2.1, POINT(-2, -2), DATETIME('2019-04-29 12:00:00'), 69.0, 4),
+    (34, 2.0, 2.1, POINT(-2, -2), DATETIME('2019-04-28 12:00:00'), 69.0, 4),
+    (35, 2.0, 2.1, POINT(-2, -2), DATETIME('2019-04-27 12:00:00'), 69.0, 4),
+    (36, 2.0, 2.1, POINT(-2, -2), DATETIME('2019-04-26 12:00:00'), 69.0, 4),
+    (37, 2.0, 2.1, POINT(-2, -2), DATETIME('2019-04-25 12:00:00'), 69.0, 4),
+    (38, 2.0, 2.1, POINT(-2, -2), DATETIME('2019-04-24 12:00:00'), 69.0, 4),
+    (39, 2.0, 2.1, POINT(-2, -2), DATETIME('2019-04-24 12:00:00'), 69.0, 4),
+    (40, 2.0, 2.1, POINT(-2, -2), DATETIME('2019-04-24 12:00:00'), 69.0, 4);
+
+
+INSERT INTO activity_log
+    (ts, pot_id, food, water, weather_event_id,
+    starting_pos, ending_pos, starting_tray, ending_tray)
+VALUES
+    (),
+    ();
