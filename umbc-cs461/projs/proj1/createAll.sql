@@ -2,12 +2,12 @@
 -- Robert Rose
 -- robrose2
 
-CREATE TABLE barcodes (
+CREATE TABLE IF NOT EXISTS barcodes (
     barcode             VARCHAR(13),
     PRIMARY KEY(barcode)
 );
 
-CREATE TABLE plants (
+CREATE TABLE IF NOT EXISTS plants (
     species             VARCHAR(255) NOT NULL,
     cultivar            VARCHAR(255) NOT NULL,
     common_name         VARCHAR(255) NOT NULL,
@@ -29,7 +29,7 @@ CREATE TABLE plants (
     CONSTRAINT check_plants_valid_type CHECK(plant_type IN ('herbs', 'vegetables', 'flowers'))
 );
 
-CREATE TABLE trays (
+CREATE TABLE IF NOT EXISTS trays (
     id                  INT AUTO_INCREMENT,
     barcode             VARCHAR(13) NOT NULL,
     position            POINT NOT NULL,
@@ -38,7 +38,7 @@ CREATE TABLE trays (
     FOREIGN KEY(barcode) REFERENCES barcodes(barcode)
 );
 
-CREATE TABLE pots (
+CREATE TABLE IF NOT EXISTS pots (
     id                          INT AUTO_INCREMENT,
     barcode                     VARCHAR(13) NOT NULL,
     height                      DECIMAL(3,1) NOT NULL,
@@ -47,7 +47,7 @@ CREATE TABLE pots (
     holding_cultivar            VARCHAR(255),
     holding_germination_date    DATE,
     holding_planting_date       DATE,
-    on_tray             INT, -- Can be null when a pot initially enters service.
+    on_tray                     INT, -- Can be null when a pot initially enters service.
     PRIMARY KEY(id),
     UNIQUE(barcode),
     FOREIGN KEY(holding_species, holding_cultivar) REFERENCES plants(species, cultivar),
@@ -64,7 +64,7 @@ CREATE TABLE pots (
     )
 );
 
-CREATE TABLE weather_station (
+CREATE TABLE IF NOT EXISTS weather_station (
     id                  INT AUTO_INCREMENT,
     position            POINT NOT NULL,
     station_name        VARCHAR(32) NOT NULL,
@@ -75,18 +75,19 @@ CREATE TABLE weather_station (
     FOREIGN KEY(barcode) REFERENCES barcodes(barcode)
 );
 
-CREATE TABLE weather_event (
+CREATE TABLE IF NOT EXISTS weather_event (
     id                  INT AUTO_INCREMENT,
     ambient_light       FLOAT NOT NULL,
     air_moisture        FLOAT NOT NULL,
-    current_pos         POINT NOT NULL,
+    curr_pos            POINT NOT NULL,
+    curr_time           DATETIME NOT NULL,
     temperature         DECIMAL(4,1) NOT NULL,
     station_id          INT NOT NULL,
     PRIMARY KEY(id),
     FOREIGN KEY(station_id) REFERENCES weather_station(id)
 );
 
-CREATE TABLE activity_log (
+CREATE TABLE IF NOT EXISTS activity_log (
     time_stamp          DATETIME NOT NULL,
     pot_id              INT NOT NULL,
     food                FLOAT NOT NULL,
@@ -105,19 +106,38 @@ CREATE TABLE activity_log (
     CONSTRAINT check_log_water_positive_or_zero CHECK(water >= 0)
 );
 
--- CREATE VIEW tray_view AS (
---     SELECT id, barcode, position FROM trays
+-- This view will be very messy, so I'll come back and make it only if I have time.
+-- CREATE VIEW IF NOT EXISTS tray_view AS (
+--     SELECT id, barcode, position, (
+--         SELECT time_stamp FROM 
+--     ) AS last_activity 
+--     FROM trays
 -- );
 
-CREATE VIEW pots_view AS (
+CREATE VIEW IF NOT EXISTS pots_view AS (
     SELECT *, IF(holding_germination_date IS NOT NULL, 
     DATEDIFF(NOW(), holding_germination_date), NULL) AS holding_age
     FROM pots); 
 
--- CREATE VIEW activities_view AS SELECT * FROM activity_log;
+CREATE VIEW IF NOT EXISTS activities_view AS (
+    SELECT  activity_log.time_stamp AS time_stamp,
+            activity_log.pot_id AS pot_id,
+            activity_log.food AS food,
+            activity_log.water AS water,
+            activity_log.starting_pos AS starting_pos,
+            activity_log.ending_pos AS ending_pos,
+            activity_log.starting_tray AS starting_tray,
+            activity_log.ending_tray AS ending_tray,
+            weather_event.ambient_light AS ambient_light,
+            weather_event.air_moisture AS air_moisture,
+            weather_event.temperature AS temperature
+    FROM activity_log
+        JOIN weather_event
+            ON activity_log.weather_event_id = weather_event.id
+);
 
-CREATE VIEW barcode_lookup_view AS (
-    SELECT  barcodes.barcode, 
+CREATE VIEW IF NOT EXISTS barcode_lookup_view AS (
+    SELECT  barcodes.barcode AS barcode, 
             plants.species AS species, 
             plants.cultivar AS cultivar,
             trays.id AS tray_id,
@@ -132,4 +152,4 @@ CREATE VIEW barcode_lookup_view AS (
             ON pots.barcode = barcodes.barcode
         JOIN weather_station
             ON weather_station.barcode = barcodes.barcode
-)
+);

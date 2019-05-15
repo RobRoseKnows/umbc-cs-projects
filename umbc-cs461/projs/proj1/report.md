@@ -228,7 +228,7 @@ Tables:
 - weather_station
 - barcodes
 Views:
-- tray_view
+<!-- - tray_view -->
 - pots_view
 - activities_view
 - barcode_lookup_view
@@ -242,7 +242,9 @@ I created pots_view, that calculates the holdings_age on query.
 I do however need to create two views that allow me to get the derived values of 
 last action on a tray and the weather statistics for an activity log. I chose to
 design the database this way because generated columns can't use data from another
-table and I wanted to minimize data duplication. 
+table and I wanted to minimize data duplication. I chose to hold off on creating the
+tray_view until later on as the query to find the most recent timestamp will be
+rather complex, it will be easier just to do it in Python code.
 
 I also created a barcode_lookup_view that makes it easy for someone to lookup what a
 barcode corresponds to. This is because the alternative is needing to join together
@@ -281,3 +283,13 @@ the pot by SQL statements.
 I have been thinking about how I would map these to a database from the very beginning
 so there's not that many changes I need to make. Most of the logical design will be
 constructed during Phase D when I create scripts for creating the tables.
+
+## Phase D - Physical Design
+
+In this phase I created the scripts to create the tables, relations and constraints
+for the MySQL database described in Section B and C. There were a few differences 
+and changes that I made from the original Phase B, that I acknowledged in Phase C.
+
+### createAll.sql
+
+The 
