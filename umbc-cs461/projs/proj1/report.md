@@ -402,19 +402,19 @@ CREATE TABLE IF NOT EXISTS activity_log (
 );
 
 -- This view will be very messy, so I'll come back and make it only if I have time.
--- CREATE VIEW IF NOT EXISTS tray_view AS (
+-- CREATE OR REPLACE VIEW tray_view AS (
 --     SELECT id, barcode, position, (
 --         SELECT ts FROM 
 --     ) AS last_activity 
 --     FROM trays
 -- );
 
-CREATE VIEW IF NOT EXISTS pots_view AS (
+CREATE OR REPLACE VIEW pots_view AS (
     SELECT *, IF(holding_germination_date IS NOT NULL, 
     DATEDIFF(NOW(), holding_germination_date), NULL) AS holding_age
     FROM pots); 
 
-CREATE VIEW IF NOT EXISTS activities_view AS (
+CREATE OR REPLACE VIEW activities_view AS (
     SELECT  activity_log.ts AS ts,
             activity_log.pot_id AS pot_id,
             activity_log.food AS food,
@@ -431,7 +431,7 @@ CREATE VIEW IF NOT EXISTS activities_view AS (
             ON activity_log.weather_event_id = weather_event.id
 );
 
-CREATE VIEW IF NOT EXISTS barcode_lookup_view AS (
+CREATE OR REPLACE VIEW barcode_lookup_view AS (
     SELECT  barcodes.barcode AS barcode, 
             plants.species AS species, 
             plants.cultivar AS cultivar,
