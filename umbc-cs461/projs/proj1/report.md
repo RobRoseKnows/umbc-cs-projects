@@ -228,7 +228,7 @@ Tables:
 - weather_station
 - barcodes
 Views:
-<!-- - tray_view -->
+- tray_view
 - pots_view
 - activities_view
 - barcode_lookup_view
@@ -250,6 +250,20 @@ I also created a barcode_lookup_view that makes it easy for someone to lookup wh
 barcode corresponds to. This is because the alternative is needing to join together
 multiple tables in every query using the barcode.
 
+### Relational Schema Diagram
+
+![Relational Schema Diagram for the tables. See rds.json for details.](./rsd.png)
+
+The tool I used to create the diagram was not able to designate views in a 
+meaningful way, so the weak attributes of the database are not included in
+this diagram. They will be included in views after the fact. 
+
+Also visible in this diagram is the chosen primary keys for each table. I mostly
+used surrogate keys for the tables, as most did not have a meaningful natural
+key or combination of keys that could be used for the primary keys. The main
+exception was the plants table, where I used the species and cultivar as primary
+keys.
+
 ### Column Types
 
 Much of the data is in a text form, which means varchar columns will be common.
@@ -263,6 +277,11 @@ For dates such as germination and planting date on the pot, I will use the `DATE
 to store the date. For the timestamps, I will use `DATETIME` because I don't expect to
 need to calculate anything across timezones, which is what `TIMESTAMP` is mostly
 useful for.
+
+Although there are a few columns where an enum may have been useful (such as `is_perannual`
+and `plant_type`) I chose to avoid using enums to allow for future expansions, such as
+by adding an additional plant type. I also chose to use a boolean for checking perannualness
+because it seemed like the most appropriate data type for that detail.
 
 ### Nullability
 
@@ -321,7 +340,8 @@ CREATE TABLE IF NOT EXISTS plants (
     CONSTRAINT check_days_to_germinate_non_negative CHECK(days_to_germinate >= 0),
     CONSTRAINT check_plants_req_feeding_non_negative CHECK(req_feeding >= 0),
     CONSTRAINT check_plants_req_watering_non_nevative CHECK(req_watering >= 0),
-    CONSTRAINT check_plants_valid_type CHECK(plant_type IN ('herbs', 'vegetables', 'flowers'))
+    CONSTRAINT check_plants_valid_type CHECK(plant_type IN ('herbs', 'vegetables', 'flowers')),
+    KEY plants_common_name_idx(common_name),
 );
 
 CREATE TABLE IF NOT EXISTS trays (
@@ -330,7 +350,8 @@ CREATE TABLE IF NOT EXISTS trays (
     position            POINT NOT NULL,
     PRIMARY KEY(id),
     UNIQUE(barcode),
-    FOREIGN KEY(barcode) REFERENCES barcodes(barcode)
+    FOREIGN KEY(barcode) REFERENCES barcodes(barcode),
+    SPATIAL KEY trays_position_idx(position)
 );
 
 CREATE TABLE IF NOT EXISTS pots (
@@ -367,7 +388,9 @@ CREATE TABLE IF NOT EXISTS weather_station (
     PRIMARY KEY(id),
     UNIQUE(station_name),
     UNIQUE(barcode),
-    FOREIGN KEY(barcode) REFERENCES barcodes(barcode)
+    FOREIGN KEY(barcode) REFERENCES barcodes(barcode),
+    KEY weather_station_name_idx(station_name), -- Create key on station_name so we can look it up
+    SPATIAL KEY weather_station_position_idx(position), -- Create spatial key on ws position
 );
 
 CREATE TABLE IF NOT EXISTS weather_event (
@@ -452,6 +475,22 @@ CREATE OR REPLACE VIEW barcode_lookup_view AS (
 
 We create the tables in the order that we must in order for the relations to not
 have non-existent dependencies.
+
+#### Indexes
+
+We also create several indexes here. Although the project description has indexes
+as part of Phase E, the rubric has them as part of Phase D, so here they will go.
+By default MySQL will create indexes along unique, primary and foreign keys, which
+is good as we'll be referencing those quite a bit.
+
+In addition we also create two spatial indexes, on the trays and the weather_stations
+that should make finding the closest weather station easier for when we are updating
+the activity log. Since weather stations and trays don't move very often, creating the
+index is relatively low cost.
+
+Additionally, we create indexes on the `plants.common_name` and `weather_station.station_name`
+columns, as those are another series of not-frequently altered (but frequently referenced)
+columns that we can speed up database access by indexing.
 
 ### dropAll.sql
 

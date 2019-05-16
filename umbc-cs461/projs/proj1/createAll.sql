@@ -26,7 +26,8 @@ CREATE TABLE IF NOT EXISTS plants (
     CONSTRAINT check_days_to_germinate_non_negative CHECK(days_to_germinate >= 0),
     CONSTRAINT check_plants_req_feeding_non_negative CHECK(req_feeding >= 0),
     CONSTRAINT check_plants_req_watering_non_nevative CHECK(req_watering >= 0),
-    CONSTRAINT check_plants_valid_type CHECK(plant_type IN ('herbs', 'vegetables', 'flowers'))
+    CONSTRAINT check_plants_valid_type CHECK(plant_type IN ('herbs', 'vegetables', 'flowers')),
+    KEY plants_common_name_idx(common_name),
 );
 
 CREATE TABLE IF NOT EXISTS trays (
@@ -35,7 +36,8 @@ CREATE TABLE IF NOT EXISTS trays (
     position            POINT NOT NULL,
     PRIMARY KEY(id),
     UNIQUE(barcode),
-    FOREIGN KEY(barcode) REFERENCES barcodes(barcode)
+    FOREIGN KEY(barcode) REFERENCES barcodes(barcode),
+    SPATIAL KEY trays_position_idx(position)
 );
 
 CREATE TABLE IF NOT EXISTS pots (
@@ -72,7 +74,9 @@ CREATE TABLE IF NOT EXISTS weather_station (
     PRIMARY KEY(id),
     UNIQUE(station_name),
     UNIQUE(barcode),
-    FOREIGN KEY(barcode) REFERENCES barcodes(barcode)
+    FOREIGN KEY(barcode) REFERENCES barcodes(barcode),
+    KEY weather_station_name_idx(station_name), -- Create key on station_name so we can look it up
+    SPATIAL KEY weather_station_position_idx(position), -- Create spatial key on ws position
 );
 
 CREATE TABLE IF NOT EXISTS weather_event (
