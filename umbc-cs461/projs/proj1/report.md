@@ -1257,3 +1257,22 @@ VALUES
         POINT( 1,  1),  POINT( 0,  0),  7,      1
     );
 ```
+
+## Phase E - Prototype, Development, and Testing.
+
+The purpose of this stage was to develop the actual scripts and code that implemented
+the designed database as well as fullfill the functional requirements of the client
+as specified in the project document. This stage was cut somewhat short, as I spent a
+lot of time troubleshooting minor errors like with the way I was inserting `DATETIME`s.
+
+I detailed the scripts that I created above in Phase D, and I have attached my partially
+completed Jupyter notebook to this report. Unfortunately, I didn't have time to create all
+the CRUD operations for the database in the Jupyter notebook, but I did utilize the interact
+module of IPython to prompt the user for input for the Barcode query. Since the other CRUD
+operations would be near identical, I decided instead to move on to other tasks in
+preparation for finals.
+
+## Phase F
+
+The user guide is in the `README.md` file attached to this document. It isn't terribly
+detailed, once again, time was fairly limited.

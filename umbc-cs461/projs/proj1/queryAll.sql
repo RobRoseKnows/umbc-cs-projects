@@ -49,6 +49,12 @@ LIMIT 1;
 
 -- 7. Find the germinated plant(s) that received the most daily water (averaged 
 -- over their age). 
+-- SELECT 
+--     pots_view.id, 
+--     pots_view.holding_species, 
+--     pots_view.holding_cultivar, 
+--     pots_view.holding_age,
+--     SUM()
 
 
 -- 8. Find the number of planted herbs that received more food than the average 
