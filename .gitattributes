@@ -1,1 +1,2 @@
 *.csv filter=lfs diff=lfs merge=lfs -text
+umbc-cs461/*.zip filter=lfs diff=lfs merge=lfs -text
