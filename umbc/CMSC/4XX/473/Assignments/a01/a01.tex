@@ -18,44 +18,58 @@ Robert Rose
 \hrulefill
 
 \begin{enumerate}
-\item \textbf{2.3} Math for Machine Learning
+\item Math for Machine Learning
   \begin{enumerate}
-  \item Compute the derivative of the function $f(x) = exp(-\frac{1}{2}(x - \mu)_2)$\\
+  \item Compute the derivative of the function $f(x) = e^(-\frac{1}{2}(x - \mu)^2)$\\
   \vspace{-2.5em}
-  \paragraph{True/False} Answer
+  \paragraph{Answer} 
 
-  \item There exist task environments in which no pure reflex agent can behave rationally.\\
+  \item Compute the derivative of the function $f(x) = \log(x^2 + x - 1)$\\
   \vspace{-2.5em}
-  \paragraph{True/False} Answer
+  \paragraph{Answer} 
 
-  \item There exists a task environment in which every agent is rational.\\
+  \item Compute the derivative with respect to $x$ of the function 
+        $f(x) = \log(\sum_{k=1}^{K}e^{kx^k})$, for finite, positive, integral $K$.\\
   \vspace{-2.5em}
-  \paragraph{True/False} Answer
+  \paragraph{Answer} 
 
-  \item The input to an agent program is the same as the input to the agent function.\\
+  \item Compute the derivative with respect to $x$ of the function
+        $f(x) = \log(\prod_{k=1}^{K}e^{kx^k})$, for finite, positive, integral $K$.\\
   \vspace{-2.5em}
-  \paragraph{True/False} Answer
+  \paragraph{Answer} 
 
-  \item Every agent function is implementable by some program/machine combination.\\
+  \item Given $N$ points $\{(x_n,y_n)\}_{n=1}^{N}$, compute the (partial) derivative
+        $\frac{\partial J}{\partial b}$, where $J(m,b) = \sum_{n=1}^{N}( ( mx_n + b ) - y_n )^2$. 
+        Note that the $N$ points $(x_n, y_n)$ can be considered constants. \textit{Hint:} the
+        partial derivative $\frac{\partial J}{\partial b}$ us a deruvatuve with respect to $b$,
+        where you treat all other variables as constant.\\
   \vspace{-2.5em}
-  \paragraph{True/False} Answer
+  \paragraph{Answer} 
 
-  \item Suppose an agent selects its action uniformly at random from the set of possible actions.
-  There exists a deterministic task environment in which this agent is rational.\\
+  \item For $J(m,b)$ defined on the $N$ points, as above, compute the values of $m$ and 
+        $b$ that result in the gradient of $J$ being the zero vector, i.e., 
+        $\nabla J = (\frac{\partial J}{\partial b}, \frac{\partial J}{\partial m})$.
+        In this case, finding these values minimizes $J$. You should be able to find 
+        closed-form expressions for both $m$ and $b$.\\
   \vspace{-2.5em}
-  \paragraph{True/False} Answer
+  \paragraph{Answer}
 
-  \item It is possible for a given agent to be perfectly rational in two distinct task environments.\\
+  \item Given two $K$-dimensional vectors $u$ and $v$, compute the dot product $u^{\top}v$\\
   \vspace{-2.5em}
-  \paragraph{True/False} Answer
+  \paragraph{Answer}
 
-  \item Every agent is rational in an unobservable environment.\\
+  \item Given the matrix $A = 
+        \begin{pmatrix}
+          4   & 2 & 0 \\
+          -1  & 0 & -1
+        \end{pmatrix}$, compute the values $A^{\top}A$ and $AA^{\top}$\\
   \vspace{-2.5em}
-  \paragraph{True/False} Answer
+  \paragraph{Answer}
 
-  \item A perfectly rational poker-playing agent never loses.\\
+  \item For the multivariate function $f(u,v) = e^{u^{\top}v}$, where $u, v \in \mathbb{R}^K$,
+        compute the gradients $\nabla_u f$ and $\nabla_v f$ \\
   \vspace{-2.5em}
-  \paragraph{True/False} Answer
+  \paragraph{Answer}
   \end{enumerate}
 \newpage
 
