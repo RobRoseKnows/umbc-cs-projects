@@ -20,13 +20,13 @@ Robert Rose
 \begin{enumerate}
 \item Math for Machine Learning
   \begin{enumerate}
-  \item Compute the derivative of the function $f(x) = e^(-\frac{1}{2}(x - \mu)^2)$\\
+  \item Compute the derivative of the function $f(x) = e^{(-\frac{1}{2}(x - \mu)^2)}$\\
   \vspace{-2.5em}
-  \paragraph{Answer} 
+  \paragraph{Answer}  $f'(x) = - \frac{1}{2} \times 2x \times e^{(-\frac{1}{2}(x - \mu)^2)} \times (x - \mu)^2$
 
   \item Compute the derivative of the function $f(x) = \log(x^2 + x - 1)$\\
   \vspace{-2.5em}
-  \paragraph{Answer} 
+  \paragraph{Answer} $\frac{(2x + 1)(x^2 + x - 1)}{x^2 + x - 1}$
 
   \item Compute the derivative with respect to $x$ of the function 
         $f(x) = \log(\sum_{k=1}^{K}e^{kx^k})$, for finite, positive, integral $K$.\\
@@ -44,7 +44,7 @@ Robert Rose
         partial derivative $\frac{\partial J}{\partial b}$ us a deruvatuve with respect to $b$,
         where you treat all other variables as constant.\\
   \vspace{-2.5em}
-  \paragraph{Answer} 
+  \paragraph{Answer} $N$
 
   \item For $J(m,b)$ defined on the $N$ points, as above, compute the values of $m$ and 
         $b$ that result in the gradient of $J$ being the zero vector, i.e., 
@@ -56,7 +56,7 @@ Robert Rose
 
   \item Given two $K$-dimensional vectors $u$ and $v$, compute the dot product $u^{\top}v$\\
   \vspace{-2.5em}
-  \paragraph{Answer}
+  \paragraph{Answer} $u^{\top}v = u_1v_1 + u_2v_2 + \dots + u_Kv_K$
 
   \item Given the matrix $A = 
         \begin{pmatrix}
@@ -64,30 +64,40 @@ Robert Rose
           -1  & 0 & -1
         \end{pmatrix}$, compute the values $A^{\top}A$ and $AA^{\top}$\\
   \vspace{-2.5em}
-  \paragraph{Answer}
+  \paragraph{Answer} $$A^{\top}A = \begin{pmatrix}
+                                    17 & 8 & 1\\
+                                    8  & 4 & 0\\
+                                    1 & 0 & 1
+                                  \end{pmatrix}$$
+                    $$AA^{\top} = \begin{pmatrix}
+                                    20 & -4\\
+                                    -4 & 2
+                                  \end{pmatrix}$$
 
   \item For the multivariate function $f(u,v) = e^{u^{\top}v}$, where $u, v \in \mathbb{R}^K$,
         compute the gradients $\nabla_u f$ and $\nabla_v f$ \\
   \vspace{-2.5em}
   \paragraph{Answer}
   \end{enumerate}
-\newpage
 
-\item \textbf{2.10} Consider a modified version of the vacuum environment in Exercise 2.8, in which the
-agent is penalized one point for each movement.
+\item Let $X_i$ be the random variable representing the $i$th roll of a six-sided die
+      and let $x_i$ be the rolled (observed) value of the $i$th roll. Assume that each
+      roll is independent from one another and the die doesn't change between rolls.
+      Let $x_1$,\dots,$x_4$ be the results of rolling that die 4 different times. Each 
+      $x_i$ can have a value of 1, 2, 3, 4, 5, or 6.
   \begin{enumerate}
-  \item Can a simple reflex agent be perfectly rational for this environment? Explain.\\
+  \item If the die is fair, compute $p(x_1, x_2, x_3, x_4)$ (the probability of observing
+        those four rolls in that particular order).\\
   \vspace{-2.5em}
-  \paragraph{Yes/No} Answer
+  \paragraph{Yes/No}
 
-  \item What about a reflex agent with state? Design such an agent.\\
+  \item Compute the expected value of $X_i$ assuming that each outcome is equally likely.\\
   \vspace{-2.5em}
-  \paragraph{Yes/No} Answer
+  \paragraph{Yes/No}
 
-  \item How do your answers to \textbf{a} and \textbf{b} change if the agent’s percepts give it the clean/dirty
-  status of every square in the environment?\\
+  \item Compute the expected value of $X_i$ assuming that any odd outcome is twice as likely as an even outcome.\\
   \vspace{-2.5em}
-  \paragraph{Yes/No, Yes/No} Answer
+  \paragraph{Yes/No}
   \end{enumerate}
 
 \end{enumerate}
