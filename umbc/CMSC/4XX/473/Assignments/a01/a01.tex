@@ -100,5 +100,22 @@ Robert Rose
   \paragraph{Answer} 3.33\dots
   \end{enumerate}
 
+\item Universal Dependecies on GL
+  \begin{enumerate}
+    \item Dev dataset has 2,002 sentences and training dataset has 12,543.
+    \item Training dataset has 19,672 types and 204,607 tokens.
+    \item They're all punctuation or prepositions. 'The' is the most common, followed 
+          by '.' and ','.
+    \item Most of them I would consider distinct, but we could potentially collapse 
+          the punctuation into a single value.
+    \item A handful of the words that appear only once seem to be normal words, but many
+          of them are unreasonable and appear to be things like dates, times or numbers.
+          I would propose dealing with this by collapsing common values such as dates and
+          times into a single type for each variety. So we could still tell what they 
+          are in training. Once you get up to words that appear fifty and hundred times
+          though, that begins to diasppear and most of the words look normal.
+    \item There are 15,840 missing types and considerably fewer tokens (25,150).
+  \end{enumerate}
+
 \end{enumerate}
 \end{document}
