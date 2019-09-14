@@ -1,0 +1,103 @@
+\documentclass[12pt]{article}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\parindent}{0in}
+\setlength{\parskip}{\baselineskip}
+
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{booktabs,multirow}
+
+\title{CMSC 473 - A02}
+
+\begin{document}
+
+CMSC 473 Fall 2019\hfill Assignment \#2\\
+Robert Rose
+
+\hrulefill
+
+\begin{enumerate}
+\item Let $X$ and $Y$ be random variables where there's at least one pair of values $x$ and $y$
+      such that $P(X = x, Y = y) = 0$. Show, with justification, whether $X$ and $Y$ are independent.
+    \paragraph{Answer} No. They are not 
+\item Let $X_i$ be the random variable representing the $i$th roll of a six-sided die
+      and let $x_i$ be the rolled (observed) value of the $i$th roll. Assume that we
+      roll the die $N$ times and that each $X_i$ is an i.i.d. sample.
+  \begin{enumerate}
+  \item $Z = \frac{N}{6}$ because the dice has six sides, and we are rolling it $N$ times.
+  \item Let's say that before we rolled our die, we first flipped a fair coin (2 outcomes, where
+        probability of heads equals probability of tails). Call this random variable $Z_i$. 
+        If $Z_i =$ H (heads), then we roll a fairly weighted six-sided die. If $Z_i =$ T (tails)
+        then we roll a six-sided die where the probabilities of rolling an even number is
+        double.
+        \begin{enumerate}
+            \item Write the conditional distributions $p(X|Z)$
+                \begin{center}
+                \begin{tabular}{ |c|c|c|c|c|c|c| }
+                    \hline
+                    $p(X|Z)$ & $X = 1$ & $X = 2$ & $X = 3$ & $X = 4$ & $X = 5$ & $X = 6$ \\
+                    \hline
+                    $Z = H$ & $\frac{1}{6}$ & $\frac{1}{6}$ & $\frac{1}{6}$ & $\frac{1}{6}$ & $\frac{1}{6}$ & $\frac{1}{6}$ \\
+                    \hline
+                    $Z = T$ & $\frac{1}{9}$ & $\frac{2}{9}$ & $\frac{1}{9}$ & $\frac{2}{9}$ & $\frac{1}{9}$ & $\frac{2}{9}$ \\
+                    \hline
+                \end{tabular}
+                \end{center}
+            \item Write the joint distributions $p(X|Z)$
+                \begin{center}
+                \begin{tabular}{ |c|c|c|c|c|c|c| }
+                    \hline
+                    $p(X,Z)$ & $X = 1$ & $X = 2$ & $X = 3$ & $X = 4$ & $X = 5$ & $X = 6$ \\
+                    \hline
+                    $Z = H$ & $\frac{1}{12}$ & $\frac{1}{12}$ & $\frac{1}{12}$ & $\frac{1}{12}$ & $\frac{1}{12}$ & $\frac{1}{12}$ \\
+                    \hline
+                    $Z = T$ & $\frac{1}{18}$ & $\frac{2}{18}$ & $\frac{1}{18}$ & $\frac{2}{18}$ & $\frac{1}{18}$ & $\frac{2}{18}$ \\
+                    \hline
+                \end{tabular}
+                \end{center}
+            \item Yes, $p(X, Z) = p(Z, X)$
+            \item \begin{math}
+                p(X_1 = 3) = \frac{5}{36} \\
+                p(X_2 = 1) = \frac{5}{36} \\
+                p(X_3 = 6) = \frac{7}{36} \\
+                p(X_4 = 5) = \frac{5}{36} \\
+                \frac{5}{36} \times \frac{5}{36} \times \frac{7}{36} \times \frac{5}{36} = \frac{875}{36^4}\\
+            \end{math}
+            \item $X$ and $Z$ are not independent because the probability vector of X is 
+                  determined by the outcome of Z.
+        \end{enumerate}
+    \end{enumerate}
+
+\item Read and review Church and Hanks (1989).
+\paragraph{Review} The basis of Church and Hanks is the common theme of word co-occurence
+        in linguistics. Although the relationships between words had long been conjectured,
+        Church and Hanks proposed a more robust measure of word associations called the 
+        association ratio. Since earlier studies and methods involving word co-occurence 
+        were subjective and small scale (i.e. Palermo and Jenkins (1964)), association
+        ratio is a measure that can be scaled up to an entire language. The basis of the
+        assocaition ratio is their mutual information, that is, the probability of observing
+        two words together (the join probability) with the probability of observing the two
+        independently (chance). Church and Hanks go into detail in how they calculate the
+        ratio and modifications they made to the ratio in order to have certain values be
+        useful. Additionally they note that the order between two words matters greatly.
+
+\item Universal Dependecies on GL
+  \begin{enumerate}
+    \item Dev dataset has 2,002 sentences and training dataset has 12,543.
+    \item Training dataset has 19,672 types and 204,607 tokens.
+    \item They're all punctuation or prepositions. 'The' is the most common, followed 
+          by '.' and ','.
+    \item Most of them I would consider distinct, but we could potentially collapse 
+          the punctuation into a single value.
+    \item A handful of the words that appear only once seem to be normal words, but many
+          of them are unreasonable and appear to be things like dates, times or numbers.
+          I would propose dealing with this by collapsing common values such as dates and
+          times into a single type for each variety. So we could still tell what they 
+          are in training. Once you get up to words that appear fifty and hundred times
+          though, that begins to diasppear and most of the words look normal.
+    \item There are 15,840 missing types and considerably fewer tokens (25,150).
+  \end{enumerate}
+
+\end{enumerate}
+\end{document}
