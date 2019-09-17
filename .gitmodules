@@ -1,3 +1,12 @@
 [submodule "umbc-cs411/projs/proj-ext"]
 	path = umbc/CMSC/4XX/411/projs/proj-ext
 	url = https://github.com/RobRoseKnows/cs411-f18-proj.git
+[submodule "umbc/CMSC/4XX/491/semantic-web/hw/02"]
+	path = umbc/CMSC/4XX/491/semantic-web/hw/02
+	url = git@github.com:UMBC-CMSC-491-691-F19-Knowledge-Graphs/hw2-RobRoseKnows.git
+[submodule "umbc/CMSC/4XX/491/semantic-web/hw/01"]
+	path = umbc/CMSC/4XX/491/semantic-web/hw/01
+	url = git@github.com:UMBC-CMSC-491-691-F19-Knowledge-Graphs/cmsc-491-691-homework-1-RobRoseKnows.git
+[submodule "umbc/CMSC/4XX/421/proj/0"]
+	path = umbc/CMSC/4XX/421/proj/0
+	url = git@github.com:umbc-cmsc421-fa2019/project0-RobRoseKnows.git
