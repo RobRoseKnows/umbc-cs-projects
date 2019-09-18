@@ -7,6 +7,8 @@
 
 \usepackage{amsmath,amsfonts,amssymb}
 \usepackage{booktabs,multirow}
+\usepackage{graphicx}
+\graphicspath{ {./} }
 
 \title{CMSC 473 - A02}
 
@@ -22,7 +24,8 @@ Robert Rose
       such that $P(X = x, Y = y) = 0$. Show, with justification, whether $X$ and $Y$ are independent.
     \paragraph{Answer} No. They are not inependent because so long as X and Y are continuous,
                 there is no way that $P(X = x, Y = y) = 0$ without them being dependent on
-                one another.
+                one another. This is because the joint probability cannot be 0 unless one
+                of them is 0.
 \item Let $X_i$ be the random variable representing the $i$th roll of a six-sided die
       and let $x_i$ be the rolled (observed) value of the $i$th roll. Assume that we
       roll the die $N$ times and that each $X_i$ is an i.i.d. sample.
@@ -84,22 +87,19 @@ Robert Rose
         ratio and modifications they made to the ratio in order to have certain values be
         useful. Additionally they note that the order between two words matters greatly.
 
-\item Universal Dependecies on GL
-  \begin{enumerate}
-    \item Dev dataset has 2,002 sentences and training dataset has 12,543.
-    \item Training dataset has 19,672 types and 204,607 tokens.
-    \item They're all punctuation or prepositions. 'The' is the most common, followed 
-          by '.' and ','.
-    \item Most of them I would consider distinct, but we could potentially collapse 
-          the punctuation into a single value.
-    \item A handful of the words that appear only once seem to be normal words, but many
-          of them are unreasonable and appear to be things like dates, times or numbers.
-          I would propose dealing with this by collapsing common values such as dates and
-          times into a single type for each variety. So we could still tell what they 
-          are in training. Once you get up to words that appear fifty and hundred times
-          though, that begins to diasppear and most of the words look normal.
-    \item There are 15,840 missing types and considerably fewer tokens (25,150).
-  \end{enumerate}
-
+\item Zipfian languages
+\paragraph{English and French} I used Python, numpy and seaborn to plot the following graphics,
+        showing a linear regression line and a 95\% confidence interval. The confidence interval
+        is so small it is hard to see in the PDF graphics.
+        \begin{figure}[h]
+            \caption{English}
+            \centering
+            \includegraphics[width=0.7\textwidth]{english.png}
+        \end{figure}
+        \begin{figure}[h]
+            \caption{French}
+            \centering
+            \includegraphics[width=0.7\textwidth]{french.png}
+        \end{figure}
 \end{enumerate}
 \end{document}

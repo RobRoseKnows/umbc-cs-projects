@@ -4,3 +4,4 @@ fr_gsd-ud-test.conllu filter=lfs diff=lfs merge=lfs -text
 fr_gsd-ud-train.conllu filter=lfs diff=lfs merge=lfs -text
 en_ewt-ud-dev.conllu filter=lfs diff=lfs merge=lfs -text
 en_ewt-ud-test.conllu filter=lfs diff=lfs merge=lfs -text
+*.png filter=lfs diff=lfs merge=lfs -text
