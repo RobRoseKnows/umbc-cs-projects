@@ -13,3 +13,6 @@
 [submodule "umbc/CMSC/4XX/421/hw/01"]
 	path = umbc/CMSC/4XX/421/hw/01
 	url = git@github.com:umbc-cmsc421-fa2019/shell-RobRoseKnows.git
+[submodule "umbc/CMSC/4XX/421/proj/1"]
+	path = umbc/CMSC/4XX/421/proj/1
+	url = git@github.com:umbc-cmsc421-fa2019/project1-RobRoseKnows.git
