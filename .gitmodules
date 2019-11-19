@@ -16,3 +16,12 @@
 [submodule "umbc/CMSC/4XX/421/proj/1"]
 	path = umbc/CMSC/4XX/421/proj/1
 	url = git@github.com:umbc-cmsc421-fa2019/project1-RobRoseKnows.git
+[submodule "umbc/CMSC/4XX/421/proj/2"]
+	path = umbc/CMSC/4XX/421/proj/2
+	url = git@github.com:umbc-cmsc421-fa2019/project2-RobRoseKnows.git
+[submodule "umbc/CMSC/4XX/491/semantic-web/hw/04"]
+	path = umbc/CMSC/4XX/491/semantic-web/hw/04
+	url = git@github.com:UMBC-CMSC-491-691-F19-Knowledge-Graphs/hw4-RobRoseKnows.git
+[submodule "umbc/CMSC/4XX/491/semantic-web/hw/03"]
+	path = umbc/CMSC/4XX/491/semantic-web/hw/03
+	url = git@github.com:UMBC-CMSC-491-691-F19-Knowledge-Graphs/hw3-RobRoseKnows.git
