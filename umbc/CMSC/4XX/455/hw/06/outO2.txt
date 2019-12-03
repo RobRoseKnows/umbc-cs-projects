@@ -1,0 +1,75 @@
+multiply N by N matrices, N=100 
+initialized 
+N=100, c=0, raw time=0.001609 seconds
+order N^3 normalized time=1.609 
+
+multiply N by N matrices, N=200 
+initialized 
+N=200, c=0, raw time=0.009296 seconds
+order N^3 normalized time=1.162 
+
+multiply N by N matrices, N=400 
+initialized 
+N=400, c=0, raw time=0.047359 seconds
+order N^3 normalized time=0.739984 
+
+multiply N by N matrices, N=800 
+initialized 
+N=800, c=0, raw time=0.393463 seconds
+order N^3 normalized time=0.768482 
+
+multiply N by N matrices, N=1600 
+initialized 
+N=1600, c=0, raw time=7.66777 seconds
+order N^3 normalized time=1.87201 
+
+multiply N by N matrices, N=100 
+initialized 
+N=100, c=0, raw time=0.001324 seconds
+order N^3 normalized time=1.324 
+
+multiply N by N matrices, N=200 
+initialized 
+N=200, c=0, raw time=0.009346 seconds
+order N^3 normalized time=1.16825 
+
+multiply N by N matrices, N=400 
+initialized 
+N=400, c=0, raw time=0.049093 seconds
+order N^3 normalized time=0.767078 
+
+multiply N by N matrices, N=800 
+initialized 
+N=800, c=0, raw time=0.433715 seconds
+order N^3 normalized time=0.8471 
+
+multiply N by N matrices, N=1600 
+initialized 
+N=1600, c=0, raw time=7.7154 seconds
+order N^3 normalized time=1.88364 
+
+multiply N by N matrices, N=100 
+initialized 
+N=100, c=0, raw time=0.00134 seconds
+order N^3 normalized time=1.34 
+
+multiply N by N matrices, N=200 
+initialized 
+N=200, c=0, raw time=0.010162 seconds
+order N^3 normalized time=1.27025 
+
+multiply N by N matrices, N=400 
+initialized 
+N=400, c=0, raw time=0.04938 seconds
+order N^3 normalized time=0.771562 
+
+multiply N by N matrices, N=800 
+initialized 
+N=800, c=0, raw time=0.40847 seconds
+order N^3 normalized time=0.797793 
+
+multiply N by N matrices, N=1600 
+initialized 
+N=1600, c=0, raw time=7.60282 seconds
+order N^3 normalized time=1.85616 
+
