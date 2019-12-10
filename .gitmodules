@@ -25,3 +25,6 @@
 [submodule "umbc/CMSC/4XX/491/semantic-web/hw/03"]
 	path = umbc/CMSC/4XX/491/semantic-web/hw/03
 	url = git@github.com:UMBC-CMSC-491-691-F19-Knowledge-Graphs/hw3-RobRoseKnows.git
+[submodule "umbc/CMSC/4XX/491/semantic-web/hw/05"]
+	path = umbc/CMSC/4XX/491/semantic-web/hw/05
+	url = git@github.com:UMBC-CMSC-491-691-F19-Knowledge-Graphs/hw5-RobRoseKnows.git
